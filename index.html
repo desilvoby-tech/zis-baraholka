@@ -1,0 +1,749 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>ЗИС Барахолка</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: navy header band with search, category rail, filter sidebar + card grid; one-column on phones */
+:root{
+  --bg:#f3f5f9; --surface:#ffffff; --ink:#13213b; --muted:#5b6880; --line:#dfe4ec;
+  --head:#15295a; --head-ink:#ffffff; --head-soft:rgba(255,255,255,.14);
+  --accent:#f4b400; --accent-ink:#1a1400; --brand:#1f4fb3; --brand-soft:#e7eefc;
+  --danger:#c23b2f; --ok:#1d8a4e; --shadow:0 1px 2px rgba(19,33,59,.06),0 6px 18px rgba(19,33,59,.07);
+  --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --f-body:"Manrope","Segoe UI",system-ui,-apple-system,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0d131e; --surface:#151d2b; --ink:#e7ecf5; --muted:#95a2b8; --line:#253145;
+  --head:#0a1530; --head-ink:#f1f4fb; --head-soft:rgba(255,255,255,.1);
+  --accent:#f6c233; --accent-ink:#1a1400; --brand:#86a8f0; --brand-soft:#1c2a47;
+  --danger:#ef6b5f; --ok:#4cc184; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d131e; --surface:#151d2b; --ink:#e7ecf5; --muted:#95a2b8; --line:#253145;
+  --head:#0a1530; --head-ink:#f1f4fb; --head-soft:rgba(255,255,255,.1);
+  --accent:#f6c233; --accent-ink:#1a1400; --brand:#86a8f0; --brand-soft:#1c2a47;
+  --danger:#ef6b5f; --ok:#4cc184; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--head)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* header */
+header{background:var(--head);color:var(--head-ink);position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
+.hrow{display:flex;align-items:center;gap:14px;padding-block:12px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;flex:none}
+.logo-mark{width:38px;height:38px;border-radius:10px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:13px;letter-spacing:.02em}
+.logo-txt{font-family:var(--f-display);font-weight:800;font-size:17px;line-height:1;letter-spacing:.01em}
+.logo-txt small{display:block;font-family:var(--f-body);font-weight:600;font-size:11px;opacity:.7;letter-spacing:.06em;text-transform:uppercase;margin-top:4px}
+.search{flex:1 1 360px;display:flex;min-width:0;background:var(--surface);border-radius:10px;overflow:hidden}
+.search input{flex:1;min-width:0;border:0;padding:11px 14px;background:transparent;color:var(--ink);outline:none}
+.search select{border:0;border-left:1px solid var(--line);background:transparent;color:var(--ink);padding:0 10px;max-width:42%;outline:none}
+.search button{border:0;background:var(--accent);color:var(--accent-ink);padding:0 18px;font-weight:700}
+.hnav{display:flex;gap:6px;align-items:center;flex:none}
+.hbtn{border:0;background:var(--head-soft);color:var(--head-ink);padding:10px 12px;border-radius:10px;font-weight:600;font-size:14px;display:flex;align-items:center;gap:6px;text-decoration:none}
+.hbtn svg{width:18px;height:18px}
+.post-btn{background:var(--accent);color:var(--accent-ink);font-weight:700}
+.badge{background:var(--accent);color:var(--accent-ink);border-radius:99px;font-size:11px;padding:0 6px;min-width:18px;text-align:center}
+
+/* categories */
+.cats{background:var(--surface);border-bottom:1px solid var(--line)}
+.cat-scroll{overflow-x:auto;scrollbar-width:thin}
+.cat-row{display:flex;gap:4px;padding-block:10px;width:max-content}
+.cat{border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 10px;border-radius:12px;width:96px;font-size:12px;font-weight:600;color:var(--ink);text-align:center;line-height:1.2}
+.cat .ic{width:46px;height:46px;border-radius:14px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center}
+.cat .ic svg{width:24px;height:24px}
+.cat .n{font-weight:500;color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+.cat:hover .ic{transform:translateY(-1px)}
+.cat[aria-pressed="true"] .ic{background:var(--accent);color:var(--accent-ink)}
+
+/* main */
+main{padding-block:20px 48px}
+.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:20px;align-items:start}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:14px}
+.panel h3{margin:0;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.field{display:flex;flex-direction:column;gap:6px}
+.field>label,.flabel{font-size:13px;font-weight:600}
+.inp{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:9px;padding:9px 11px;outline:none;min-width:0}
+.inp:focus{border-color:var(--brand)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.chk{display:flex;gap:8px;align-items:center;font-size:14px}
+.link{border:0;background:none;color:var(--brand);font-weight:600;padding:0;text-align:left}
+.toolbar{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.toolbar h1{font-family:var(--f-display);font-size:22px;font-weight:600;margin:0;text-wrap:balance}
+.toolbar .cnt{color:var(--muted);font-variant-numeric:tabular-nums}
+.toolbar select{width:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.card{background:var(--surface);border-radius:14px;overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column;cursor:pointer;text-align:left;padding:0;transition:box-shadow .15s}
+.card:hover{box-shadow:var(--shadow)}
+.ph{aspect-ratio:4/3;background:var(--brand-soft);position:relative;overflow:hidden;max-width:100%}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .noph{position:absolute;inset:0;display:grid;place-items:center;color:var(--brand);opacity:.5}
+.ph .noph svg{width:40px;height:40px}
+.ph .np{position:absolute;right:8px;bottom:8px;background:rgba(10,18,35,.6);color:#fff;font-size:11px;border-radius:6px;padding:2px 6px}
+.fav{position:absolute;top:8px;right:8px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:#13213b;display:grid;place-items:center}
+.fav svg{width:18px;height:18px}
+.fav[aria-pressed="true"]{color:#d63a4a}
+.fav[aria-pressed="true"] svg{fill:currentColor}
+.cbody{padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px;flex:1}
+.price{font-weight:800;font-size:17px;font-variant-numeric:tabular-nums}
+.price.free{color:var(--ok)}
+.ctitle{font-size:14px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em}
+.meta{font-size:12px;color:var(--muted);margin-top:auto;display:flex;justify-content:space-between;gap:8px}
+.tag{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:1px 6px;background:var(--brand-soft);color:var(--brand)}
+
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:40px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}
+.empty h2{font-family:var(--f-display);font-weight:600;font-size:19px;margin:0;text-wrap:balance}
+.empty p{margin:0;color:var(--muted);max-width:52ch}
+.btn{border:0;border-radius:10px;padding:11px 18px;font-weight:700;background:var(--accent);color:var(--accent-ink);display:inline-flex;align-items:center;gap:8px}
+.btn.sec{background:var(--brand-soft);color:var(--brand)}
+.btn.danger{background:transparent;color:var(--danger);border:1px solid var(--danger)}
+.btn:disabled{opacity:.55;cursor:default}
+.note{font-size:13px;color:var(--muted)}
+.err{color:var(--danger);font-size:13px;font-weight:600}
+
+/* form */
+.form{max-width:760px;display:flex;flex-direction:column;gap:16px}
+.form .panel{gap:16px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg label{border:1px solid var(--line);border-radius:9px;padding:7px 12px;font-size:14px;cursor:pointer;background:var(--bg)}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label:has(input:checked){border-color:var(--brand);background:var(--brand-soft);color:var(--brand);font-weight:700}
+.seg label:has(input:focus-visible){outline:2px solid var(--accent)}
+.pics{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.pic{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--brand-soft)}
+.pic img{width:100%;height:100%;object-fit:cover}
+.pic button{position:absolute;top:4px;right:4px;border:0;border-radius:50%;width:24px;height:24px;background:rgba(10,18,35,.7);color:#fff;font-size:14px;line-height:1}
+.addpic{aspect-ratio:1;border:2px dashed var(--line);border-radius:10px;display:grid;place-items:center;text-align:center;font-size:12px;color:var(--muted);cursor:pointer;padding:6px}
+textarea.inp{min-height:130px;resize:vertical}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(6,12,24,.6);display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:max(24px,env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) 24px max(12px,env(safe-area-inset-left,0px))}
+.sheet{background:var(--surface);border-radius:16px;width:min(980px,100%);display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);overflow:hidden;position:relative}
+.gal{background:#0b1220;display:flex;flex-direction:column;align-self:start;border-radius:0 0 16px 0}
+.gal .main{aspect-ratio:4/3;display:grid;place-items:center;max-width:100%}
+.gal .main img{max-width:100%;max-height:100%;object-fit:contain}
+.thumbs{display:flex;gap:6px;padding:8px;overflow-x:auto}
+.thumbs button{flex:none;width:64px;height:48px;border:2px solid transparent;border-radius:6px;padding:0;overflow:hidden;background:#1b2436}
+.thumbs button[aria-current="true"]{border-color:var(--accent)}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+.info{padding:22px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.info h2{margin:0;font-size:20px;line-height:1.25;text-wrap:balance;overflow-wrap:anywhere}
+.info .price{font-size:26px}
+.desc{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:14px}
+.kv dt{color:var(--muted)} .kv dd{margin:0}
+.seller{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.phone{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;user-select:all}
+.close{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.9);color:#13213b;font-size:20px;z-index:2}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;z-index:60;max-width:calc(100% - 32px)}
+
+.tags{display:flex;gap:4px;flex-wrap:wrap}
+.tag.sold{background:var(--ink);color:var(--surface)}
+.card.is-sold .ph{opacity:.55}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.seg2{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg2 button{border:0;background:var(--surface);padding:7px 11px;font-size:16px;line-height:1;color:var(--muted)}
+.seg2 button[aria-pressed="true"]{background:var(--brand-soft);color:var(--brand)}
+.grid.list{grid-template-columns:minmax(0,1fr)}
+.grid.list .card{flex-direction:row}
+.grid.list .ph{width:220px;flex:none;aspect-ratio:4/3}
+.grid.list .ctitle{-webkit-line-clamp:3;font-size:15px}
+.sub{margin:0 0 10px;font-size:15px;font-weight:700}
+.recent{margin-bottom:24px}
+.recent .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.recent .ctitle{font-size:13px}
+.sellerbar{display:flex;gap:12px;align-items:baseline;margin-bottom:12px;flex-wrap:wrap}
+.sslist{display:flex;flex-direction:column}
+.ssrow{display:flex;gap:12px;align-items:center;justify-content:space-between;padding-block:8px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.ssrow:last-child{border-bottom:0}
+.danger-link{color:var(--danger);font-size:13px}
+.link:disabled{color:var(--muted);cursor:default}
+.qa{border-top:1px solid var(--line);padding-top:12px}
+.q{padding-block:8px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:4px}
+.qt{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px}
+.ans{margin-left:14px;padding:6px 10px;background:var(--brand-soft);border-radius:8px}
+.qaform{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.qaform .inp{flex:1 1 160px}
+.simgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.simgrid .ctitle{font-size:13px}.simgrid .price{font-size:15px}.simgrid .fav{display:none}
+.filters-toggle{display:none}
+@media (max-width:860px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .filters-toggle{display:inline-flex}
+  aside.panel{display:none} aside.panel.open{display:flex}
+  .sheet{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:560px){
+  .hbtn .lbl{display:none}
+  .logo-txt small{display:none}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .grid.list .ph{width:120px}
+  .search select{display:none}
+  .toolbar h1{font-size:18px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header>
+  <div class="wrap hrow">
+    <a class="logo" href="#home" aria-label="ЗИС Барахолка, на главную">
+      <span class="logo-mark">ЗИС</span>
+      <span class="logo-txt">Барахолка<small>Объявления по Беларуси</small></span>
+    </a>
+    <form class="search" id="searchForm" role="search">
+      <input id="q" type="search" placeholder="Поиск по объявлениям" aria-label="Поиск">
+      <select id="regionTop" aria-label="Регион"></select>
+      <button type="submit">Найти</button>
+    </form>
+    <nav class="hnav">
+      <a class="hbtn" href="#favs" title="Избранное"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.4-9.3-9A5.3 5.3 0 0 1 12 6a5.3 5.3 0 0 1 9.3 6c-2.3 4.6-9.3 9-9.3 9z"/></svg><span class="lbl">Избранное</span><span class="badge" id="favCount" hidden>0</span></a>
+      <a class="hbtn" href="#reports" id="repLink" title="Жалобы" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg><span class="lbl">Жалобы</span><span class="badge">0</span></a>
+      <a class="hbtn" href="#my" title="Мои объявления"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span class="lbl">Мои</span></a>
+      <a class="hbtn post-btn" href="#post"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg><span class="lbl">Подать объявление</span></a>
+    </nav>
+  </div>
+</header>
+
+<div class="cats"><div class="wrap cat-scroll"><div class="cat-row" id="catRow"></div></div></div>
+
+<main class="wrap" id="view"></main>
+<div id="modalRoot"></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const REGIONS = {
+  "Минск":["Минск"],
+  "Брестская обл.":["Брест","Барановичи","Пинск","Кобрин","Берёза","Лунинец","Ивацевичи","Пружаны"],
+  "Витебская обл.":["Витебск","Орша","Новополоцк","Полоцк","Поставы","Глубокое","Лепель"],
+  "Гомельская обл.":["Гомель","Мозырь","Жлобин","Светлогорск","Речица","Калинковичи","Рогачёв","Добруш","Хойники"],
+  "Гродненская обл.":["Гродно","Лида","Слоним","Волковыск","Сморгонь","Новогрудок","Щучин"],
+  "Минская обл.":["Борисов","Солигорск","Молодечно","Жодино","Слуцк","Дзержинск","Марьина Горка","Заславль","Фаниполь"],
+  "Могилёвская обл.":["Могилёв","Бобруйск","Горки","Кричев","Осиповичи","Шклов","Быхов"]
+};
+const I = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const CATS = [
+  {id:"realty",name:"Недвижимость",ic:I('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>')},
+  {id:"auto",name:"Авто и транспорт",ic:I('<path d="M5 16l1.5-5h11L19 16"/><rect x="3" y="16" width="18" height="3" rx="1"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/>')},
+  {id:"electronics",name:"Электроника",ic:I('<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>')},
+  {id:"computers",name:"Компьютеры",ic:I('<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/>')},
+  {id:"home",name:"Дом и сад",ic:I('<path d="M4 14h16v4H4z"/><path d="M6 14V9a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v5"/><path d="M5 18v2M19 18v2"/>')},
+  {id:"repair",name:"Ремонт и стройка",ic:I('<path d="M14 6l4 4-9 9H5v-4z"/><path d="M13 7l4 4"/>')},
+  {id:"clothes",name:"Одежда и обувь",ic:I('<path d="M8 3l4 2 4-2 4 4-3 3v11H7V10L4 7z"/>')},
+  {id:"kids",name:"Детские товары",ic:I('<circle cx="9" cy="19" r="2"/><circle cx="17" cy="19" r="2"/><path d="M3 5h2l2 9h11l2-6H7"/>')},
+  {id:"hobby",name:"Хобби и спорт",ic:I('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>')},
+  {id:"animals",name:"Животные",ic:I('<circle cx="7" cy="9" r="2"/><circle cx="17" cy="9" r="2"/><circle cx="10" cy="5" r="1.6"/><circle cx="14" cy="5" r="1.6"/><path d="M8 17c0-3 2-5 4-5s4 2 4 5-2 3-4 2-4 1-4-2z"/>')},
+  {id:"beauty",name:"Красота и здоровье",ic:I('<path d="M9 3h6v4H9z"/><path d="M8 7h8v13a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1z"/>')},
+  {id:"jobs",name:"Работа",ic:I('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>')},
+  {id:"services",name:"Услуги",ic:I('<path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/>')},
+  {id:"free",name:"Отдам даром",ic:I('<rect x="3" y="9" width="18" height="12" rx="1"/><path d="M3 13h18M12 9v12M12 9c-2-4-6-4-6-1s6 1 6 1 6 2 6-1-4-3-6 1"/>')}
+];
+const CAT = Object.fromEntries(CATS.map(c=>[c.id,c]));
+const NOPH = I('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 17l-5-5-9 7"/>');
+const HEART = '<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 21s-7-4.4-9.3-9A5.3 5.3 0 0 1 12 6a5.3 5.3 0 0 1 9.3 6c-2.3 4.6-9.3 9-9.3 9z"/></svg>';
+
+const S = {q:"",region:"",city:"",cat:"",min:"",max:"",sort:"new",photo:false,cond:"",seller:""};
+let db=null, user=null, uid=null, canWrite=null, owner=false, demo=false;
+let ads=[], myItems={}, favs=new Set(), searches=[], loaded=false, loadErr="", readOnly=false;
+let filtersOpen=false, draft=null, lastView="#home";
+let viewCounts={}, myViews=[], qa=[], myQa={}, reports=[], myReports={};
+let layoutMode=(()=>{try{return localStorage.getItem("zis-layout")||"grid"}catch(_){return "grid"}})();
+const REASONS=["Мошенничество","Товар уже продан","Неверная цена или категория","Запрещённый товар","Оскорбления или спам","Другое"];
+function getRecent(){try{return JSON.parse(localStorage.getItem("zis-recent")||"[]")}catch(_){return []}}
+function addRecent(k){try{const r=getRecent().filter(x=>x!==k);r.unshift(k);localStorage.setItem("zis-recent",JSON.stringify(r.slice(0,12)))}catch(_){}}
+const bumpAt=a=>a.bumped||a.created||0;
+
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const rid = ()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const key = a=>a.uid+"|"+a.id;
+function fmtPrice(a){
+  if(a.priceType==="free"||a.cat==="free") return '<span class="price free">Бесплатно</span>';
+  if(a.priceType==="deal"||a.price==null) return '<span class="price">Договорная</span>';
+  return `<span class="price">${Number(a.price).toLocaleString("ru-RU")} р.</span>`;
+}
+function fmtDate(t){
+  if(!t) return ""; const d=new Date(t), n=new Date();
+  const hm=d.toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});
+  const day=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate()).getTime();
+  const diff=(day(n)-day(d))/864e5;
+  if(diff===0) return "Сегодня, "+hm; if(diff===1) return "Вчера, "+hm;
+  return d.toLocaleDateString("ru-RU",{day:"numeric",month:"short",year:d.getFullYear()===n.getFullYear()?undefined:"numeric"});
+}
+function toast(msg){const t=$("#toast");t.textContent=msg;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2600)}
+function regionOptions(sel,withAll=true){
+  return (withAll?`<option value="">Вся Беларусь</option>`:`<option value="">Выберите область</option>`)+Object.keys(REGIONS).map(r=>`<option ${r===sel?"selected":""}>${esc(r)}</option>`).join("");
+}
+
+/* ---------- photos stored in db ---------- */
+const picCache=new Map();
+function getPic(owner,id){
+  const k=owner+"/"+id;
+  if(!picCache.has(k)) picCache.set(k, db? db.doc("pics/"+owner+"/p/"+id).get().then(s=>s.exists?(s.data()||{}).d||null:null).catch(()=>{picCache.delete(k);return null}) : Promise.resolve(null));
+  return picCache.get(k);
+}
+const io = "IntersectionObserver" in window ? new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){io.unobserve(e.target);loadImg(e.target)}}),{rootMargin:"300px"}) : null;
+function loadImg(img){getPic(img.dataset.o,img.dataset.p).then(src=>{if(src){img.src=src;img.hidden=false;const n=img.parentElement.querySelector(".noph");if(n)n.hidden=true}})}
+function hookImgs(root){root.querySelectorAll("img[data-p]").forEach(img=>io?io.observe(img):loadImg(img))}
+function compress(file,max,limit){
+  return new Promise((res,rej)=>{
+    const url=URL.createObjectURL(file); const im=new Image();
+    im.onload=()=>{
+      let q=.82, m=max, out="";
+      for(let i=0;i<7;i++){
+        const sc=Math.min(1,m/Math.max(im.width,im.height));
+        const c=document.createElement("canvas"); c.width=Math.round(im.width*sc); c.height=Math.round(im.height*sc);
+        c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+        out=c.toDataURL("image/jpeg",q);
+        if(out.length<limit) break; q=Math.max(.5,q-.08); m=Math.round(m*.85);
+      }
+      URL.revokeObjectURL(url); res(out);
+    };
+    im.onerror=()=>{URL.revokeObjectURL(url);rej(new Error("bad image"))};
+    im.src=url;
+  });
+}
+
+/* ---------- writes ---------- */
+let chain=Promise.resolve();
+function saveMine(items){
+  chain=chain.catch(()=>{}).then(()=>db.collection("ads").doc(uid).set({items}));
+  return chain;
+}
+function writeErr(e){
+  if(e&&e.code==="invalid_argument"){readOnly=true;return "У вас нет права подавать объявления на этой площадке. Попросите владельца выдать доступ «Участник» (Contributor)."}
+  if(e&&e.code==="quota_exceeded") return "Хранилище площадки заполнено. Удалите старые объявления и попробуйте снова.";
+  if(e&&e.code==="resource_exhausted") return "Слишком много действий подряд. Подождите минуту.";
+  return "Не удалось сохранить. Проверьте соединение и попробуйте ещё раз.";
+}
+
+/* ---------- filtering ---------- */
+function filtered(list){
+  const q=S.q.trim().toLowerCase();
+  let r=list.filter(a=>{
+    if(a.sold) return false;
+    if(S.seller&&a.uid!==S.seller) return false;
+    if(S.cat&&a.cat!==S.cat) return false;
+    if(S.region&&a.region!==S.region) return false;
+    if(S.city&&a.city!==S.city) return false;
+    if(S.cond&&a.cond!==S.cond) return false;
+    if(S.photo&&!(a.pics&&a.pics.length)) return false;
+    const p=a.priceType==="fixed"?Number(a.price):null;
+    if(S.min!==""&&(p==null||p<Number(S.min))) return false;
+    if(S.max!==""&&(p==null||p>Number(S.max))) return false;
+    if(q&&!((a.title||"")+" "+(a.desc||"")).toLowerCase().includes(q)) return false;
+    return true;
+  });
+  const pv=a=>a.priceType==="fixed"?Number(a.price):(a.priceType==="free"?0:Infinity);
+  if(S.sort==="new") r.sort((a,b)=>bumpAt(b)-bumpAt(a));
+  if(S.sort==="views") r.sort((a,b)=>(viewCounts[key(b)]||0)-(viewCounts[key(a)]||0));
+  if(S.sort==="cheap") r.sort((a,b)=>pv(a)-pv(b));
+  if(S.sort==="dear") r.sort((a,b)=>{const x=pv(a),y=pv(b);return (y===Infinity?-1:y)-(x===Infinity?-1:x)});
+  return r;
+}
+
+/* ---------- rendering ---------- */
+function renderCats(){
+  const counts={}; ads.forEach(a=>counts[a.cat]=(counts[a.cat]||0)+1);
+  $("#catRow").innerHTML=CATS.map(c=>`<button class="cat" data-cat="${c.id}" aria-pressed="${S.cat===c.id}"><span class="ic">${c.ic}</span>${esc(c.name)}<span class="n">${loaded?(counts[c.id]||0):"…"}</span></button>`).join("");
+}
+function card(a){
+  const n=(a.pics||[]).length;
+  const tags=(a.sold?'<span class="tag sold">Продано</span>':"")+(a.haggle&&a.priceType==="fixed"?'<span class="tag">Торг</span>':"")+(a.cond==="new"?'<span class="tag">Новое</span>':"");
+  return `<div class="card${a.sold?" is-sold":""}" role="button" tabindex="0" data-open="${esc(key(a))}">
+    <div class="ph"><div class="noph">${NOPH}</div>${n?`<img alt="" hidden data-o="${esc(a.uid)}" data-p="${esc(a.pics[0])}t">`:""}${n>1?`<span class="np">${n} фото</span>`:""}
+      <button class="fav" data-fav="${esc(key(a))}" aria-pressed="${favs.has(key(a))}" aria-label="В избранное">${HEART}</button></div>
+    <div class="cbody">${fmtPrice(a)}<div class="ctitle">${esc(a.title)}</div>${tags?`<div class="tags">${tags}</div>`:""}
+      <div class="meta"><span>${esc(a.city)}</span><span>${esc(fmtDate(bumpAt(a)))}</span></div></div></div>`;
+}
+function emptyBlock(title,text,cta=true){
+  return `<div class="empty">${NOPH.replace("<svg",'<svg width="48" height="48" style="color:var(--brand)"')}<h2>${title}</h2><p>${text}</p>${cta&&canPost()?'<a class="btn" href="#post">Подать объявление</a>':""}</div>`;
+}
+const canPost=()=>!!db&&!!uid&&canWrite!==false&&!readOnly;
+
+function renderHome(){
+  const r=filtered(ads);
+  const sellerAd=S.seller?ads.find(a=>a.uid===S.seller):null;
+  const title=S.seller?`Объявления продавца ${esc(sellerAd?sellerAd.name:"")}`:S.cat?CAT[S.cat].name:(S.q?`Поиск: «${esc(S.q)}»`:"Все объявления");
+  const anyFilter=!!(S.q||S.region||S.cat||S.min||S.max||S.cond||S.photo);
+  const recent=(!anyFilter&&!S.seller)?getRecent().map(k=>ads.find(a=>key(a)===k)).filter(a=>a&&!a.sold).slice(0,6):[];
+  const where=S.city||S.region||"Вся Беларусь";
+  let body;
+  if(!loaded&&!loadErr) body=`<div class="empty"><p>Загружаем объявления…</p></div>`;
+  else if(loadErr) body=emptyBlock("Объявления сейчас недоступны",esc(loadErr),false);
+  else if(!ads.length) body=emptyBlock("Здесь пока нет объявлений","Продайте ненужное или найдите нужное по всей Беларуси. Первое объявление появится здесь сразу после публикации.");
+  else if(!r.length) body=emptyBlock("Ничего не найдено","Попробуйте изменить запрос, убрать часть фильтров или выбрать другой регион.",false);
+  else body=`<div class="grid ${layoutMode==="list"?"list":""}">${r.map(card).join("")}</div>`;
+  if(recent.length&&loaded) body=`<div class="recent"><h3 class="sub">Вы недавно смотрели</h3><div class="grid">${recent.map(card).join("")}</div></div>`+body;
+  if(S.seller) body=`<div class="sellerbar"><button class="link" id="sellerBack">← Все объявления</button><span class="note">${r.length} ${plural(r.length,["активное объявление","активных объявления","активных объявлений"])}</span></div>`+body;
+  const cities=S.region?REGIONS[S.region]:[];
+  $("#view").innerHTML=`<div class="layout">
+    <aside class="panel ${filtersOpen?"open":""}" aria-label="Фильтры">
+      <h3>Фильтры</h3>
+      <div class="field"><label for="fRegion">Область</label><select class="inp" id="fRegion">${regionOptions(S.region)}</select></div>
+      ${cities.length>1?`<div class="field"><label for="fCity">Город</label><select class="inp" id="fCity"><option value="">Все города</option>${cities.map(c=>`<option ${c===S.city?"selected":""}>${esc(c)}</option>`).join("")}</select></div>`:""}
+      <div class="field"><span class="flabel">Цена, р.</span><div class="row2"><input class="inp" id="fMin" inputmode="numeric" placeholder="от" value="${esc(S.min)}" aria-label="Цена от"><input class="inp" id="fMax" inputmode="numeric" placeholder="до" value="${esc(S.max)}" aria-label="Цена до"></div></div>
+      <div class="field"><label for="fCond">Состояние</label><select class="inp" id="fCond"><option value="">Любое</option><option value="new" ${S.cond==="new"?"selected":""}>Новое</option><option value="used" ${S.cond==="used"?"selected":""}>Б/у</option></select></div>
+      <label class="chk"><input type="checkbox" id="fPhoto" ${S.photo?"checked":""}> Только с фото</label>
+      <button class="link" id="fReset">Сбросить фильтры</button>
+    </aside>
+    <section style="min-width:0">
+      <div class="toolbar"><div><h1>${title}</h1><span class="cnt">${loaded?r.length+" "+plural(r.length,["объявление","объявления","объявлений"])+" · ":""}${esc(where)}</span></div>
+        <div class="tools">${anyFilter&&uid?'<button class="btn sec" id="saveSearch">Сохранить поиск</button>':""}<button class="btn sec filters-toggle" id="fToggle">Фильтры</button>
+        <select class="inp" id="fSort" aria-label="Сортировка"><option value="new">Сначала новые</option><option value="cheap" ${S.sort==="cheap"?"selected":""}>Сначала дешёвые</option><option value="dear" ${S.sort==="dear"?"selected":""}>Сначала дорогие</option><option value="views" ${S.sort==="views"?"selected":""}>Популярные</option></select>
+        <div class="seg2" role="group" aria-label="Вид"><button id="vGrid" aria-pressed="${layoutMode!=="list"}" title="Плиткой">▦</button><button id="vList" aria-pressed="${layoutMode==="list"}" title="Списком">☰</button></div></div></div>
+      ${body}
+    </section></div>`;
+  hookImgs($("#view"));
+}
+function plural(n,f){const m=n%10,h=n%100;return f[(m===1&&h!==11)?0:(m>=2&&m<=4&&(h<12||h>14))?1:2]}
+
+function renderMy(){
+  if(!db||!uid){$("#view").innerHTML=emptyBlock("Войдите в аккаунт","Чтобы подавать объявления и видеть свои, откройте площадку, войдя в аккаунт Claude.",false);return}
+  const mine=ads.filter(a=>a.uid===uid).sort((a,b)=>(b.created||0)-(a.created||0));
+  $("#view").innerHTML=`<div class="toolbar"><div><h1>Мои объявления</h1><span class="cnt">${mine.length} ${plural(mine.length,["объявление","объявления","объявлений"])}</span></div>${canPost()?'<a class="btn" href="#post">Подать объявление</a>':""}</div>
+  ${mine.length?`<div class="grid">${mine.map(card).join("")}</div>`:emptyBlock("У вас пока нет объявлений",canPost()?"Подайте первое: это займёт пару минут. Добавьте фото, цену и телефон, и покупатели смогут с вами связаться.":"Подавать объявления могут участники с доступом «Участник» (Contributor). Попросите владельца площадки выдать его.")}`;
+  hookImgs($("#view"));
+}
+function renderFavs(){
+  const list=ads.filter(a=>favs.has(key(a)));
+  const ss=searches.length?`<div class="panel" style="margin-bottom:16px"><h3>Сохранённые поиски</h3><div class="sslist">${searches.map((s,i)=>`<div class="ssrow"><button class="link" data-ss="${i}">${esc(searchLabel(s))}</button><span class="note">${filteredBy(s).length} сейчас</span><button class="link danger-link" data-ssdel="${i}" aria-label="Удалить поиск">Удалить</button></div>`).join("")}</div></div>`:"";
+  $("#view").innerHTML=`<div class="toolbar"><div><h1>Избранное</h1><span class="cnt">${list.length} ${plural(list.length,["объявление","объявления","объявлений"])}</span></div></div>${ss}
+  ${list.length?`<div class="grid">${list.map(card).join("")}</div>`:emptyBlock("В избранном пусто","Нажмите на сердечко на карточке объявления, чтобы сохранить его здесь.",false)}`;
+  hookImgs($("#view"));
+}
+
+function searchLabel(s){
+  const parts=[]; if(s.q)parts.push("«"+s.q+"»"); if(s.cat&&CAT[s.cat])parts.push(CAT[s.cat].name);
+  parts.push(s.city||s.region||"Вся Беларусь"); if(s.min||s.max)parts.push((s.min?"от "+s.min:"")+(s.max?" до "+s.max:"")+" р.");
+  if(s.cond)parts.push(s.cond==="new"?"новое":"б/у"); if(s.photo)parts.push("с фото"); return parts.join(" · ");
+}
+function filteredBy(s){const keep={...S};Object.assign(S,{q:"",region:"",city:"",cat:"",min:"",max:"",cond:"",photo:false,seller:""},s);const r=filtered(ads);Object.assign(S,keep);return r}
+function renderReports(){
+  if(!owner){$("#view").innerHTML=emptyBlock("Раздел для владельца","Жалобы видит только владелец площадки.",false);return}
+  const rows=reports.slice().sort((a,b)=>b.t-a.t);
+  $("#view").innerHTML=`<div class="toolbar"><div><h1>Жалобы</h1><span class="cnt">${rows.length} ${plural(rows.length,["жалоба","жалобы","жалоб"])}</span></div></div>
+  ${rows.length?`<div class="panel">${rows.map(r=>{const a=ads.find(x=>key(x)===r.ad);return `<div class="ssrow"><div style="min-width:0"><strong>${esc(r.reason)}</strong>${r.text?` — ${esc(r.text)}`:""}<div class="note">${a?esc(a.title):"Объявление уже удалено"} · ${esc(fmtDate(r.t))}</div></div>${a?`<button class="link" data-open="${esc(r.ad)}">Открыть</button>`:""}</div>`}).join("")}</div>`:emptyBlock("Жалоб нет","Когда посетители пожалуются на объявление, жалоба появится здесь.",false)}`;
+}
+async function saveFavDoc(){
+  if(!db||!uid) return;
+  favChain=favChain.catch(()=>{}).then(()=>db.collection("data/users/"+uid).doc("favs").set({ids:[...favs],searches}));
+  return favChain;
+}
+
+/* ---------- post / edit form ---------- */
+function renderPost(){
+  if(!db||!uid){$("#view").innerHTML=emptyBlock("Войдите в аккаунт","Подать объявление можно после входа в аккаунт Claude.",false);return}
+  if(!canPost()){$("#view").innerHTML=emptyBlock("Нет доступа к подаче","Подавать объявления могут участники с доступом «Участник» (Contributor). Попросите владельца площадки выдать его.",false);return}
+  if(!draft) draft={id:null,cat:"",title:"",desc:"",priceType:"fixed",price:"",haggle:false,cond:"used",region:"",city:"",name:"",phone:"",pics:[],newPics:[]};
+  const d=draft; const cities=d.region?REGIONS[d.region]:[];
+  $("#view").innerHTML=`<form class="form" id="postForm" novalidate>
+    <div class="toolbar"><h1>${d.id?"Редактирование объявления":"Новое объявление"}</h1></div>
+    <div class="panel">
+      <div class="field"><label for="pCat">Категория</label><select class="inp" id="pCat" required><option value="">Выберите категорию</option>${CATS.map(c=>`<option value="${c.id}" ${d.cat===c.id?"selected":""}>${esc(c.name)}</option>`).join("")}</select></div>
+      <div class="field"><label for="pTitle">Заголовок</label><input class="inp" id="pTitle" maxlength="70" placeholder="Например: iPhone 13, 128 ГБ, синий" value="${esc(d.title)}"></div>
+      <div class="field"><label for="pDesc">Описание</label><textarea class="inp" id="pDesc" maxlength="4000" placeholder="Состояние, комплектация, причина продажи, условия встречи">${esc(d.desc)}</textarea></div>
+      <div class="field"><span class="flabel">Фотографии <span class="note">(до 6)</span></span>
+        <div class="pics" id="picBox"></div>
+        <input type="file" id="pFiles" accept="image/*" multiple hidden></div>
+    </div>
+    <div class="panel">
+      <div class="field"><span class="flabel">Цена</span>
+        <div class="seg" role="radiogroup">${[["fixed","Указать цену"],["deal","Договорная"],["free","Бесплатно"]].map(([v,l])=>`<label><input type="radio" name="pt" value="${v}" ${d.priceType===v?"checked":""}>${l}</label>`).join("")}</div>
+        <div class="row2" ${d.priceType==="fixed"?"":"hidden"} id="priceRow"><input class="inp" id="pPrice" inputmode="decimal" placeholder="Цена в белорусских рублях" value="${esc(d.price)}" aria-label="Цена"><label class="chk"><input type="checkbox" id="pHaggle" ${d.haggle?"checked":""}> Возможен торг</label></div></div>
+      <div class="field"><span class="flabel">Состояние</span>
+        <div class="seg">${[["used","Б/у"],["new","Новое"]].map(([v,l])=>`<label><input type="radio" name="cond" value="${v}" ${d.cond===v?"checked":""}>${l}</label>`).join("")}</div></div>
+    </div>
+    <div class="panel">
+      <div class="row2"><div class="field"><label for="pRegion">Область</label><select class="inp" id="pRegion">${regionOptions(d.region,false)}</select></div>
+      <div class="field"><label for="pCity">Город</label><select class="inp" id="pCity" ${cities.length?"":"disabled"}><option value="">Выберите город</option>${cities.map(c=>`<option ${c===d.city?"selected":""}>${esc(c)}</option>`).join("")}</select></div></div>
+      <div class="row2"><div class="field"><label for="pName">Ваше имя</label><input class="inp" id="pName" maxlength="40" value="${esc(d.name)}" autocomplete="given-name"></div>
+      <div class="field"><label for="pPhone">Телефон</label><input class="inp" id="pPhone" maxlength="20" inputmode="tel" placeholder="+375 29 123-45-67" value="${esc(d.phone)}" autocomplete="tel"></div></div>
+    </div>
+    <div class="err" id="pErr" hidden></div>
+    <div class="actions"><button class="btn" type="submit" id="pSubmit">${d.id?"Сохранить изменения":"Опубликовать"}</button><a class="btn sec" href="${d.id?"#my":"#home"}">Отмена</a></div>
+  </form>`;
+  renderPicBox();
+}
+function renderPicBox(){
+  const d=draft, box=$("#picBox"); if(!box) return;
+  const total=d.pics.length+d.newPics.length;
+  box.innerHTML=d.pics.map((p,i)=>`<div class="pic"><img alt="" hidden data-o="${esc(uid)}" data-p="${esc(p)}t"><button type="button" data-rmold="${i}" aria-label="Удалить фото">×</button></div>`).join("")
+   +d.newPics.map((p,i)=>`<div class="pic"><img alt="" src="${p.t}"><button type="button" data-rmnew="${i}" aria-label="Удалить фото">×</button></div>`).join("")
+   +(total<6?`<label class="addpic" for="pFiles">+ Добавить фото</label>`:"");
+  box.querySelectorAll("img[data-p]").forEach(loadImg);
+}
+function readForm(){
+  const d=draft, v=id=>($("#"+id)||{}).value||"";
+  d.cat=v("pCat");d.title=v("pTitle").trim();d.desc=v("pDesc").trim();d.price=v("pPrice").trim();
+  d.region=v("pRegion");d.city=v("pCity");d.name=v("pName").trim();d.phone=v("pPhone").trim();
+  d.priceType=(document.querySelector('input[name="pt"]:checked')||{}).value||"fixed";
+  d.cond=(document.querySelector('input[name="cond"]:checked')||{}).value||"used";
+  const hg=$("#pHaggle"); if(hg) d.haggle=hg.checked;
+}
+async function submitPost(e){
+  e.preventDefault(); readForm(); const d=draft, er=$("#pErr");
+  const price=Number(d.price.replace(",",".").replace(/\s/g,""));
+  const problem=!d.cat?"Выберите категорию.":d.title.length<3?"Заголовок должен быть не короче 3 символов.":
+    (d.priceType==="fixed"&&!(price>0))?"Укажите цену больше нуля или выберите «Договорная».":
+    !d.region||!d.city?"Укажите область и город.":!d.name?"Укажите имя, чтобы покупатели знали, как к вам обращаться.":
+    d.phone.replace(/\D/g,"").length<7?"Укажите телефон для связи.":"";
+  if(problem){er.textContent=problem;er.hidden=false;return}
+  er.hidden=true; const btn=$("#pSubmit"); btn.disabled=true; btn.textContent="Сохраняем…";
+  try{
+    const newIds=[];
+    for(const p of d.newPics){
+      const id=rid();
+      await db.doc("pics/"+uid+"/p/"+id).set({d:p.f});
+      await db.doc("pics/"+uid+"/p/"+id+"t").set({d:p.t});
+      picCache.set(uid+"/"+id,Promise.resolve(p.f));picCache.set(uid+"/"+id+"t",Promise.resolve(p.t));
+      newIds.push(id);
+    }
+    const id=d.id||rid(); const prev=myItems[id];
+    const item={id,cat:d.cat,title:d.title,desc:d.desc,priceType:d.cat==="free"?"free":d.priceType,price:d.priceType==="fixed"&&d.cat!=="free"?Math.round(price*100)/100:null,
+      cond:d.cond,haggle:!!d.haggle&&d.priceType==="fixed",region:d.region,city:d.city,name:d.name,phone:d.phone,pics:[...d.pics,...newIds],created:prev?prev.created:Date.now(),updated:Date.now()};
+    if(prev&&prev.bumped) item.bumped=prev.bumped; if(prev&&prev.sold) item.sold=prev.sold;
+    const removed=prev?(prev.pics||[]).filter(p=>!item.pics.includes(p)):[];
+    await saveMine({...myItems,[id]:item});
+    removed.forEach(p=>{db.doc("pics/"+uid+"/p/"+p).delete().catch(()=>{});db.doc("pics/"+uid+"/p/"+p+"t").delete().catch(()=>{})});
+    draft=null; toast(prev?"Изменения сохранены":"Объявление опубликовано"); location.hash="#my";
+  }catch(err){er.textContent=writeErr(err);er.hidden=false;btn.disabled=false;btn.textContent=d.id?"Сохранить изменения":"Опубликовать"}
+}
+
+/* ---------- detail modal ---------- */
+let openKey=null;
+function similar(a){return ads.filter(x=>!x.sold&&x.cat===a.cat&&key(x)!==key(a)).sort((x,y)=>(x.region===a.region?0:1)-(y.region===a.region?0:1)||bumpAt(y)-bumpAt(x)).slice(0,4)}
+function openAd(k){
+  const a=ads.find(x=>key(x)===k); if(!a) return;
+  openKey=k; addRecent(k); markViewed(k);
+  if(location.hash!=="#ad-"+a.id){ location.hash="#ad-"+a.id; }
+  const pics=a.pics||[]; const mine=a.uid===uid;
+  const canBump=mine&&!a.sold&&Date.now()-bumpAt(a)>=864e5;
+  const hoursLeft=Math.ceil((864e5-(Date.now()-bumpAt(a)))/36e5);
+  const sim=similar(a); const sellerCount=ads.filter(x=>x.uid===a.uid&&!x.sold).length;
+  const reported=Object.values(myReports).some(r=>r.ad===k);
+  $("#modalRoot").innerHTML=`<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="${esc(a.title)}"><div class="sheet">
+    <button class="close" id="mClose" aria-label="Закрыть">×</button>
+    <div class="gal"><div class="main">${pics.length?`<img id="mMain" alt="${esc(a.title)}">`:`<div style="color:#8fa3c8">${NOPH.replace("<svg",'<svg width="64" height="64"')}</div>`}</div>
+      ${pics.length>1?`<div class="thumbs">${pics.map((p,i)=>`<button data-th="${i}" aria-current="${i===0}" aria-label="Фото ${i+1}"><img alt="" data-o="${esc(a.uid)}" data-p="${esc(p)}t"></button>`).join("")}</div>`:""}</div>
+    <div class="info">
+      <div class="tags"><span class="tag">${esc((CAT[a.cat]||{}).name||"")}</span>${a.sold?'<span class="tag sold">Продано</span>':""}${a.haggle&&a.priceType==="fixed"?'<span class="tag">Торг уместен</span>':""}</div>
+      <h2>${esc(a.title)}</h2>${fmtPrice(a)}
+      <dl class="kv"><dt>Состояние</dt><dd>${a.cond==="new"?"Новое":"Б/у"}</dd><dt>Где</dt><dd>${esc(a.city)}, ${esc(a.region)}</dd><dt>Размещено</dt><dd>${esc(fmtDate(a.created))}${a.bumped?` · поднято ${esc(fmtDate(a.bumped))}`:""}</dd><dt>Просмотры</dt><dd>${viewCounts[k]||1}</dd><dt>Номер</dt><dd>${esc(a.id)}</dd></dl>
+      ${a.desc?`<div class="desc">${esc(a.desc)}</div>`:""}
+      <div class="seller"><div><div class="note">Продавец</div><strong>${esc(a.name)}</strong> <button class="link" id="mSeller">${sellerCount>1?`все объявления (${sellerCount})`:"страница продавца"}</button></div>
+        ${a.sold?'<p class="note">Товар продан, связаться с продавцом по нему уже нельзя.</p>':'<div id="phoneBox"><button class="btn" id="showPhone">Показать телефон</button></div>'}
+        <div class="actions"><button class="btn sec" id="mFav" aria-pressed="${favs.has(k)}">${favs.has(k)?"В избранном":"В избранное"}</button>
+        ${demo?'<button class="btn sec" id="mShare">Скопировать ссылку</button>':""}
+        ${mine?`<button class="btn sec" id="mEdit">Редактировать</button>${a.sold?"":`<button class="btn sec" id="mBump" ${canBump?"":"disabled"} title="${canBump?"":"Поднять можно раз в сутки"}">${canBump?"Поднять в поиске":"Поднять через "+hoursLeft+" ч"}</button>`}<button class="btn sec" id="mSold">${a.sold?"Вернуть в продажу":"Отметить проданным"}</button><button class="btn danger" id="mDel">Удалить</button>`:(owner?`<button class="btn danger" id="mMod">Удалить (модерация)</button>`:"")}</div>
+        ${!mine&&uid&&!a.sold?`<div><button class="link danger-link" id="mReport" ${reported?"disabled":""}>${reported?"Жалоба отправлена":"Пожаловаться на объявление"}</button></div>`:""}
+        <div id="mConfirm"></div></div>
+      <div class="qa"><h3 class="sub">Вопросы продавцу</h3><div id="qaList"></div>
+        ${!mine&&uid&&!a.sold&&canPost()?`<form id="qaForm" class="qaform"><input class="inp" id="qaText" maxlength="500" placeholder="Задайте вопрос: его увидят все посетители" aria-label="Ваш вопрос"><input class="inp" id="qaName" maxlength="40" placeholder="Ваше имя" aria-label="Ваше имя" style="max-width:9em"><button class="btn sec" type="submit">Спросить</button></form>`:""}
+        ${!uid?'<p class="note">Задавать вопросы можно после входа в аккаунт.</p>':""}</div>
+      ${sim.length?`<div><h3 class="sub">Похожие объявления</h3><div class="simgrid">${sim.map(card).join("")}</div></div>`:""}
+    </div></div></div>`;
+  const setMain=i=>{const m=$("#mMain");if(!m)return;getPic(a.uid,pics[i]).then(s=>{if(s)m.src=s});document.querySelectorAll("[data-th]").forEach(b=>b.setAttribute("aria-current",b.dataset.th==i))};
+  if(pics.length) setMain(0);
+  $("#modalRoot").querySelectorAll("img[data-p]").forEach(loadImg);
+  renderQa(k);
+  const onKey=e=>{if(e.key==="Escape"&&openKey)closeAd()};
+  document.addEventListener("keydown",onKey); closeAd.off=()=>document.removeEventListener("keydown",onKey);
+  const m=$("#modal");
+  m.addEventListener("submit",e=>{
+    e.preventDefault();
+    if(e.target.id==="qaForm"){const t=$("#qaText").value.trim(),n=$("#qaName").value.trim();if(t.length<3)return toast("Напишите вопрос подробнее");
+      saveQa({ad:k,text:t,name:n||"Покупатель",t:Date.now()}).then(()=>{toast("Вопрос опубликован")}).catch(err=>toast(writeErr(err)))}
+    if(e.target.id==="repForm"){const r=$("#repReason").value,t=$("#repText").value.trim();
+      const id=rid(); const next={...myReports,[id]:{ad:k,reason:r,text:t,t:Date.now()}};
+      db.collection("reports").doc(uid).set({items:next}).then(()=>{myReports=next;$("#mConfirm").innerHTML='<p class="note">Спасибо, жалоба отправлена модератору.</p>';const b=$("#mReport");if(b){b.disabled=true;b.textContent="Жалоба отправлена"}}).catch(err=>{$("#mConfirm").innerHTML=`<p class="err">${esc(writeErr(err))}</p>`})}
+    if(e.target.matches(".ansform")){const qid=e.target.dataset.q,t=e.target.querySelector("input").value.trim();if(!t)return;
+      saveQa({ad:k,replyTo:qid,text:t,name:a.name,t:Date.now()}).catch(err=>toast(writeErr(err)))}
+  });
+  m.addEventListener("click",e=>{
+    if(e.target.id==="modal"||e.target.id==="mClose") return closeAd();
+    const th=e.target.closest("[data-th]"); if(th) return setMain(+th.dataset.th);
+    const c=e.target.closest(".simgrid [data-open]"); if(c&&!e.target.closest("[data-fav]")){e.stopPropagation();openAd(c.dataset.open);return}
+    const id=e.target.id;
+    if(id==="showPhone"){ $("#phoneBox").innerHTML=`<div class="phone">${esc(a.phone)}</div><div class="actions" style="margin-top:6px"><button class="btn sec" id="copyPhone">Скопировать номер</button></div>`; }
+    if(id==="copyPhone") copyText(a.phone,".phone","Номер скопирован");
+    if(id==="mShare") copyText(location.href,null,"Ссылка скопирована");
+    if(id==="mSeller"){ Object.assign(S,{seller:a.uid,q:"",cat:"",region:"",city:"",min:"",max:"",cond:"",photo:false}); lastView="#home"; closeAd(true); location.hash="#home"; route(); }
+    if(id==="mFav"){ toggleFav(k).then(()=>{const b=$("#mFav");if(b){b.textContent=favs.has(k)?"В избранном":"В избранное";b.setAttribute("aria-pressed",favs.has(k))}}); }
+    if(id==="mEdit"){ draft={...a,price:a.price==null?"":String(a.price),pics:[...(a.pics||[])],newPics:[]}; closeAd(true); location.hash="#post"; }
+    if(id==="mBump"){ saveMine({...myItems,[a.id]:{...myItems[a.id],bumped:Date.now()}}).then(()=>{toast("Объявление поднято наверх");openAd(k)}).catch(err=>toast(writeErr(err))); }
+    if(id==="mSold"){ saveMine({...myItems,[a.id]:{...myItems[a.id],sold:!a.sold}}).then(()=>{toast(a.sold?"Объявление снова в продаже":"Отмечено как проданное");closeAd()}).catch(err=>toast(writeErr(err))); }
+    if(id==="mReport"&&!e.target.disabled){ $("#mConfirm").innerHTML=`<form id="repForm" class="panel" style="padding:12px"><div class="field"><label for="repReason">Причина</label><select class="inp" id="repReason">${REASONS.map(r=>`<option>${r}</option>`).join("")}</select></div><input class="inp" id="repText" maxlength="300" placeholder="Комментарий (необязательно)" aria-label="Комментарий"><div class="actions"><button class="btn danger" type="submit">Отправить жалобу</button><button class="btn sec" type="button" id="mNo">Отмена</button></div></form>`; }
+    if(id==="mDel"||id==="mMod"){ $("#mConfirm").innerHTML=`<p class="note">Объявление исчезнет для всех. Удалить?</p><div class="actions"><button class="btn danger" id="${id}Yes">Да, удалить</button><button class="btn sec" id="mNo">Отмена</button></div>`; }
+    if(id==="mNo") $("#mConfirm").innerHTML="";
+    if(id==="mDelYes"||id==="mModYes"){ removeAd(a).then(()=>{closeAd();toast("Объявление удалено")}).catch(err=>{$("#mConfirm").innerHTML=`<p class="err">${esc(writeErr(err))}</p>`}); }
+    const dq=e.target.closest("[data-qdel]"); if(dq){ const next={...myQa}; delete next[dq.dataset.qdel]; db.collection("qa").doc(uid).set({items:next}).catch(err=>toast(writeErr(err))); }
+  });
+  hookImgs(m); $("#mClose").focus();
+}
+function closeAd(keepHash){
+  openKey=null; $("#modalRoot").innerHTML=""; if(closeAd.off)closeAd.off();
+  if(!keepHash&&location.hash.startsWith("#ad-")) location.hash=lastView;
+}
+function copyText(t,sel,msg){
+  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast(msg)).catch(()=>{const el=sel&&$(sel);if(el){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);toast("Текст выделен, скопируйте его")}else toast(t)});
+}
+function renderQa(k){
+  const box=$("#qaList"); if(!box) return;
+  const a=ads.find(x=>key(x)===k); const mine=a&&a.uid===uid;
+  const qs=qa.filter(q=>q.ad===k&&!q.replyTo).sort((x,y)=>x.t-y.t);
+  const ans=id=>qa.filter(q=>q.ad===k&&q.replyTo===id&&a&&q.uid===a.uid).sort((x,y)=>x.t-y.t);
+  box.innerHTML=qs.length?qs.map(q=>`<div class="q"><div><strong>${esc(q.name)}</strong> <span class="note">${esc(fmtDate(q.t))}</span>${q.uid===uid?` <button class="link danger-link" data-qdel="${esc(q.id)}">удалить</button>`:""}</div><div class="qt">${esc(q.text)}</div>
+    ${ans(q.id).map(r=>`<div class="ans"><span class="note">Ответ продавца</span><div class="qt">${esc(r.text)}</div>${mine?`<button class="link danger-link" data-qdel="${esc(r.id)}">удалить</button>`:""}</div>`).join("")}
+    ${mine?`<form class="ansform qaform" data-q="${esc(q.id)}"><input class="inp" maxlength="500" placeholder="Ответить покупателю" aria-label="Ответ"><button class="btn sec" type="submit">Ответить</button></form>`:""}</div>`).join(""):'<p class="note">Вопросов пока нет.</p>';
+}
+let qaChain=Promise.resolve();
+function saveQa(item){
+  const id=rid(); const next={...myQa,[id]:item};
+  qaChain=qaChain.catch(()=>{}).then(()=>db.collection("qa").doc(uid).set({items:next})).then(()=>{myQa=next});
+  return qaChain;
+}
+let viewChain=Promise.resolve();
+function markViewed(k){
+  if(!db||!uid||myViews.includes(k)) return;
+  myViews=[...myViews,k].slice(-400); viewCounts[k]=(viewCounts[k]||0)+1; const ids=myViews.slice();
+  viewChain=viewChain.catch(()=>{}).then(()=>db.collection("views").doc(uid).set({ids})).catch(()=>{});
+}
+async function removeAd(a){
+  if(a.uid===uid){ const next={...myItems}; delete next[a.id]; await saveMine(next); }
+  else { const ref=db.collection("ads").doc(a.uid); const s=await ref.get(); const items={...((s.data()||{}).items||{})}; delete items[a.id]; await ref.set({items}); }
+  (a.pics||[]).forEach(p=>{db.doc("pics/"+a.uid+"/p/"+p).delete().catch(()=>{});db.doc("pics/"+a.uid+"/p/"+p+"t").delete().catch(()=>{})});
+}
+
+/* ---------- favourites (private per person) ---------- */
+let favChain=Promise.resolve();
+function toggleFav(k){
+  if(!db||!uid){toast("Избранное доступно после входа в аккаунт");return Promise.resolve()}
+  favs.has(k)?favs.delete(k):favs.add(k); syncFavUI();
+  return saveFavDoc().catch(()=>toast("Не удалось сохранить избранное"));
+}
+function syncFavUI(){
+  const n=[...favs].filter(k=>ads.some(a=>key(a)===k)).length;
+  const b=$("#favCount"); b.textContent=n; b.hidden=!n;
+  document.querySelectorAll("[data-fav]").forEach(el=>el.setAttribute("aria-pressed",favs.has(el.dataset.fav)));
+}
+
+/* ---------- routing & events ---------- */
+function renderView(h){
+  if(h==="post") renderPost(); else if(h==="my") renderMy(); else if(h==="favs") renderFavs(); else if(h==="reports") renderReports(); else renderHome();
+  renderCats(); syncFavUI();
+}
+function route(){
+  const h=location.hash.slice(1)||"home";
+  if(h.startsWith("ad-")){
+    const id=h.slice(3), a=ads.find(x=>x.id===id);
+    if(!$("#view").innerHTML.trim()) renderView(lastView.slice(1)||"home");
+    if(a){ if(openKey!==key(a)) openAd(key(a)); }
+    else if(loaded){ toast("Объявление не найдено или уже удалено"); location.hash=lastView; }
+    return;
+  }
+  if(openKey) closeAd(true);
+  lastView="#"+h; renderView(h); window.scrollTo(0,0);
+}
+function render(){
+  const h=location.hash.slice(1)||"home";
+  if(h==="post") return;
+  if(h.startsWith("ad-")){ renderView(lastView.slice(1)||"home"); if(!openKey) route(); return; }
+  const y=window.scrollY; renderView(h); window.scrollTo(0,y);
+}
+addEventListener("hashchange",route);
+
+$("#regionTop").innerHTML=regionOptions("");
+$("#searchForm").addEventListener("submit",e=>{e.preventDefault();S.q=$("#q").value;S.region=$("#regionTop").value;S.city="";if(location.hash&&location.hash!=="#home")location.hash="#home";else route()});
+$("#catRow").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;S.cat=S.cat===b.dataset.cat?"":b.dataset.cat;if(location.hash&&location.hash!=="#home")location.hash="#home";else route()});
+document.addEventListener("click",e=>{
+  const f=e.target.closest("[data-fav]"); if(f){e.stopPropagation();toggleFav(f.dataset.fav);return}
+  const c=e.target.closest("[data-open]"); if(c&&!e.target.closest("#modalRoot")){openAd(c.dataset.open);return}
+  if(e.target.id==="sellerBack"){S.seller="";route()}
+  if(e.target.id==="vGrid"||e.target.id==="vList"){layoutMode=e.target.id==="vList"?"list":"grid";try{localStorage.setItem("zis-layout",layoutMode)}catch(_){}render()}
+  if(e.target.id==="saveSearch"){const s={};["q","region","city","cat","min","max","cond","photo"].forEach(k=>{if(S[k])s[k]=S[k]});
+    if(searches.some(x=>JSON.stringify(x)===JSON.stringify(s))){toast("Этот поиск уже сохранён");return}
+    searches=[...searches,s].slice(-20);saveFavDoc().then(()=>toast("Поиск сохранён в «Избранном»")).catch(()=>toast("Не удалось сохранить поиск"))}
+  const ss=e.target.closest("[data-ss]"); if(ss){Object.assign(S,{q:"",region:"",city:"",cat:"",min:"",max:"",cond:"",photo:false,seller:""},searches[+ss.dataset.ss]);$("#q").value=S.q;$("#regionTop").value=S.region;location.hash="#home"}
+  const sd=e.target.closest("[data-ssdel]"); if(sd){searches=searches.filter((_,i)=>i!==+sd.dataset.ssdel);saveFavDoc();renderFavs()}
+  if(e.target.id==="fReset"){Object.assign(S,{region:"",city:"",min:"",max:"",cond:"",photo:false});$("#regionTop").value="";route()}
+  if(e.target.id==="fToggle"){filtersOpen=!filtersOpen;document.querySelector("aside.panel").classList.toggle("open",filtersOpen)}
+  const ro=e.target.closest("[data-rmold]"); if(ro){draft.pics.splice(+ro.dataset.rmold,1);renderPicBox()}
+  const rn=e.target.closest("[data-rmnew]"); if(rn){draft.newPics.splice(+rn.dataset.rmnew,1);renderPicBox()}
+});
+document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("[data-open]")){e.preventDefault();openAd(e.target.dataset.open)}});
+document.addEventListener("change",e=>{
+  const t=e.target, id=t.id;
+  if(id==="fRegion"){S.region=t.value;S.city="";$("#regionTop").value=t.value;route()}
+  if(id==="fCity"){S.city=t.value;route()}
+  if(id==="fCond"){S.cond=t.value;route()}
+  if(id==="fPhoto"){S.photo=t.checked;route()}
+  if(id==="fSort"){S.sort=t.value;route()}
+  if(id==="fMin"||id==="fMax"){S[id==="fMin"?"min":"max"]=t.value.replace(/[^\d.]/g,"");route()}
+  if(id==="pRegion"||t.name==="pt"){readForm();if(id==="pRegion")draft.city="";renderPost()}
+  if(id==="pFiles"){
+    const files=[...t.files].slice(0,6-draft.pics.length-draft.newPics.length); t.value="";
+    readForm();
+    Promise.all(files.map(f=>Promise.all([compress(f,1280,200000),compress(f,420,40000)]).then(([full,th])=>({f:full,t:th})).catch(()=>null)))
+      .then(r=>{const ok=r.filter(Boolean);draft.newPics.push(...ok);if(ok.length<r.length)toast("Часть файлов не удалось открыть как фото");renderPicBox()});
+  }
+});
+document.addEventListener("submit",e=>{if(e.target.id==="postForm")submitPost(e)});
+
+/* ---------- local demo store (used only outside claude.ai, e.g. GitHub Pages) ---------- */
+function localDB(){
+  let store={}; try{store=JSON.parse(localStorage.getItem("zis-db")||"{}")}catch(_){}
+  const subs=new Set();
+  const save=()=>{try{localStorage.setItem("zis-db",JSON.stringify(store))}catch(_){throw {code:"quota_exceeded"}}subs.forEach(f=>f())};
+  const snapOf=(p)=>({id:p.split("/").pop(),exists:p in store,data:()=>store[p]});
+  const doc=p=>({id:p.split("/").pop(),path:p,
+    get:async()=>snapOf(p),
+    set:async d=>{const old=store[p];store[p]=JSON.parse(JSON.stringify(d));try{save()}catch(e){if(old===undefined)delete store[p];else store[p]=old;throw e}},
+    delete:async()=>{delete store[p];save()},
+    onSnapshot(next){const f=()=>next(snapOf(p));subs.add(f);f();return()=>subs.delete(f)}});
+  const coll=c=>{const q={path:c,doc:id=>doc(c+"/"+(id||rid())),limit:()=>q,
+    onSnapshot(next){const f=()=>{const docs=Object.keys(store).filter(k=>k.startsWith(c+"/")&&!k.slice(c.length+1).includes("/")).map(snapOf);next({docs,size:docs.length,empty:!docs.length})};subs.add(f);f();return()=>subs.delete(f)}};return q};
+  return {doc,collection:coll};
+}
+
+/* ---------- boot ---------- */
+route();
+(async()=>{
+  const timer=setTimeout(()=>{if(!loaded){loadErr="Не удалось загрузить объявления. Обновите страницу чуть позже.";render()}},10000);
+  if(!window.claude){
+    db=localDB(); uid="local"; canWrite=true; owner=true; demo=true;
+    const b=document.createElement("div"); b.className="wrap note"; b.style.paddingBlock="8px";
+    b.textContent="Демо-режим: объявления сохраняются только в этом браузере. Общая база работает в версии на claude.ai.";
+    document.querySelector(".cats").after(b);
+  }
+  try{ if(!db) db = window.claude ? await window.claude.use("db") : null; }catch(_){db=null}
+  if(!db){clearTimeout(timer);loadErr="Войдите в аккаунт Claude, чтобы смотреть и подавать объявления.";render();return}
+  if(window.claude){ try{ user = await window.claude.use("user"); }catch(_){user=null} }
+  if(user){ try{uid=await user.id()}catch(_){} try{canWrite=await user.can("data.write")}catch(_){} try{owner=await user.isOwner()}catch(_){} }
+  db.collection("ads").limit(1000).onSnapshot(snap=>{
+    clearTimeout(timer); loadErr="";
+    const list=[]; let mine={};
+    snap.docs.forEach(d=>{const items=(d.data()||{}).items||{};for(const k in items){const it=items[k];if(it&&it.title)list.push({...it,id:k,uid:d.id})}if(d.id===uid)mine={...items}});
+    ads=list; myItems=mine; loaded=true; render();
+  },err=>{clearTimeout(timer);loadErr="Не удалось загрузить объявления. Обновите страницу чуть позже.";render()});
+  if(uid) db.collection("data/users/"+uid).doc("favs").onSnapshot(s=>{const d=s.data()||{};favs=new Set(d.ids||[]);searches=Array.isArray(d.searches)?d.searches:[];syncFavUI();if(location.hash==="#favs")route()},()=>{});
+  db.collection("views").limit(1000).onSnapshot(snap=>{
+    const c={}; snap.docs.forEach(d=>{const ids=(d.data()||{}).ids||[];ids.forEach(k=>c[k]=(c[k]||0)+1);if(d.id===uid)myViews=ids.slice()});
+    viewCounts=c;
+  },()=>{});
+  db.collection("qa").limit(1000).onSnapshot(snap=>{
+    const list=[]; snap.docs.forEach(d=>{const items=(d.data()||{}).items||{};for(const k in items)list.push({...items[k],id:k,uid:d.id});if(d.id===uid)myQa={...items}});
+    qa=list; if(openKey) renderQa(openKey);
+  },()=>{});
+  if(owner) db.collection("reports").limit(1000).onSnapshot(snap=>{
+    const list=[]; snap.docs.forEach(d=>{const items=(d.data()||{}).items||{};for(const k in items)list.push({...items[k],id:k,uid:d.id})});
+    reports=list; const b=$("#repLink"); if(b){b.hidden=false;b.querySelector(".badge").textContent=list.length} if(location.hash==="#reports")route();
+  },()=>{});
+  if(uid) db.collection("reports").doc(uid).onSnapshot(s=>{myReports={...((s.data()||{}).items||{})}},()=>{});
+  if(location.hash.startsWith("#ad-")) route();
+})();
+</script>
+</body></html>
