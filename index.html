@@ -269,6 +269,84 @@ textarea.inp{min-height:130px;resize:vertical}
   .chat{height:calc(100vh - 220px)}
   .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 }
+
+/* ---- Abisto light theme ---- */
+:root{
+  --bg:#ffffff; --surface:#ffffff; --ink:#1a1a1a; --muted:#7a7a7a; --line:#ebebeb;
+  --head:#ffffff; --head-ink:#1a1a1a; --head-soft:#f4f4f4;
+  --accent:#ffc800; --accent-ink:#1a1a1a; --brand:#0a6cf5; --brand-soft:#eef4ff;
+  --danger:#e5322d; --ok:#14a44d; --shadow:0 2px 12px rgba(0,0,0,.08);
+  --f-display:"Manrope","Segoe UI",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121212; --surface:#121212; --ink:#f2f2f2; --muted:#9a9a9a; --line:#2a2a2a;
+  --head:#121212; --head-ink:#f2f2f2; --head-soft:#222;
+  --accent:#ffc800; --accent-ink:#1a1a1a; --brand:#5b9bff; --brand-soft:#1b2433; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121212; --surface:#121212; --ink:#f2f2f2; --muted:#9a9a9a; --line:#2a2a2a;
+  --head:#121212; --head-ink:#f2f2f2; --head-soft:#222;
+  --accent:#ffc800; --accent-ink:#1a1a1a; --brand:#5b9bff; --brand-soft:#1b2433; color-scheme:dark}
+header{border-bottom:1px solid var(--line)}
+.hrow{padding-block:14px;gap:18px}
+.logo-txt{font-family:"Unbounded","Arial Black",system-ui,sans-serif;font-size:22px;letter-spacing:-.01em}
+.logo-txt small{color:var(--muted);opacity:1}
+.logo-mark{border-radius:12px;width:40px;height:40px}
+.search{border:2px solid var(--accent);border-radius:12px;background:var(--surface)}
+.search input{padding:12px 16px;font-size:16px}
+.search button{border-radius:0 9px 9px 0;font-size:15px;padding:0 22px}
+.hbtn{background:transparent;color:var(--ink);border-radius:10px}
+.hbtn:hover{background:var(--head-soft)}
+.post-btn{background:var(--accent);color:var(--accent-ink)}
+.post-btn:hover{background:#ffd633}
+.cats{border-bottom:0}
+.cat-row{gap:10px;padding-block:18px 8px}
+.cat{width:116px;padding:0;gap:8px;font-size:13px;border-radius:14px}
+.cat .ic{width:116px;height:76px;border-radius:14px;justify-content:end;align-content:end;padding:10px;display:grid}
+.cat .ic svg{width:34px;height:34px}
+.cat:nth-child(14n+1) .ic{background:#e9f3ff;color:#2f6fd6}
+.cat:nth-child(14n+2) .ic{background:#fff1e6;color:#d9661c}
+.cat:nth-child(14n+3) .ic{background:#eef9ee;color:#2e9a4a}
+.cat:nth-child(14n+4) .ic{background:#f3efff;color:#6b4fd8}
+.cat:nth-child(14n+5) .ic{background:#fff8dc;color:#b88a00}
+.cat:nth-child(14n+6) .ic{background:#ffecec;color:#d23c3c}
+.cat:nth-child(14n+7) .ic{background:#fdeefa;color:#c03aa5}
+.cat:nth-child(14n+8) .ic{background:#e8faf8;color:#1a9c8f}
+.cat:nth-child(14n+9) .ic{background:#eef2ff;color:#3d5bd9}
+.cat:nth-child(14n+10) .ic{background:#f6f2ea;color:#9a6b2f}
+.cat:nth-child(14n+11) .ic{background:#fff0f5;color:#d4467a}
+.cat:nth-child(14n+12) .ic{background:#eaf6ff;color:#1f86c7}
+.cat:nth-child(14n+13) .ic{background:#f1f8e8;color:#5d9a23}
+.cat:nth-child(14n+14) .ic{background:#fff6e0;color:#c98a00}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .cat .ic{background:#1e1e1e!important}}
+:root[data-theme="dark"] .cat .ic{background:#1e1e1e!important}
+.cat[aria-pressed="true"] .ic{outline:3px solid var(--accent);outline-offset:-3px}
+.cat .n{display:none}
+.toolbar h1{font-size:26px;font-weight:800;letter-spacing:-.01em}
+.panel{border-color:var(--line);border-radius:14px}
+.inp{background:var(--surface);border-color:#dedede;border-radius:10px}
+.grid{gap:22px 16px}
+.card{border:0;border-radius:0;background:transparent}
+.card:hover{box-shadow:none}
+.card .ph{border-radius:12px}
+.card:hover .ctitle{color:var(--brand)}
+.cbody{padding:10px 2px 0;gap:3px}
+.price{font-size:18px}
+.ctitle{color:var(--brand);font-size:15px}
+.card .ctitle{color:var(--ink)}
+.meta{margin-top:4px}
+.tag{background:var(--head-soft);color:var(--ink);border-radius:6px}
+.btn.sec{background:var(--head-soft);color:var(--ink)}
+.btn.sec:hover{background:#eaeaea}
+.box{border-color:var(--line)}
+.empty{border-style:solid;border-color:var(--line)}
+.empty svg{color:var(--muted)!important}
+.grid.list .card{gap:14px}
+.grid.list .cbody{padding-top:0}
+@media (max-width:640px){
+  .cat{width:96px}.cat .ic{width:96px;height:66px}
+  .toolbar h1{font-size:20px}
+  .logo-txt{font-size:20px}
+}
 </style>
 </head>
 <body>
