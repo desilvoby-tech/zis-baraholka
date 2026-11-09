@@ -308,6 +308,52 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 #tgMsg{display:flex;flex-direction:column;gap:8px;margin:0}
 .or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}
 .or:before,.or:after{content:"";flex:1;height:1px;background:var(--line)}
+/* ---- выпадающее меню категорий ---- */
+.hrow .search{flex:1 1 150px}
+@media (min-width:1100px){.hrow{flex-wrap:nowrap}}
+@media (max-width:1440px){.hnav .hbtn:not(.post-btn) .lbl{display:none}.hnav .hbtn:not(.post-btn){padding:10px}}
+@media (max-width:1280px){.logo-txt small{display:none}}
+.catalog-btn{flex:none;display:inline-flex;align-items:center;gap:10px;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:15px;padding:0 18px;height:48px;cursor:pointer}
+.catalog-btn:hover,.catalog-btn.on{background:#0d8a3e}
+.cb-ic{width:18px;height:14px;display:flex;flex-direction:column;justify-content:space-between}
+.cb-ic i{display:block;height:2px;border-radius:2px;background:currentColor;transition:transform .2s,opacity .2s}
+.catalog-btn.on .cb-ic i:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.catalog-btn.on .cb-ic i:nth-child(2){opacity:0}
+.catalog-btn.on .cb-ic i:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+.mega{position:fixed;left:0;right:0;top:var(--mega-top,79px);bottom:0;z-index:19;background:rgba(0,0,0,.28);overflow:auto}
+.mega-in{background:var(--surface);display:grid;grid-template-columns:300px 1fr;gap:0;border-radius:0 0 16px 16px;box-shadow:0 12px 30px rgba(0,0,0,.12);max-height:calc(100vh - 110px);overflow:hidden;padding:0!important}
+.mega-l{list-style:none;margin:0;padding:10px;overflow:auto;border-right:1px solid var(--line)}
+.mega-l a{display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:10px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:600}
+.mega-l a .ic{width:32px;height:32px;border-radius:9px;background:#e8f7ee;color:var(--accent);display:grid;place-items:center;flex:none}
+.mega-l a .ic svg{width:19px;height:19px}
+.mega-l a .nm{flex:1}
+.mega-l a .arr{color:var(--muted);font-size:20px;line-height:1}
+.mega-l a.on,.mega-l a:hover{background:var(--head-soft)}
+.mega-l a.on .nm{color:var(--accent)}
+.mega-r{padding:22px 28px;overflow:auto}
+.mega-h{display:inline-block;font-size:22px;font-weight:800;color:var(--ink);text-decoration:none;margin-bottom:16px}
+.mega-h:hover{color:var(--accent)}
+.mega-h .cnt{color:var(--muted);font-size:15px;font-weight:600}
+.mega-subs{list-style:none;margin:0;padding:0;columns:3 200px;column-gap:28px}
+.mega-subs li{break-inside:avoid;padding:6px 0}
+.mega-subs a{color:var(--ink);text-decoration:none;font-size:15px}
+.mega-subs a:hover{color:var(--accent);text-decoration:underline}
+.mega-back{display:none}
+@media (max-width:720px){
+  .catalog-btn{height:44px;padding:0 13px}
+  .catalog-btn .lbl{display:none}
+  .mega{background:var(--surface)}
+  .mega-in{display:block;max-height:none;box-shadow:none;border-radius:0}
+  .mega-l{border:0;padding:8px 6px 90px}
+  .mega-r{display:none;padding:14px 16px 90px}
+  .mega-in.sub .mega-l{display:none}
+  .mega-in.sub .mega-r{display:block}
+  .mega-back{display:block;border:0;background:none;color:var(--brand);font:inherit;font-weight:600;padding:4px 0 12px;cursor:pointer}
+  .mega-h{font-size:20px}
+  .mega-subs{columns:1}
+  .mega-subs li{border-bottom:1px solid var(--line);padding:12px 0}
+  body.mega-open{overflow:hidden}
+}
 /* ---- подкатегории ---- */
 .subchips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;scrollbar-width:thin}
 .subchips .chip{white-space:nowrap;padding:8px 14px;font-size:14px}
@@ -421,6 +467,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
       <span class="logo-mark" style="font-size:21px">A</span>
       <span class="logo-txt">Abisto<small>Объявления по Беларуси</small></span>
     </a>
+    <button class="catalog-btn" id="catBtn" type="button" aria-expanded="false" aria-controls="mega"><span class="cb-ic" aria-hidden="true"><i></i><i></i><i></i></span><span class="lbl">Все категории</span></button>
     <form class="search" id="searchForm" role="search">
       <input id="q" type="search" placeholder="Поиск по объявлениям" aria-label="Поиск">
       <select id="regionTop" aria-label="Регион"></select>
@@ -435,6 +482,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
     </nav>
   </div>
 </header>
+<div class="mega" id="mega" hidden></div>
 
 <div class="cats" id="catsBar"><div class="wrap cat-scroll"><div class="cat-row" id="catRow"></div></div></div>
 
@@ -675,6 +723,31 @@ async function loadSubCounts(){
   subCountsKey=key; subCounts={};
   const {data,error}=await sb.rpc("sub_counts",{c:S.cat,r:S.region||null,ct:S.city||null});
   if(error||subCountsKey!==key) return; subCounts=data||{}; const box=$("#subChips"); if(box) box.innerHTML=subChips();
+}
+let megaCat="";
+const isNarrow=()=>matchMedia("(max-width:720px)").matches;
+function megaRight(){
+  const c=CAT[megaCat]; if(!c) return "";
+  return `<button class="mega-back" type="button" data-mback>← Все категории</button>
+    <a href="#" class="mega-h" data-mgo="${c.id}">${esc(c.name)}${catCounts[c.id]?` <span class="cnt">${catCounts[c.id]}</span>`:""} <span aria-hidden="true">→</span></a>
+    ${c.subs.length?`<ul class="mega-subs">${c.subs.map(x=>`<li><a href="#" data-mgo="${c.id}" data-msub="${esc(x)}">${esc(x)}</a></li>`).join("")}</ul>`:'<p class="note">Подкатегорий нет — смотрите все объявления раздела.</p>'}`;
+}
+function renderMega(){
+  if(!megaCat) megaCat=S.cat||CATS[0].id;
+  $("#mega").innerHTML=`<div class="wrap mega-in${isNarrow()&&$("#mega").classList.contains("sub")?" sub":""}">
+    <ul class="mega-l">${CATS.map(c=>`<li><a href="#" data-mcat="${c.id}" class="${c.id===megaCat?"on":""}"><span class="ic">${c.ic}</span><span class="nm">${esc(c.name)}</span><span class="arr" aria-hidden="true">›</span></a></li>`).join("")}</ul>
+    <div class="mega-r" id="megaR">${megaRight()}</div></div>`;
+}
+function toggleMega(open){
+  const m=$("#mega"), b=$("#catBtn"); if(!m) return;
+  open=open==null?m.hidden:open;
+  if(open){m.style.top=Math.max(0,document.querySelector("header").getBoundingClientRect().bottom)+"px";m.classList.remove("sub");megaCat=S.cat||megaCat||CATS[0].id;renderMega()}
+  m.hidden=!open; b.setAttribute("aria-expanded",String(open)); b.classList.toggle("on",open);
+  document.body.classList.toggle("mega-open",open&&isNarrow());
+}
+function pickMega(id){
+  megaCat=id; document.querySelectorAll("#mega [data-mcat]").forEach(a=>a.classList.toggle("on",a.dataset.mcat===id));
+  $("#megaR").innerHTML=megaRight();
 }
 function renderAllCats(){
   view().innerHTML=`<div class="page"><div class="toolbar"><h1>Все категории</h1></div><div class="allcat-grid">${CATS.map(c=>`<section class="allcat">
@@ -1249,6 +1322,20 @@ function wire(){
   addEventListener("hashchange",route);
   $("#searchForm").addEventListener("submit",e=>{e.preventDefault();S.q=$("#q").value.trim();S.region=$("#regionTop").value;S.city="";S.user="";goHome()});
   $("#catRow").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;const c=b.dataset.cat;const keep={q:S.q,region:S.region,city:S.city,sort:S.sort};S={...freshFilters(),...keep,cat:S.cat===c?"":c};goHome()});
+  document.addEventListener("click",e=>{
+    const t=e.target;
+    if(t.closest("#catBtn")){toggleMega();return}
+    const m=$("#mega"); if(!m||m.hidden) return;
+    const mc=t.closest("[data-mcat]");
+    if(mc){e.preventDefault(); if(isNarrow()){pickMega(mc.dataset.mcat);m.querySelector(".mega-in").classList.add("sub");m.classList.add("sub");m.scrollTop=0}else{S=freshFilters();S.cat=mc.dataset.mcat;toggleMega(false);goHome()} return}
+    if(t.closest("[data-mback]")){m.querySelector(".mega-in").classList.remove("sub");m.classList.remove("sub");return}
+    const mg=t.closest("[data-mgo]");
+    if(mg){e.preventDefault();S=freshFilters();S.cat=mg.dataset.mgo;S.sub=mg.dataset.msub||"";toggleMega(false);goHome();return}
+    if(!t.closest(".mega-in")) toggleMega(false);
+  });
+  document.addEventListener("mouseover",e=>{const mc=e.target.closest&&e.target.closest("#mega [data-mcat]");if(mc&&!isNarrow()&&mc.dataset.mcat!==megaCat){clearTimeout(pickMega.t);pickMega.t=setTimeout(()=>pickMega(mc.dataset.mcat),60)}});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#mega").hidden)toggleMega(false)});
+  window.addEventListener("hashchange",()=>toggleMega(false));
   document.addEventListener("click",async e=>{
     const f=e.target.closest("[data-fav]"); if(f){e.preventDefault();e.stopPropagation();toggleFav(f.dataset.fav);return}
     const t=e.target, id=t.id;
