@@ -297,11 +297,17 @@ header{border-bottom:1px solid var(--line)}
 .hbtn{background:transparent;color:var(--ink);border-radius:10px}
 .hbtn:hover{background:var(--head-soft)}
 .post-btn{background:var(--accent);color:var(--accent-ink)}
-.post-btn:hover,.btn:not(.sec):not(.danger):not(:disabled):hover,.search button:hover{background:var(--accent-hover,#0d8a3e)}
+.post-btn:hover,.btn:not(.sec):not(.danger):not(.tg-btn):not(:disabled):hover,.search button:hover{background:var(--accent-hover,#0d8a3e)}
 .inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(16,163,74,.15);outline:0}
 .seg input:checked+span,.seg label:has(input:checked){border-color:var(--accent)}
 .chip[aria-pressed="true"]{background:#e8f7ee;border-color:var(--accent);color:#0b7a37}
 input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
+/* ---- вход через Telegram ---- */
+.tg-btn{background:#2aabee;color:#fff;justify-content:center;text-decoration:none}
+.btn.tg-btn:not(:disabled):hover{background:#1e96d4}
+#tgMsg{display:flex;flex-direction:column;gap:8px;margin:0}
+.or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}
+.or:before,.or:after{content:"";flex:1;height:1px;background:var(--line)}
 /* ---- подкатегории ---- */
 .subchips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;scrollbar-width:thin}
 .subchips .chip{white-space:nowrap;padding:8px 14px;font-size:14px}
@@ -916,7 +922,7 @@ async function renderMy(){
   if(needLogin()) return;
   const shop=me&&me.shop_name;
   view().innerHTML=`<div class="page cab">
-    <div class="box cab-head"><div class="userhead">${avatarHtml(me,"lg")}<div style="flex:1;min-width:0"><h1 style="font-size:20px">${esc(shop||(me?me.name:""))}</h1><div class="note">${shop?esc(me.name)+" · ":""}${esc(user.email||user.phone||"")}</div></div>
+    <div class="box cab-head"><div class="userhead">${avatarHtml(me,"lg")}<div style="flex:1;min-width:0"><h1 style="font-size:20px">${esc(shop||(me?me.name:""))}</h1><div class="note">${shop?esc(me.name)+" · ":""}${esc(/@telegram\.abisto\.by$/.test(user.email||"")?"Вход через Telegram":(user.email||user.phone||""))}</div></div>
       <div class="actions"><a class="btn sec" href="#profile">Профиль и магазин</a><a class="btn sec" href="#user/${user.id}">Страница продавца</a><button class="btn danger" id="logout">Выйти</button></div></div></div>
     <div class="toolbar"><h1>Кабинет продавца</h1><a class="btn" href="#post">Подать объявление</a></div>
     <section class="box cab-stats"><div class="cab-sh"><h2 class="sub2">Статистика</h2><div class="chips">${[7,30].map(r=>`<button class="chip" data-range="${r}" aria-pressed="${myRange===r}">${r} дней</button>`).join("")}</div></div><div id="cabStats">${loadingBlock()}</div></section>
@@ -1145,6 +1151,28 @@ function authErr(e){const m=(e&&(e.message||e.code))||"";
   if(/rate limit|over_email/i.test(m))return "Сайт сейчас не может отправить письмо: слишком много писем за час. Войдите по паролю или попробуйте позже.";
   if(/valid email|invalid format|Unable to validate email/i.test(m))return "Проверьте адрес почты.";
   return errText(e)}
+let tgTimer=null;
+async function tgLogin(){
+  const m=$("#tgMsg"), b=$("#tgLogin"); if(!m) return; clearTimeout(tgTimer);
+  m.hidden=false; m.className="note"; m.textContent="Готовим вход…"; b.disabled=true;
+  const fn=CFG.url+"/functions/v1/tg", hdr={"Content-Type":"application/json",apikey:CFG.anonKey};
+  let r={}; try{r=await (await fetch(fn,{method:"POST",headers:hdr,body:JSON.stringify({action:"login_start"})})).json()}catch(_){}
+  b.disabled=false;
+  if(!r.code){m.className="err";m.textContent="Вход через Telegram пока недоступен. Войдите по почте.";return}
+  m.innerHTML=`<a class="btn tg-btn" target="_blank" rel="noopener" href="${esc(r.link)}">Открыть Telegram</a><span>Нажмите «Старт» в боте — вход произойдёт автоматически.</span>`;
+  const t0=Date.now();
+  const tick=async()=>{
+    if(!$("#tgMsg")) return;
+    if(Date.now()-t0>5*60e3){m.className="err";m.textContent="Время вышло. Нажмите «Войти через Telegram» ещё раз.";return}
+    try{const st=await (await fetch(fn,{method:"POST",headers:hdr,body:JSON.stringify({action:"login_check",code:r.code})})).json();
+      if(st.token_hash){m.textContent="Входим…";const {error}=await sb.auth.verifyOtp({token_hash:st.token_hash,type:"magiclink"});
+        if(error){m.className="err";m.textContent="Ошибка входа: "+authErr(error);return}
+        toast("Вы вошли через Telegram");return}
+      if(st.status==="expired"||st.status==="error"){m.className="err";m.textContent="Не удалось войти. Попробуйте ещё раз.";return}
+    }catch(_){}
+    tgTimer=setTimeout(tick,2500)};
+  tgTimer=setTimeout(tick,2500);
+}
 function renderLogin(){
   if(user&&!recoveryMode){location.hash=sessionStorage.getItem("zis-after-login")||"#my";return}
   if(recoveryMode){view().innerHTML=`<div class="narrow" style="margin-top:20px"><div class="box"><h1 style="font-size:22px">Новый пароль</h1>
@@ -1155,6 +1183,7 @@ function renderLogin(){
     <div class="tabs" style="margin:0"><button class="chip" data-lmode="login" aria-pressed="${!reg}">Вход</button><button class="chip" data-lmode="register" aria-pressed="${reg}">Регистрация</button></div>
     ${authNotice?`<p class="err">${esc(authNotice)}</p>`:""}
     ${CFG.google?`<button class="btn sec" id="gLogin" style="justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.3c0-.8-.1-1.5-.2-2.3H12v4.3h5.9a5 5 0 0 1-2.2 3.3v2.7h3.5c2-1.9 3.3-4.7 3.3-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.5-2.7c-1 .7-2.3 1.1-3.8 1.1-2.9 0-5.4-2-6.3-4.6H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.7 14.1a6.6 6.6 0 0 1 0-4.2V7.1H2.1a11 11 0 0 0 0 9.8z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.1-3.1A11 11 0 0 0 2.1 7.1l3.6 2.8C6.6 7.3 9.1 5.4 12 5.4z"/></svg> Войти через Google</button><div class="note" style="text-align:center">или по почте</div>`:""}
+    ${CFG.telegram===false?"":`<button class="btn tg-btn" id="tgLogin" type="button"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.7 19.4c-.2 1-.9 1.3-1.7.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.6 13.1l-4.7-1.5c-1-.3-1-1 .2-1.5L20.5 3c.9-.3 1.6.2 1.4 1.3z"/></svg>Войти через Telegram</button><p class="note" id="tgMsg" hidden></p><div class="or"><span>или по почте</span></div>`}
     <form id="pwForm" class="form" style="gap:10px">
       ${reg?`<div class="field"><label for="lName">Ваше имя</label><input class="inp" id="lName" maxlength="40" autocomplete="given-name" placeholder="Как к вам обращаться"></div>`:""}
       <div class="field"><label for="lEmail">Электронная почта</label><input class="inp" id="lEmail" type="email" autocomplete="email" required value="${esc(loginEmail)}" placeholder="you@example.com"></div>
@@ -1238,6 +1267,7 @@ function wire(){
     if(id==="logout"){await sb.auth.signOut();toast("Вы вышли из аккаунта");location.hash="#"}
     if(id==="notifOn"){const r=await Notification.requestPermission();toast(r==="granted"?"Уведомления включены":"Уведомления не разрешены");t.remove()}
     if(id==="gLogin"){const {error}=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname}});if(error){$("#lErr").textContent=errText(error);$("#lErr").hidden=false}}
+    if(id==="tgLogin"){tgLogin();return}
     if(id==="codeBack"){$("#codeForm").hidden=true;$("#emailForm").hidden=false}
     const lm=t.closest("[data-lmode]"); if(lm){loginMode=lm.dataset.lmode;authNotice="";renderLogin()}
     if(id==="magicToggle"){const pw=$("#pwForm"),em=$("#emailForm");$("#codeForm").hidden=true;pw.hidden=!pw.hidden;em.hidden=!pw.hidden;if(!em.hidden)$("#lEmail2").value=$("#lEmail").value;t.textContent=pw.hidden?"Войти по паролю":"Войти по ссылке на почту";const f=$("#forgotPw");if(f)f.hidden=pw.hidden}
