@@ -302,6 +302,21 @@ header{border-bottom:1px solid var(--line)}
 .seg input:checked+span,.seg label:has(input:checked){border-color:var(--accent)}
 .chip[aria-pressed="true"]{background:#e8f7ee;border-color:var(--accent);color:#0b7a37}
 input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
+/* ---- подкатегории ---- */
+.subchips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;scrollbar-width:thin}
+.subchips .chip{white-space:nowrap;padding:8px 14px;font-size:14px}
+.subchips .cnt{color:var(--muted);font-weight:500;margin-left:2px}
+.cat.allcats{text-decoration:none}
+.cat.allcats .ic{background:#e8f7ee!important;color:var(--accent)!important}
+.allcat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:26px 24px}
+.allcat-h{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--ink);text-decoration:none;margin-bottom:8px}
+.allcat-h:hover{color:var(--accent)}
+.allcat-h .ic{width:38px;height:38px;border-radius:10px;background:#e8f7ee;color:var(--accent);display:grid;place-items:center;flex:none}
+.allcat-h .ic svg{width:22px;height:22px}
+.allcat-h .cnt{color:var(--muted);font-weight:600;font-size:13px}
+.allcat ul{list-style:none;margin:0;padding:0 0 0 48px;display:flex;flex-direction:column;gap:6px}
+.allcat li a{color:var(--ink);text-decoration:none;font-size:14px}
+.allcat li a:hover{color:var(--accent);text-decoration:underline}
 /* ---- кабинет продавца ---- */
 .btn.sm{padding:7px 12px;font-size:13px;border-radius:8px}
 .cab-sh{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
@@ -455,18 +470,18 @@ const CATS = [
    subs:["Мобильные телефоны","Планшеты","Умные часы и браслеты","Чехлы и аксессуары","Зарядки и аккумуляторы","Стационарные телефоны"],
    fields:[BRAND,{k:"model",l:"Модель",t:"text"},{k:"memory",l:"Память",t:"num",u:"ГБ"}]},
   {id:"electronics",name:"Электроника",ic:I('<rect x="3" y="5" width="18" height="12" rx="1.5"/><path d="M8 21h8"/><path d="M10 9l4 2-4 2z"/>'),
-   subs:["Телевизоры","Аудиотехника","Наушники","Фото и видеокамеры","Игровые приставки и игры","Видеонаблюдение","Электронные книги","Аксессуары"],
+   subs:["Телевизоры","Аудиотехника","Наушники","Портативные колонки","Фото и видеокамеры","Объективы и вспышки","Игровые приставки и игры","Квадрокоптеры","Видеонаблюдение","Электронные книги","Проекторы","Аксессуары"],
    fields:[BRAND,{k:"model",l:"Модель",t:"text"}]},
   {id:"computers",name:"Компьютерная техника",ic:I('<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/>'),
    subs:["Ноутбуки","Системные блоки","Мониторы","Комплектующие","Оргтехника и расходники","Сетевое оборудование","Клавиатуры, мыши, периферия","Программы"],
    fields:[BRAND,{k:"model",l:"Модель",t:"text"},{k:"ram",l:"Оперативная память",t:"num",u:"ГБ"}]},
   {id:"appliances",name:"Бытовая техника",ic:I('<rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="13" r="4"/><path d="M8 6h2"/>'),
-   subs:["Холодильники","Стиральные машины","Плиты и духовки","Посудомоечные машины","Пылесосы","Техника для кухни","Климатическая техника","Водонагреватели","Швейная техника","Техника для красоты"],
+   subs:["Холодильники и морозильники","Стиральные и сушильные машины","Плиты и духовки","Варочные панели","Вытяжки","Посудомоечные машины","Микроволновки","Пылесосы","Кофемашины","Мелкая техника для кухни","Утюги и уход за одеждой","Климатическая техника","Водонагреватели","Швейная техника","Техника для красоты"],
    fields:[BRAND,{k:"model",l:"Модель",t:"text"}]},
   {id:"furniture",name:"Мебель",ic:I('<path d="M4 14h16v4H4z"/><path d="M6 14V9a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v5"/><path d="M5 18v2M19 18v2"/>'),
    subs:["Диваны и кресла","Шкафы и стенки","Кровати и матрасы","Столы и стулья","Кухонные гарнитуры","Прихожие","Комоды и тумбы","Офисная мебель","Мебель для ванной"],fields:[BRAND]},
   {id:"home",name:"Всё для дома",ic:I('<path d="M6 10h12l-1 10H7z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/>'),
-   subs:["Посуда и кухня","Текстиль","Декор и интерьер","Освещение","Хозтовары","Ковры","Продукты питания"],fields:[BRAND]},
+   subs:["Посуда и кухня","Текстиль","Шторы и карнизы","Декор и интерьер","Зеркала и картины","Освещение","Хозтовары","Бытовая химия","Ковры","Продукты питания"],fields:[BRAND]},
   {id:"repair",name:"Ремонт и стройка",ic:I('<path d="M14 6l4 4-9 9H5v-4z"/><path d="M13 7l4 4"/>'),
    subs:["Инструменты","Стройматериалы","Отделочные материалы","Сантехника","Отопление","Двери и окна","Электрика","Строительное оборудование"],fields:[BRAND]},
   {id:"garden",name:"Сад и огород",ic:I('<path d="M12 21V11"/><path d="M12 11c0-4 3-7 7-7 0 4-3 7-7 7z"/><path d="M12 14c0-3-2-5-6-5 0 3 2 5 6 5z"/>'),
@@ -478,7 +493,7 @@ const CATS = [
    subs:["Верхняя одежда","Костюмы и пиджаки","Брюки и джинсы","Рубашки и футболки","Кофты и свитера","Обувь","Сумки и рюкзаки","Аксессуары","Часы"],
    fields:[{k:"size",l:"Размер",t:"text"},BRAND]},
   {id:"beauty",name:"Красота и здоровье",ic:I('<path d="M9 3h6v4H9z"/><path d="M8 7h8v13a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1z"/>'),
-   subs:["Косметика","Парфюмерия","Уход и гигиена","Маникюр и педикюр","Медтовары","Оборудование для салонов"],fields:[BRAND]},
+   subs:["Декоративная косметика","Уход за лицом и телом","Уход за волосами","Парфюмерия","Маникюр и педикюр","Средства гигиены","Медтовары","Оптика","Оборудование для салонов"],fields:[BRAND]},
   {id:"kids",name:"Всё для детей и мам",ic:I('<circle cx="9" cy="19" r="2"/><circle cx="17" cy="19" r="2"/><path d="M3 5h2l2 9h11l2-6H7"/>'),
    subs:["Детская одежда","Детская обувь","Коляски","Автокресла","Игрушки","Детская мебель","Детский транспорт","Кормление и уход","Школьникам","Товары для мам"],
    fields:[{k:"age",l:"Возраст",t:"text"},{k:"gender",l:"Для кого",t:"sel",o:["Мальчик","Девочка","Унисекс"]}]},
@@ -487,12 +502,12 @@ const CATS = [
   {id:"wedding",name:"Свадьба и праздники",ic:I('<circle cx="9" cy="14" r="5"/><circle cx="15" cy="14" r="5"/><path d="M10 4l2 3 2-3"/>'),
    subs:["Свадебные платья","Костюмы","Украшения и декор","Карнавальные костюмы","Подарки и сувениры"],fields:[{k:"size",l:"Размер",t:"text"}]},
   {id:"animals",name:"Животные",ic:I('<circle cx="7" cy="9" r="2"/><circle cx="17" cy="9" r="2"/><circle cx="10" cy="5" r="1.6"/><circle cx="14" cy="5" r="1.6"/><path d="M8 17c0-3 2-5 4-5s4 2 4 5-2 3-4 2-4 1-4-2z"/>'),
-   subs:["Собаки","Кошки","Птицы","Аквариумистика","Грызуны","Сельхоз животные","Корма и товары для животных","Вязка"],
+   subs:["Собаки","Кошки","Птицы","Аквариумистика","Грызуны","Рептилии","Лошади","Сельхоз животные","Корма","Товары для животных","Вязка","Бюро находок"],
    fields:[{k:"breed",l:"Порода",t:"text"},{k:"age",l:"Возраст",t:"text"}]},
   {id:"business",name:"Бизнес и оборудование",ic:I('<path d="M3 21h18"/><path d="M5 21V9l5 3V9l5 3V5h4v16"/>'),
    subs:["Готовый бизнес","Торговое оборудование","Оборудование для общепита","Производственное оборудование","Офисное оборудование","Сырьё и материалы"],fields:[BRAND]},
   {id:"jobs",name:"Работа",ic:I('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>'),
-   subs:["Вакансии","Подработка","Резюме"],
+   subs:["Вакансии","Подработка","Работа за рубежом","Резюме"],
    fields:[{k:"sched",l:"График",t:"sel",o:["Полный день","Сменный","Частичная занятость","Удалённо","Вахта"]},{k:"exp",l:"Опыт",t:"sel",o:["Без опыта","1–3 года","3–6 лет","Более 6 лет"]}]},
   {id:"services",name:"Услуги",ic:I('<path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/>'),
    subs:["Ремонт техники","Компьютерная помощь","Строительство и ремонт","Ремонт авто","Перевозки и грузчики","Уборка и клининг","Красота","Обучение и репетиторы","Фото и видео","Праздники и мероприятия","Юридические и бухгалтерские","Бытовые услуги","Аренда техники","Прочие услуги"],fields:[]},
@@ -629,7 +644,7 @@ let layoutMode=lsGet("zis-layout","grid");
 
 /* ================= КАТЕГОРИИ ================= */
 function renderCats(){
-  $("#catRow").innerHTML=CATS.map(c=>`<button class="cat" data-cat="${c.id}" aria-pressed="${S.cat===c.id}"><span class="ic">${c.ic}</span>${esc(c.name)}<span class="n">${catCounts[c.id]||0}</span></button>`).join("");
+  $("#catRow").innerHTML=`<a class="cat allcats" href="#cats"><span class="ic">${I('<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>')}</span>Все категории</a>`+CATS.map(c=>`<button class="cat" data-cat="${c.id}" aria-pressed="${S.cat===c.id}"><span class="ic">${c.ic}</span>${esc(c.name)}<span class="n">${catCounts[c.id]||0}</span></button>`).join("");
 }
 async function loadCatCounts(){const {data}=await sb.rpc("cat_counts");catCounts=data||{};renderCats()}
 
@@ -644,7 +659,24 @@ function fieldFilters(cat){
   }
   return h;
 }
+let subCounts={}, subCountsKey="";
+function subChips(){
+  const c=CAT[S.cat]; const n=x=>subCounts[x]!=null?`<span class="cnt">${subCounts[x]}</span>`:"";
+  return `<button class="chip" data-sub="" aria-pressed="${!S.sub}">Все</button>`+c.subs.map(x=>`<button class="chip" data-sub="${esc(x)}" aria-pressed="${S.sub===x}">${esc(x)} ${n(x)}</button>`).join("");
+}
+async function loadSubCounts(){
+  const key=[S.cat,S.region,S.city].join("|"); if(key===subCountsKey){const box=$("#subChips");if(box)box.innerHTML=subChips();return}
+  subCountsKey=key; subCounts={};
+  const {data,error}=await sb.rpc("sub_counts",{c:S.cat,r:S.region||null,ct:S.city||null});
+  if(error||subCountsKey!==key) return; subCounts=data||{}; const box=$("#subChips"); if(box) box.innerHTML=subChips();
+}
+function renderAllCats(){
+  view().innerHTML=`<div class="page"><div class="toolbar"><h1>Все категории</h1></div><div class="allcat-grid">${CATS.map(c=>`<section class="allcat">
+    <a href="#" class="allcat-h" data-gocat="${c.id}"><span class="ic">${c.ic}</span><span>${esc(c.name)}${catCounts[c.id]?` <span class="cnt">${catCounts[c.id]}</span>`:""}</span></a>
+    ${c.subs.length?`<ul>${c.subs.map(x=>`<li><a href="#" data-gocat="${c.id}" data-gosub="${esc(x)}">${esc(x)}</a></li>`).join("")}</ul>`:""}</section>`).join("")}</div></div>`;
+}
 async function renderHome(){
+  if(S.cat&&CAT[S.cat]&&CAT[S.cat].subs.length) loadSubCounts();
   const seller=S.user?(await profiles([S.user]))[S.user]:null;
   const title=S.user?`Объявления: ${esc(seller?seller.name:"")}`:S.sub?esc(S.sub):S.cat?CAT[S.cat].name:(S.q?`Поиск: «${esc(S.q)}»`:"Все объявления");
   view().innerHTML=`<div class="layout">
@@ -664,6 +696,7 @@ async function renderHome(){
         <div class="tools">${anyFilter(S)?'<button class="btn sec" id="saveSearch">Сохранить поиск</button>':""}<button class="btn sec filters-toggle" id="fToggle">Фильтры</button>
         <select class="inp" id="fSort" aria-label="Сортировка"><option value="new">Сначала новые</option><option value="cheap" ${S.sort==="cheap"?"selected":""}>Сначала дешёвые</option><option value="dear" ${S.sort==="dear"?"selected":""}>Сначала дорогие</option><option value="popular" ${S.sort==="popular"?"selected":""}>Популярные</option></select>
         <div class="seg2" role="group" aria-label="Вид"><button id="vGrid" aria-pressed="${layoutMode!=="list"}" title="Плиткой">▦</button><button id="vList" aria-pressed="${layoutMode==="list"}" title="Списком">☰</button></div></div></div>
+      ${S.cat&&CAT[S.cat]&&CAT[S.cat].subs.length?`<div class="subchips" id="subChips">${subChips()}</div>`:""}
       <div id="recent"></div>
       <div id="results">${loadingBlock()}</div>
     </section></div>`;
@@ -1164,6 +1197,7 @@ async function route(){
   window.scrollTo(0,0);
   try{
     if(v==="home") await renderHome();
+    else if(v==="cats") renderAllCats();
     else if(v==="ad") await renderAd(arg);
     else if(v==="post") await renderPost();
     else if(v==="edit") await renderPost(arg);
@@ -1189,6 +1223,8 @@ function wire(){
   document.addEventListener("click",async e=>{
     const f=e.target.closest("[data-fav]"); if(f){e.preventDefault();e.stopPropagation();toggleFav(f.dataset.fav);return}
     const t=e.target, id=t.id;
+    const sc=t.closest("[data-sub]"); if(sc&&sc.closest("#subChips")){S.sub=sc.dataset.sub;renderHome();return}
+    const ac=t.closest(".allcat [data-gocat]"); if(ac){e.preventDefault();S=freshFilters();S.cat=ac.dataset.gocat;S.sub=ac.dataset.gosub||"";location.hash="#";return}
     if(id==="loadMore"){t.disabled=true;t.textContent="Загружаем…";try{const r=await search(S,homeItems.length);homeItems=homeItems.concat(r.items);homeTotal=r.total;paintResults()}catch(err){toast(errText(err));t.disabled=false}}
     if(id==="sellerBack"){S.user="";goHome()}
     if(id==="vGrid"||id==="vList"){layoutMode=id==="vList"?"list":"grid";lsSet("zis-layout",layoutMode);document.querySelectorAll(".seg2 button").forEach(b=>b.setAttribute("aria-pressed",b.id===id));paintResults()}
