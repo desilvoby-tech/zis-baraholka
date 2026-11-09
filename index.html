@@ -348,6 +348,8 @@ header{border-bottom:1px solid var(--line)}
   .logo-txt{font-size:20px}
 }
 .price .usd{font-size:13px;font-weight:500;color:var(--muted);margin-left:4px;white-space:nowrap}
+.byn{width:.72em;height:.95em;vertical-align:-.12em;margin-left:.18em;display:inline-block}
+.flabel .byn{width:1em;height:1.1em}
 </style>
 </head>
 <body>
@@ -451,13 +453,14 @@ const esc = s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":
 const rid = ()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
 function plural(n,f){const m=n%10,h=n%100;return f[(m===1&&h!==11)?0:(m>=2&&m<=4&&(h<12||h>14))?1:2]}
 const nAds=n=>n+" "+plural(n,["объявление","объявления","объявлений"]);
+const BYN='<svg class="byn" viewBox="3 2 16 20" role="img" aria-label="руб."><path d="M8.5 3.5h9.5M8.5 3.5v17M8.5 10.5h4a5 5 0 0 1 0 10h-4M4 15.5h10.5" fill="none" stroke="currentColor" stroke-width="2.8"/></svg>';
 function fmtPrice(a){
   if(a.price_type==="free"||a.cat==="free") return '<span class="price free">Бесплатно</span>';
   if(a.price_type==="deal"||a.price==null) return '<span class="price">Договорная</span>';
   const usdFixed=a.currency==="USD"&&a.price_usd!=null;
   const byn=usdFixed&&USD_RATE?Math.round(a.price_usd*USD_RATE):Number(a.price);
   const usd=usdFixed?Number(a.price_usd):(USD_RATE?Math.round(Number(a.price)/USD_RATE):null);
-  return `<span class="price">${byn.toLocaleString("ru-RU")} р.${usd!=null?` <span class="usd">≈ ${usd.toLocaleString("ru-RU")} $</span>`:""}</span>`;
+  return `<span class="price">${byn.toLocaleString("ru-RU")}${BYN}${usd!=null?` <span class="usd">≈ ${usd.toLocaleString("ru-RU")} $</span>`:""}</span>`;
 }
 function fmtDate(t){
   if(!t) return ""; const d=new Date(t), n=new Date();
@@ -546,7 +549,7 @@ async function search(s,offset=0,limit=PAGE){
 const anyFilter=s=>!!(s.q||s.cat||s.region||s.min||s.max||s.cond||s.photo||Object.values(s.eq).some(Boolean)||Object.values(s.nmin).some(Boolean)||Object.values(s.nmax).some(Boolean));
 function searchLabel(s){
   const parts=[]; if(s.q)parts.push("«"+s.q+"»"); if(s.cat&&CAT[s.cat])parts.push(s.sub||CAT[s.cat].name);
-  parts.push(s.city||s.region||"Вся Беларусь"); if(s.min||s.max)parts.push((s.min?"от "+s.min:"")+(s.max?" до "+s.max:"")+" р.");
+  parts.push(s.city||s.region||"Вся Беларусь"); if(s.min||s.max)parts.push((s.min?"от "+s.min:"")+(s.max?" до "+s.max:"")+" руб.");
   if(s.cond)parts.push(s.cond==="new"?"новое":"б/у"); if(s.photo)parts.push("с фото");
   for(const [k,v] of Object.entries(s.eq||{}))if(v)parts.push(v);
   return parts.join(" · ");
@@ -591,7 +594,7 @@ async function renderHome(){
       ${fieldFilters(S.cat)}
       <div class="field"><label for="fRegion">Область</label><select class="inp" id="fRegion">${regionOptions(S.region)}</select></div>
       ${S.region&&REGIONS[S.region].length>1?`<div class="field"><label for="fCity">Город</label><select class="inp" id="fCity">${cityOptions(S.region,S.city)}</select></div>`:""}
-      <div class="field"><span class="flabel">Цена, р.</span><div class="row2"><input class="inp" id="fMin" inputmode="numeric" placeholder="от" value="${esc(S.min)}" aria-label="Цена от"><input class="inp" id="fMax" inputmode="numeric" placeholder="до" value="${esc(S.max)}" aria-label="Цена до"></div></div>
+      <div class="field"><span class="flabel">Цена, ${BYN}</span><div class="row2"><input class="inp" id="fMin" inputmode="numeric" placeholder="от" value="${esc(S.min)}" aria-label="Цена от"><input class="inp" id="fMax" inputmode="numeric" placeholder="до" value="${esc(S.max)}" aria-label="Цена до"></div></div>
       <div class="field"><label for="fCond">Состояние</label><select class="inp" id="fCond"><option value="">Любое</option><option value="new" ${S.cond==="new"?"selected":""}>Новое</option><option value="used" ${S.cond==="used"?"selected":""}>Б/у</option></select></div>
       <label class="chk"><input type="checkbox" id="fPhoto" ${S.photo?"checked":""}> Только с фото</label>
       <button class="link" id="fReset">Сбросить фильтры</button>
@@ -727,7 +730,7 @@ async function renderPost(editId){
     <div class="panel">
       <div class="field"><span class="flabel">${d.cat==="jobs"?"Зарплата":"Цена"}</span>
         <div class="seg" role="radiogroup">${[["fixed",d.cat==="jobs"?"Указать":"Указать цену"],["deal","Договорная"],["free","Бесплатно"]].filter(x=>d.cat!=="jobs"||x[0]!=="free").map(([v,l])=>`<label><input type="radio" name="pt" value="${v}" ${d.price_type===v?"checked":""}>${l}</label>`).join("")}</div>
-        <div class="row2" ${d.price_type==="fixed"?"":"hidden"}><div style="display:flex;gap:6px"><input class="inp" id="pPrice" inputmode="decimal" placeholder="Сумма" value="${esc(d.price)}" aria-label="Цена"><select class="inp" id="pCur" aria-label="Валюта" style="width:auto"><option value="BYN" ${d.currency!=="USD"?"selected":""}>р.</option><option value="USD" ${d.currency==="USD"?"selected":""}>$</option></select></div><label class="chk"><input type="checkbox" id="pHaggle" ${d.haggle?"checked":""}> Возможен торг</label></div></div>
+        <div class="row2" ${d.price_type==="fixed"?"":"hidden"}><div style="display:flex;gap:6px"><input class="inp" id="pPrice" inputmode="decimal" placeholder="Сумма" value="${esc(d.price)}" aria-label="Цена"><select class="inp" id="pCur" aria-label="Валюта" style="width:auto"><option value="BYN" ${d.currency!=="USD"?"selected":""}>BYN</option><option value="USD" ${d.currency==="USD"?"selected":""}>USD</option></select></div><label class="chk"><input type="checkbox" id="pHaggle" ${d.haggle?"checked":""}> Возможен торг</label></div></div>
       ${["jobs","services"].includes(d.cat)?"":`<div class="field"><span class="flabel">Состояние</span><div class="seg">${[["used","Б/у"],["new","Новое"]].map(([v,l])=>`<label><input type="radio" name="cond" value="${v}" ${d.cond===v?"checked":""}>${l}</label>`).join("")}</div></div>`}
     </div>
     <div class="panel">
@@ -948,17 +951,38 @@ async function renderUser(uid){
 
 /* ================= ВХОД ================= */
 let loginEmail="";
+let loginMode="login", recoveryMode=false, authNotice="", lastMagic=0;
+function authErr(e){const m=(e&&(e.message||e.code))||"";
+  if(/Invalid login credentials/i.test(m))return "Неверная почта или пароль.";
+  if(/already registered|already exists/i.test(m))return "Эта почта уже зарегистрирована. Перейдите на вкладку «Вход».";
+  if(/at least 6|Password should|weak/i.test(m))return "Пароль должен быть не короче 6 символов.";
+  if(/Email not confirmed/i.test(m))return "Почта не подтверждена. Откройте ссылку из письма или войдите по ссылке на почту.";
+  if(/rate limit|over_email/i.test(m))return "Сайт сейчас не может отправить письмо: слишком много писем за час. Войдите по паролю или попробуйте позже.";
+  if(/valid email|invalid format|Unable to validate email/i.test(m))return "Проверьте адрес почты.";
+  return errText(e)}
 function renderLogin(){
-  if(user){location.hash=sessionStorage.getItem("zis-after-login")||"#my";return}
+  if(user&&!recoveryMode){location.hash=sessionStorage.getItem("zis-after-login")||"#my";return}
+  if(recoveryMode){view().innerHTML=`<div class="narrow" style="margin-top:20px"><div class="box"><h1 style="font-size:22px">Новый пароль</h1>
+    <form id="newPassForm" class="form" style="gap:10px"><div class="field"><label for="lNew">Придумайте новый пароль</label><input class="inp" id="lNew" type="password" minlength="6" autocomplete="new-password" required></div>
+    <button class="btn" type="submit" style="justify-content:center">Сохранить пароль</button></form><div class="err" id="lErr" hidden></div></div></div>`;return}
+  const reg=loginMode==="register";
   view().innerHTML=`<div class="narrow" style="margin-top:20px"><div class="box">
-    <h1 style="font-size:22px">Вход и регистрация</h1>
-    <p class="note">Аккаунт создаётся автоматически при первом входе.</p>
+    <div class="tabs" style="margin:0"><button class="chip" data-lmode="login" aria-pressed="${!reg}">Вход</button><button class="chip" data-lmode="register" aria-pressed="${reg}">Регистрация</button></div>
+    ${authNotice?`<p class="err">${esc(authNotice)}</p>`:""}
     ${CFG.google?`<button class="btn sec" id="gLogin" style="justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.3c0-.8-.1-1.5-.2-2.3H12v4.3h5.9a5 5 0 0 1-2.2 3.3v2.7h3.5c2-1.9 3.3-4.7 3.3-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.5-2.7c-1 .7-2.3 1.1-3.8 1.1-2.9 0-5.4-2-6.3-4.6H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.7 14.1a6.6 6.6 0 0 1 0-4.2V7.1H2.1a11 11 0 0 0 0 9.8z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.1-3.1A11 11 0 0 0 2.1 7.1l3.6 2.8C6.6 7.3 9.1 5.4 12 5.4z"/></svg> Войти через Google</button><div class="note" style="text-align:center">или по почте</div>`:""}
-    <form id="emailForm" class="form" style="gap:10px"><div class="field"><label for="lEmail">Электронная почта</label><input class="inp" id="lEmail" type="email" autocomplete="email" required value="${esc(loginEmail)}" placeholder="you@example.com"></div>
-      <button class="btn" type="submit" style="justify-content:center">Получить код для входа</button></form>
+    <form id="pwForm" class="form" style="gap:10px">
+      ${reg?`<div class="field"><label for="lName">Ваше имя</label><input class="inp" id="lName" maxlength="40" autocomplete="given-name" placeholder="Как к вам обращаться"></div>`:""}
+      <div class="field"><label for="lEmail">Электронная почта</label><input class="inp" id="lEmail" type="email" autocomplete="email" required value="${esc(loginEmail)}" placeholder="you@example.com"></div>
+      <div class="field"><label for="lPass">Пароль</label><input class="inp" id="lPass" type="password" minlength="6" required autocomplete="${reg?"new-password":"current-password"}"></div>
+      ${reg?'<p class="note" style="margin:0">Не меньше 6 символов.</p>':""}
+      <button class="btn" type="submit" style="justify-content:center">${reg?"Зарегистрироваться":"Войти"}</button>
+    </form>
+    <form id="emailForm" class="form" style="gap:10px" hidden><div class="field"><label for="lEmail2">Электронная почта</label><input class="inp" id="lEmail2" type="email" autocomplete="email" required value="${esc(loginEmail)}" placeholder="you@example.com"></div>
+      <button class="btn" type="submit" style="justify-content:center">Прислать ссылку для входа</button></form>
     <form id="codeForm" class="form" style="gap:10px" hidden><p class="note" id="codeNote"></p><div class="field"><label for="lCode">Код из письма</label><input class="inp" id="lCode" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="123456"></div>
       <button class="btn" type="submit" style="justify-content:center">Войти</button><button class="link" type="button" id="codeBack">Изменить почту</button></form>
-    <div class="err" id="lErr" hidden></div>
+    <div class="actions" style="justify-content:space-between">${reg?"<span></span>":'<button class="link" id="forgotPw" type="button">Забыли пароль?</button>'}<button class="link" id="magicToggle" type="button">Войти по ссылке на почту</button></div>
+    <div class="err" id="lErr" hidden></div><p class="note" id="lOk" hidden></p>
   </div></div>`;
 }
 
@@ -1027,6 +1051,11 @@ function wire(){
     if(id==="notifOn"){const r=await Notification.requestPermission();toast(r==="granted"?"Уведомления включены":"Уведомления не разрешены");t.remove()}
     if(id==="gLogin"){const {error}=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname}});if(error){$("#lErr").textContent=errText(error);$("#lErr").hidden=false}}
     if(id==="codeBack"){$("#codeForm").hidden=true;$("#emailForm").hidden=false}
+    const lm=t.closest("[data-lmode]"); if(lm){loginMode=lm.dataset.lmode;authNotice="";renderLogin()}
+    if(id==="magicToggle"){const pw=$("#pwForm"),em=$("#emailForm");$("#codeForm").hidden=true;pw.hidden=!pw.hidden;em.hidden=!pw.hidden;if(!em.hidden)$("#lEmail2").value=$("#lEmail").value;t.textContent=pw.hidden?"Войти по паролю":"Войти по ссылке на почту";const f=$("#forgotPw");if(f)f.hidden=pw.hidden}
+    if(id==="forgotPw"){const er=$("#lErr");er.hidden=true;const em=$("#lEmail").value.trim();if(!em){er.textContent="Введите почту, на которую зарегистрирован аккаунт, и нажмите «Забыли пароль?» ещё раз.";er.hidden=false;return}
+      const {error}=await sb.auth.resetPasswordForEmail(em,{redirectTo:location.origin+location.pathname});if(error){er.textContent=authErr(error);er.hidden=false;return}
+      $("#lOk").textContent="Мы отправили письмо со ссылкой для смены пароля на "+em+". Откройте его в этом же браузере.";$("#lOk").hidden=false}
     const tab=t.closest("[data-tab]"); if(tab){myTab=tab.dataset.tab;renderMy()}
   });
   document.addEventListener("change",async e=>{
@@ -1052,12 +1081,22 @@ function wire(){
     const id=e.target.id;
     if(id==="postForm") return submitPost(e);
     if(id==="chatForm") return sendMsg(e);
-    if(id==="emailForm"){e.preventDefault();const er=$("#lErr");er.hidden=true;loginEmail=$("#lEmail").value.trim();
+    if(id==="pwForm"){e.preventDefault();const er=$("#lErr");er.hidden=true;$("#lOk").hidden=true;loginEmail=$("#lEmail").value.trim();const pass=$("#lPass").value;
+      const btn=e.target.querySelector("button[type=submit]");btn.disabled=true;let res;
+      if(loginMode==="register"){const nm=(($("#lName")||{}).value||"").trim();res=await sb.auth.signUp({email:loginEmail,password:pass,options:{data:nm?{full_name:nm}:{},emailRedirectTo:location.origin+location.pathname}})}
+      else res=await sb.auth.signInWithPassword({email:loginEmail,password:pass});
+      btn.disabled=false;
+      if(res.error){er.textContent=authErr(res.error);er.hidden=false;return}
+      if(loginMode==="register"&&!res.data.session){$("#lOk").textContent="Почти готово: подтвердите почту по ссылке из письма, затем войдите.";$("#lOk").hidden=false}}
+    if(id==="newPassForm"){e.preventDefault();const er=$("#lErr");er.hidden=true;const {error}=await sb.auth.updateUser({password:$("#lNew").value});
+      if(error){er.textContent=authErr(error);er.hidden=false;return} recoveryMode=false;toast("Пароль изменён");location.hash="#my"}
+    if(id==="emailForm"){e.preventDefault();const er=$("#lErr");er.hidden=true;loginEmail=$("#lEmail2").value.trim();
+      if(Date.now()-lastMagic<60000){er.textContent="Письмо уже отправлено. Новое можно запросить через минуту: каждое новое письмо отменяет ссылку из предыдущего.";er.hidden=false;return}
       const btn=e.target.querySelector("button");btn.disabled=true;
       const {error}=await sb.auth.signInWithOtp({email:loginEmail,options:{emailRedirectTo:location.origin+location.pathname}});
       btn.disabled=false;
-      if(error){er.textContent=errText(error);er.hidden=false;return}
-      $("#emailForm").hidden=true;$("#codeForm").hidden=false;$("#codeNote").innerHTML=`Мы отправили письмо на <strong>${esc(loginEmail)}</strong>. Откройте его <strong>в этом же браузере</strong> и нажмите ссылку для входа. Письмо может попасть в «Спам». Если в письме есть код из цифр, введите его ниже.`}
+      if(error){er.textContent=authErr(error);er.hidden=false;return}
+      lastMagic=Date.now();$("#emailForm").hidden=true;$("#codeForm").hidden=false;$("#codeNote").innerHTML=`Мы отправили письмо на <strong>${esc(loginEmail)}</strong>. Откройте его <strong>в этом же браузере</strong> и нажмите ссылку для входа. Письмо может попасть в «Спам». Если в письме есть код из цифр, введите его ниже.`}
     if(id==="codeForm"){e.preventDefault();const er=$("#lErr");er.hidden=true;
       const {error}=await sb.auth.verifyOtp({email:loginEmail,token:$("#lCode").value.trim(),type:"email"});
       if(error){er.textContent=/expired|invalid/i.test(error.message)?"Код неверный или устарел. Запросите новый.":errText(error);er.hidden=false}}
@@ -1084,7 +1123,7 @@ async function onAuth(session){
   } else {me=null;isAdmin=false}
   paintMe();
   if(prev!==(user&&user.id)){await loadFavs();refreshUnread();subscribeMessages();
-    if(user&&currentView()==="login"){const to=sessionStorage.getItem("zis-after-login")||"#my";sessionStorage.removeItem("zis-after-login");location.hash=to}
+    if(user&&currentView()==="login"&&!recoveryMode){const to=sessionStorage.getItem("zis-after-login")||"#my";sessionStorage.removeItem("zis-after-login");location.hash=to}
     else route();}
 }
 
@@ -1101,11 +1140,13 @@ fetch("https://api.nbrb.by/exrates/rates/431").then(r=>r.json()).then(j=>{if(j&&
     return;
   }
   sb=window.supabase.createClient(CFG.url,CFG.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"pkce"}});
+  {const q=new URLSearchParams(location.search),h=new URLSearchParams(location.hash.replace(/^#/,""));const code=q.get("error_code")||h.get("error_code"),desc=q.get("error_description")||h.get("error_description");
+    if(code||desc){authNotice=/expired|invalid/i.test((code||"")+(desc||""))?"Ссылка из письма устарела или уже использована. Каждое новое письмо отменяет ссылку из предыдущего, поэтому открывайте ссылку из последнего письма. Или войдите по паролю.":"Не удалось войти по ссылке: "+(desc||code);history.replaceState(null,"",location.pathname+"#login")}}
   wire(); renderCats(); loadCatCounts();
   const {data:{session}}=await sb.auth.getSession();
   await onAuth(session);
   if(!user) route();
-  sb.auth.onAuthStateChange((ev,s)=>{if(ev==="SIGNED_IN"||ev==="SIGNED_OUT"||ev==="USER_UPDATED")setTimeout(()=>onAuth(s),0)});
+  sb.auth.onAuthStateChange((ev,s)=>{if(ev==="PASSWORD_RECOVERY"){recoveryMode=true;location.hash="#login";setTimeout(renderLogin,60)}if(ev==="SIGNED_IN"||ev==="SIGNED_OUT"||ev==="USER_UPDATED")setTimeout(()=>onAuth(s),0)});
 })();
 </script>
 </body>
