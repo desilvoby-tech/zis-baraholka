@@ -347,6 +347,7 @@ header{border-bottom:1px solid var(--line)}
   .toolbar h1{font-size:20px}
   .logo-txt{font-size:20px}
 }
+.price .usd{font-size:13px;font-weight:500;color:var(--muted);margin-left:4px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -453,7 +454,10 @@ const nAds=n=>n+" "+plural(n,["объявление","объявления","о�
 function fmtPrice(a){
   if(a.price_type==="free"||a.cat==="free") return '<span class="price free">Бесплатно</span>';
   if(a.price_type==="deal"||a.price==null) return '<span class="price">Договорная</span>';
-  return `<span class="price">${Number(a.price).toLocaleString("ru-RU")} р.</span>`;
+  const usdFixed=a.currency==="USD"&&a.price_usd!=null;
+  const byn=usdFixed&&USD_RATE?Math.round(a.price_usd*USD_RATE):Number(a.price);
+  const usd=usdFixed?Number(a.price_usd):(USD_RATE?Math.round(Number(a.price)/USD_RATE):null);
+  return `<span class="price">${byn.toLocaleString("ru-RU")} р.${usd!=null?` <span class="usd">≈ ${usd.toLocaleString("ru-RU")} $</span>`:""}</span>`;
 }
 function fmtDate(t){
   if(!t) return ""; const d=new Date(t), n=new Date();
@@ -702,10 +706,10 @@ async function renderPost(editId){
     if(!draft||draft.id!==+editId){
       const {data:a}=await sb.from("ads").select("*").eq("id",editId).maybeSingle();
       if(!a||a.user_id!==user.id){view().innerHTML=emptyBlock("Нельзя редактировать","Это объявление не ваше или его удалили.");return}
-      draft={...a,price:a.price==null?"":String(a.price),attrs:{...a.attrs},photos:[...a.photos],newFiles:[],removed:[]};
+      draft={...a,price:a.currency==="USD"&&a.price_usd!=null?String(a.price_usd):(a.price==null?"":String(a.price)),attrs:{...a.attrs},photos:[...a.photos],newFiles:[],removed:[]};
     }
   } else if(!draft||draft.id){
-    draft={id:null,cat:"",sub:"",title:"",descr:"",price_type:"fixed",price:"",haggle:false,cond:"used",region:"",city:me&&me.city?"":"",phone:(me&&me.phone)||"",show_phone:true,attrs:{},photos:[],newFiles:[],removed:[]};
+    draft={id:null,cat:"",sub:"",title:"",descr:"",price_type:"fixed",price:"",currency:"BYN",haggle:false,cond:"used",region:"",city:me&&me.city?"":"",phone:(me&&me.phone)||"",show_phone:true,attrs:{},photos:[],newFiles:[],removed:[]};
     if(me&&me.city){for(const [r,cs] of Object.entries(REGIONS))if(cs.includes(me.city)){draft.region=r;draft.city=me.city}}
   }
   const d=draft, c=CAT[d.cat];
@@ -723,7 +727,7 @@ async function renderPost(editId){
     <div class="panel">
       <div class="field"><span class="flabel">${d.cat==="jobs"?"Зарплата":"Цена"}</span>
         <div class="seg" role="radiogroup">${[["fixed",d.cat==="jobs"?"Указать":"Указать цену"],["deal","Договорная"],["free","Бесплатно"]].filter(x=>d.cat!=="jobs"||x[0]!=="free").map(([v,l])=>`<label><input type="radio" name="pt" value="${v}" ${d.price_type===v?"checked":""}>${l}</label>`).join("")}</div>
-        <div class="row2" ${d.price_type==="fixed"?"":"hidden"}><input class="inp" id="pPrice" inputmode="decimal" placeholder="В белорусских рублях" value="${esc(d.price)}" aria-label="Цена"><label class="chk"><input type="checkbox" id="pHaggle" ${d.haggle?"checked":""}> Возможен торг</label></div></div>
+        <div class="row2" ${d.price_type==="fixed"?"":"hidden"}><div style="display:flex;gap:6px"><input class="inp" id="pPrice" inputmode="decimal" placeholder="Сумма" value="${esc(d.price)}" aria-label="Цена"><select class="inp" id="pCur" aria-label="Валюта" style="width:auto"><option value="BYN" ${d.currency!=="USD"?"selected":""}>р.</option><option value="USD" ${d.currency==="USD"?"selected":""}>$</option></select></div><label class="chk"><input type="checkbox" id="pHaggle" ${d.haggle?"checked":""}> Возможен торг</label></div></div>
       ${["jobs","services"].includes(d.cat)?"":`<div class="field"><span class="flabel">Состояние</span><div class="seg">${[["used","Б/у"],["new","Новое"]].map(([v,l])=>`<label><input type="radio" name="cond" value="${v}" ${d.cond===v?"checked":""}>${l}</label>`).join("")}</div></div>`}
     </div>
     <div class="panel">
@@ -748,7 +752,7 @@ function renderPicBox(){
 function readForm(){
   const d=draft, v=id=>($("#"+id)||{}).value||"";
   d.cat=v("pCat");d.sub=v("pSub");d.title=v("pTitle").trim();d.descr=v("pDesc").trim();d.price=v("pPrice").trim();
-  d.region=v("pRegion");d.city=v("pCity");d.phone=v("pPhone").trim();
+  d.currency=v("pCur")||d.currency||"BYN";d.region=v("pRegion");d.city=v("pCity");d.phone=v("pPhone").trim();
   const sp=$("#pShowPhone");if(sp)d.show_phone=sp.checked; const hg=$("#pHaggle");if(hg)d.haggle=hg.checked;
   d.price_type=(document.querySelector('input[name="pt"]:checked')||{}).value||"fixed";
   d.cond=(document.querySelector('input[name="cond"]:checked')||{}).value||d.cond||"used";
@@ -770,7 +774,7 @@ async function submitPost(e){
     const attrs={};for(const f of c.fields){const v=d.attrs[f.k];if(v)attrs[f.k]=f.t==="num"?Number(String(v).replace(",",".")):v}
     const row={cat:d.cat,sub:d.sub||null,title:d.title,descr:d.descr,price_type:d.cat==="free"?"free":d.price_type,
       price:d.price_type==="fixed"&&d.cat!=="free"?Math.round(price*100)/100:null,haggle:!!d.haggle&&d.price_type==="fixed",
-      cond:["jobs","services"].includes(d.cat)?"used":d.cond,region:d.region,city:d.city,phone:d.phone||null,show_phone:!!d.show_phone&&!!d.phone,attrs,photos:[...d.photos,...newBases]};
+      cond:["jobs","services"].includes(d.cat)?"used":d.cond,region:d.region,city:d.city,phone:d.phone||null,show_phone:!!d.show_phone&&!!d.phone,attrs,photos:[...d.photos,...newBases]};{const fx=d.price_type==="fixed"&&d.cat!=="free";const isUsd=fx&&d.currency==="USD";row.currency=isUsd?"USD":"BYN";row.price_usd=isUsd?Math.round(price*100)/100:null;if(isUsd){if(!USD_RATE)throw new Error("Не удалось получить курс доллара. Попробуйте позже или укажите цену в рублях.");row.price=Math.round(price*USD_RATE)}}
     let id=d.id;
     if(id){const {error}=await sb.from("ads").update(row).eq("id",id);if(error)throw error;removePhotos(d.removed)}
     else{const {data,error}=await sb.from("ads").insert(row).select("id").single();if(error)throw error;id=data.id}
@@ -1085,6 +1089,8 @@ async function onAuth(session){
 }
 
 /* ================= СТАРТ ================= */
+let USD_RATE=(lsGet("zis-usd",null)||{}).r||null;
+fetch("https://api.nbrb.by/exrates/rates/431").then(r=>r.json()).then(j=>{if(j&&j.Cur_OfficialRate){const fresh=USD_RATE!==j.Cur_OfficialRate;USD_RATE=j.Cur_OfficialRate;lsSet("zis-usd",{r:USD_RATE});if(fresh&&sb&&!["post","edit","chat"].includes(currentView()))route()}}).catch(()=>{});
 (async function start(){
   if(!window.supabase||!CFG.url||!CFG.anonKey||/ВСТАВЬТЕ|ВАШ_/.test(CFG.anonKey)){
     $("#catsBar").hidden=true;
