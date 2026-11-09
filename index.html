@@ -1,9 +1,18 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ЗИС Барахолка</title>
-<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="ЗИС Барахолка: бесплатные объявления по всей Беларуси. Продайте ненужное и найдите нужное рядом с домом.">
+<meta name="theme-color" content="#15295a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f4b400'/%3E%3Ctext x='32' y='41' font-family='Arial' font-weight='900' font-size='22' text-anchor='middle' fill='%231a1400'%3E%D0%97%D0%98%D0%A1%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Manrope:wght@400;500;600;700&display=swap">
 <style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+
 /* Layout: navy header band with search, category rail, filter sidebar + card grid; one-column on phones */
 :root{
   --bg:#f3f5f9; --surface:#ffffff; --ink:#13213b; --muted:#5b6880; --line:#dfe4ec;
@@ -76,7 +85,7 @@ main{padding-block:20px 48px}
 .toolbar .cnt{color:var(--muted);font-variant-numeric:tabular-nums}
 .toolbar select{width:auto}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
-.card{background:var(--surface);border-radius:14px;overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column;cursor:pointer;text-align:left;padding:0;transition:box-shadow .15s}
+.card{color:inherit;text-decoration:none;background:var(--surface);border-radius:14px;overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column;cursor:pointer;text-align:left;padding:0;transition:box-shadow .15s}
 .card:hover{box-shadow:var(--shadow)}
 .ph{aspect-ratio:4/3;background:var(--brand-soft);position:relative;overflow:hidden;max-width:100%}
 .ph img{width:100%;height:100%;object-fit:cover;display:block}
@@ -186,11 +195,85 @@ textarea.inp{min-height:130px;resize:vertical}
   .toolbar h1{font-size:18px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-</style>
 
+/* ---- full site additions ---- */
+.hbtn{position:relative}
+.hbtn .dot{position:absolute;top:4px;right:4px;background:var(--danger);color:#fff;border-radius:99px;font-size:10px;min-width:16px;height:16px;line-height:16px;text-align:center;padding:0 4px}
+.avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;background:var(--brand-soft);color:var(--brand);display:inline-grid;place-items:center;font-weight:800;flex:none;overflow:hidden}
+.avatar.lg{width:72px;height:72px;font-size:26px}
+.avatar.sm{width:28px;height:28px;font-size:12px}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.stars{color:var(--accent);letter-spacing:1px;white-space:nowrap}
+.stars .off{color:var(--line)}
+.page{max-width:980px}
+.narrow{max-width:520px;margin-inline:auto}
+.crumbs{font-size:13px;color:var(--muted);display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.crumbs a{color:var(--brand);text-decoration:none}
+.adpage{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px;align-items:start}
+.adpage .gal{border-radius:14px;overflow:hidden;align-self:stretch}
+.adside{display:flex;flex-direction:column;gap:14px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 84px)}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.box h1{margin:0;font-size:22px;line-height:1.25;text-wrap:balance;overflow-wrap:anywhere}
+.box .price{font-size:28px}
+.sellercard{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}
+.sellercard .nm{font-weight:700}
+.sub2{margin:0;font-size:16px;font-weight:700}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--ink);text-decoration:none}
+.chip[aria-pressed="true"]{background:var(--brand-soft);border-color:var(--brand);color:var(--brand)}
+.more{display:flex;justify-content:center;margin-top:16px}
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+/* chat */
+.convs{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.conv{display:flex;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
+.conv:last-child{border-bottom:0}
+.conv:hover{background:var(--bg)}
+.conv .cmain{min-width:0;flex:1}
+.conv .ct{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.conv .cl{color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.conv .cthumb{width:52px;height:40px;border-radius:8px;object-fit:cover;background:var(--brand-soft);flex:none}
+.conv .unread{background:var(--accent);color:var(--accent-ink);border-radius:99px;font-size:12px;font-weight:800;padding:1px 8px}
+.chat{background:var(--surface);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;height:min(72vh,720px);min-height:380px}
+.chathead{display:flex;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}
+.chathead a{color:inherit}
+.msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:6px}
+.msg{max-width:78%;padding:8px 12px;border-radius:14px;background:var(--bg);align-self:flex-start;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg.me{align-self:flex-end;background:var(--brand-soft)}
+.msg time{display:block;font-size:11px;color:var(--muted);margin-top:2px;text-align:right}
+.chatform{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line)}
+.chatform textarea{flex:1;min-height:42px;max-height:140px;resize:none}
+.review{border-bottom:1px solid var(--line);padding-block:10px;display:flex;flex-direction:column;gap:4px}
+.review:last-child{border-bottom:0}
+.starpick{display:flex;gap:2px}
+.starpick button{border:0;background:none;font-size:26px;line-height:1;color:var(--line);padding:0 2px}
+.starpick button.on{color:var(--accent)}
+.attrs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.attrs div{background:var(--bg);border-radius:10px;padding:8px 10px}
+.attrs dt{font-size:12px;color:var(--muted)} .attrs dd{margin:0;font-weight:700}
+.setup{max-width:640px;margin:40px auto}
+.setup code{background:var(--bg);padding:2px 6px;border-radius:6px}
+.bottomnav{display:none}
+.userhead{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+@media (max-width:860px){
+  .adpage{grid-template-columns:minmax(0,1fr)}
+  .adside{position:static}
+}
+@media (max-width:640px){
+  .hnav{display:none}
+  main{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  .bottomnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--line);padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));justify-content:space-around}
+  .bottomnav a{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:600;color:var(--muted);text-decoration:none;position:relative;padding:4px 8px}
+  .bottomnav a svg{width:22px;height:22px}
+  .bottomnav a[aria-current="page"]{color:var(--brand)}
+  .bottomnav .dot{position:absolute;top:0;right:4px;background:var(--danger);color:#fff;border-radius:99px;font-size:10px;min-width:16px;height:16px;line-height:16px;text-align:center;padding:0 4px}
+  .chat{height:calc(100vh - 220px)}
+}
+</style>
+</head>
+<body>
 <header>
   <div class="wrap hrow">
-    <a class="logo" href="#home" aria-label="ЗИС Барахолка, на главную">
+    <a class="logo" href="#" aria-label="ЗИС Барахолка, на главную">
       <span class="logo-mark">ЗИС</span>
       <span class="logo-txt">Барахолка<small>Объявления по Беларуси</small></span>
     </a>
@@ -200,550 +283,745 @@ textarea.inp{min-height:130px;resize:vertical}
       <button type="submit">Найти</button>
     </form>
     <nav class="hnav">
-      <a class="hbtn" href="#favs" title="Избранное"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.4-9.3-9A5.3 5.3 0 0 1 12 6a5.3 5.3 0 0 1 9.3 6c-2.3 4.6-9.3 9-9.3 9z"/></svg><span class="lbl">Избранное</span><span class="badge" id="favCount" hidden>0</span></a>
-      <a class="hbtn" href="#reports" id="repLink" title="Жалобы" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg><span class="lbl">Жалобы</span><span class="badge">0</span></a>
-      <a class="hbtn" href="#my" title="Мои объявления"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span class="lbl">Мои</span></a>
+      <a class="hbtn" href="#favs" title="Избранное"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.4-9.3-9A5.3 5.3 0 0 1 12 6a5.3 5.3 0 0 1 9.3 6c-2.3 4.6-9.3 9-9.3 9z"/></svg><span class="lbl">Избранное</span></a>
+      <a class="hbtn" href="#msgs" title="Сообщения"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H8l-4 4z"/></svg><span class="lbl">Сообщения</span><span class="dot" data-unread hidden>0</span></a>
+      <a class="hbtn" href="#admin" id="adminLink" title="Модерация" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg><span class="lbl">Жалобы</span></a>
+      <a class="hbtn" href="#my" id="meLink" title="Кабинет"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><span class="lbl" id="meLabel">Войти</span></a>
       <a class="hbtn post-btn" href="#post"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg><span class="lbl">Подать объявление</span></a>
     </nav>
   </div>
 </header>
 
-<div class="cats"><div class="wrap cat-scroll"><div class="cat-row" id="catRow"></div></div></div>
+<div class="cats" id="catsBar"><div class="wrap cat-scroll"><div class="cat-row" id="catRow"></div></div></div>
 
 <main class="wrap" id="view"></main>
-<div id="modalRoot"></div>
+
+<nav class="bottomnav" aria-label="Навигация">
+  <a href="#" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Главная</a>
+  <a href="#favs" data-nav="favs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.4-9.3-9A5.3 5.3 0 0 1 12 6a5.3 5.3 0 0 1 9.3 6c-2.3 4.6-9.3 9-9.3 9z"/></svg>Избранное</a>
+  <a href="#post" data-nav="post"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Подать</a>
+  <a href="#msgs" data-nav="msgs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H8l-4 4z"/></svg>Сообщения<span class="dot" data-unread hidden>0</span></a>
+  <a href="#my" data-nav="my"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Кабинет</a>
+</nav>
 <div class="toast" id="toast" hidden></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
 <script>
+"use strict";
+/* ================= ДАННЫЕ ================= */
 const REGIONS = {
   "Минск":["Минск"],
-  "Брестская обл.":["Брест","Барановичи","Пинск","Кобрин","Берёза","Лунинец","Ивацевичи","Пружаны"],
-  "Витебская обл.":["Витебск","Орша","Новополоцк","Полоцк","Поставы","Глубокое","Лепель"],
-  "Гомельская обл.":["Гомель","Мозырь","Жлобин","Светлогорск","Речица","Калинковичи","Рогачёв","Добруш","Хойники"],
-  "Гродненская обл.":["Гродно","Лида","Слоним","Волковыск","Сморгонь","Новогрудок","Щучин"],
-  "Минская обл.":["Борисов","Солигорск","Молодечно","Жодино","Слуцк","Дзержинск","Марьина Горка","Заславль","Фаниполь"],
-  "Могилёвская обл.":["Могилёв","Бобруйск","Горки","Кричев","Осиповичи","Шклов","Быхов"]
+  "Брестская обл.":["Брест","Барановичи","Пинск","Кобрин","Берёза","Лунинец","Ивацевичи","Пружаны","Столин","Жабинка"],
+  "Витебская обл.":["Витебск","Орша","Новополоцк","Полоцк","Поставы","Глубокое","Лепель","Новолукомль"],
+  "Гомельская обл.":["Гомель","Мозырь","Жлобин","Светлогорск","Речица","Калинковичи","Рогачёв","Добруш","Хойники","Петриков","Ельск","Буда-Кошелёво","Ветка","Чечерск"],
+  "Гродненская обл.":["Гродно","Лида","Слоним","Волковыск","Сморгонь","Новогрудок","Щучин","Мосты","Ошмяны"],
+  "Минская обл.":["Борисов","Солигорск","Молодечно","Жодино","Слуцк","Дзержинск","Марьина Горка","Заславль","Фаниполь","Смолевичи","Логойск","Вилейка","Несвиж"],
+  "Могилёвская обл.":["Могилёв","Бобруйск","Горки","Кричев","Осиповичи","Шклов","Быхов","Климовичи"]
 };
 const I = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const BRAND={k:"brand",l:"Марка / бренд",t:"text"};
 const CATS = [
-  {id:"realty",name:"Недвижимость",ic:I('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>')},
-  {id:"auto",name:"Авто и транспорт",ic:I('<path d="M5 16l1.5-5h11L19 16"/><rect x="3" y="16" width="18" height="3" rx="1"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/>')},
-  {id:"electronics",name:"Электроника",ic:I('<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>')},
-  {id:"computers",name:"Компьютеры",ic:I('<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/>')},
-  {id:"home",name:"Дом и сад",ic:I('<path d="M4 14h16v4H4z"/><path d="M6 14V9a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v5"/><path d="M5 18v2M19 18v2"/>')},
-  {id:"repair",name:"Ремонт и стройка",ic:I('<path d="M14 6l4 4-9 9H5v-4z"/><path d="M13 7l4 4"/>')},
-  {id:"clothes",name:"Одежда и обувь",ic:I('<path d="M8 3l4 2 4-2 4 4-3 3v11H7V10L4 7z"/>')},
-  {id:"kids",name:"Детские товары",ic:I('<circle cx="9" cy="19" r="2"/><circle cx="17" cy="19" r="2"/><path d="M3 5h2l2 9h11l2-6H7"/>')},
-  {id:"hobby",name:"Хобби и спорт",ic:I('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>')},
-  {id:"animals",name:"Животные",ic:I('<circle cx="7" cy="9" r="2"/><circle cx="17" cy="9" r="2"/><circle cx="10" cy="5" r="1.6"/><circle cx="14" cy="5" r="1.6"/><path d="M8 17c0-3 2-5 4-5s4 2 4 5-2 3-4 2-4 1-4-2z"/>')},
-  {id:"beauty",name:"Красота и здоровье",ic:I('<path d="M9 3h6v4H9z"/><path d="M8 7h8v13a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1z"/>')},
-  {id:"jobs",name:"Работа",ic:I('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>')},
-  {id:"services",name:"Услуги",ic:I('<path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/>')},
-  {id:"free",name:"Отдам даром",ic:I('<rect x="3" y="9" width="18" height="12" rx="1"/><path d="M3 13h18M12 9v12M12 9c-2-4-6-4-6-1s6 1 6 1 6 2 6-1-4-3-6 1"/>')}
+  {id:"realty",name:"Недвижимость",ic:I('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>'),
+   subs:["Квартиры","Комнаты","Дома и дачи","Участки","Гаражи и стоянки","Коммерческая"],
+   fields:[{k:"deal",l:"Тип сделки",t:"sel",o:["Продажа","Долгосрочная аренда","Посуточно"]},{k:"rooms",l:"Комнат",t:"num"},{k:"area",l:"Площадь",t:"num",u:"м²"},{k:"floor",l:"Этаж",t:"num"},{k:"year",l:"Год постройки",t:"num"}]},
+  {id:"auto",name:"Авто и транспорт",ic:I('<path d="M5 16l1.5-5h11L19 16"/><rect x="3" y="16" width="18" height="3" rx="1"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/>'),
+   subs:["Легковые авто","Мотоциклы и мопеды","Грузовики и спецтехника","Запчасти","Шины и диски","Аксессуары"],
+   fields:[{k:"brand",l:"Марка",t:"text"},{k:"model",l:"Модель",t:"text"},{k:"year",l:"Год выпуска",t:"num"},{k:"mileage",l:"Пробег",t:"num",u:"км"},{k:"fuel",l:"Топливо",t:"sel",o:["Бензин","Дизель","Газ/бензин","Гибрид","Электро"]},{k:"gear",l:"Коробка",t:"sel",o:["Механика","Автомат","Робот","Вариатор"]},{k:"body",l:"Кузов",t:"sel",o:["Седан","Универсал","Хэтчбек","Внедорожник","Минивэн","Купе","Пикап","Фургон"]}]},
+  {id:"electronics",name:"Электроника",ic:I('<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>'),
+   subs:["Мобильные телефоны","Планшеты","Наушники и аудио","Телевизоры и видео","Фото и видеокамеры","Игры и приставки","Умные часы","Аксессуары"],
+   fields:[BRAND,{k:"model",l:"Модель",t:"text"},{k:"memory",l:"Память",t:"num",u:"ГБ"}]},
+  {id:"computers",name:"Компьютеры",ic:I('<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/>'),
+   subs:["Ноутбуки","Системные блоки","Комплектующие","Мониторы","Оргтехника","Периферия"],
+   fields:[BRAND,{k:"model",l:"Модель",t:"text"},{k:"ram",l:"Оперативная память",t:"num",u:"ГБ"}]},
+  {id:"home",name:"Дом и сад",ic:I('<path d="M4 14h16v4H4z"/><path d="M6 14V9a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v5"/><path d="M5 18v2M19 18v2"/>'),
+   subs:["Мебель","Крупная бытовая техника","Мелкая бытовая техника","Посуда и кухня","Текстиль и декор","Сад и огород","Освещение"],fields:[BRAND]},
+  {id:"repair",name:"Ремонт и стройка",ic:I('<path d="M14 6l4 4-9 9H5v-4z"/><path d="M13 7l4 4"/>'),
+   subs:["Инструменты","Стройматериалы","Сантехника","Отопление","Двери и окна","Электрика"],fields:[BRAND]},
+  {id:"clothes",name:"Одежда и обувь",ic:I('<path d="M8 3l4 2 4-2 4 4-3 3v11H7V10L4 7z"/>'),
+   subs:["Женская одежда","Мужская одежда","Женская обувь","Мужская обувь","Сумки и аксессуары","Часы и украшения"],
+   fields:[{k:"size",l:"Размер",t:"text"},BRAND]},
+  {id:"kids",name:"Детские товары",ic:I('<circle cx="9" cy="19" r="2"/><circle cx="17" cy="19" r="2"/><path d="M3 5h2l2 9h11l2-6H7"/>'),
+   subs:["Детская одежда","Детская обувь","Коляски","Автокресла","Игрушки","Детская мебель","Товары для мам"],
+   fields:[{k:"age",l:"Возраст",t:"text"},{k:"gender",l:"Для кого",t:"sel",o:["Мальчик","Девочка","Унисекс"]}]},
+  {id:"hobby",name:"Хобби и спорт",ic:I('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>'),
+   subs:["Спорт и фитнес","Велосипеды","Туризм","Рыбалка и охота","Музыкальные инструменты","Книги","Коллекционирование","Билеты"],fields:[BRAND]},
+  {id:"animals",name:"Животные",ic:I('<circle cx="7" cy="9" r="2"/><circle cx="17" cy="9" r="2"/><circle cx="10" cy="5" r="1.6"/><circle cx="14" cy="5" r="1.6"/><path d="M8 17c0-3 2-5 4-5s4 2 4 5-2 3-4 2-4 1-4-2z"/>'),
+   subs:["Собаки","Кошки","Птицы","Аквариумистика","Грызуны","Сельхоз животные","Товары для животных"],
+   fields:[{k:"breed",l:"Порода",t:"text"},{k:"age",l:"Возраст",t:"text"}]},
+  {id:"beauty",name:"Красота и здоровье",ic:I('<path d="M9 3h6v4H9z"/><path d="M8 7h8v13a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1z"/>'),
+   subs:["Косметика","Парфюмерия","Уход и гигиена","Медтехника"],fields:[BRAND]},
+  {id:"jobs",name:"Работа",ic:I('<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>'),
+   subs:["Вакансии","Резюме"],
+   fields:[{k:"sched",l:"График",t:"sel",o:["Полный день","Сменный","Частичная занятость","Удалённо","Вахта"]},{k:"exp",l:"Опыт",t:"sel",o:["Без опыта","1–3 года","3–6 лет","Более 6 лет"]}]},
+  {id:"services",name:"Услуги",ic:I('<path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/>'),
+   subs:["Ремонт техники","Строительство и ремонт","Перевозки","Красота","Обучение и репетиторы","Компьютерная помощь","Праздники","Прочие услуги"],fields:[]},
+  {id:"free",name:"Отдам даром",ic:I('<rect x="3" y="9" width="18" height="12" rx="1"/><path d="M3 13h18M12 9v12M12 9c-2-4-6-4-6-1s6 1 6 1 6 2 6-1-4-3-6 1"/>'),subs:[],fields:[]}
 ];
 const CAT = Object.fromEntries(CATS.map(c=>[c.id,c]));
+const REASONS=["Мошенничество","Товар уже продан","Неверная цена или категория","Запрещённый товар","Оскорбления или спам","Другое"];
 const NOPH = I('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 17l-5-5-9 7"/>');
 const HEART = '<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 21s-7-4.4-9.3-9A5.3 5.3 0 0 1 12 6a5.3 5.3 0 0 1 9.3 6c-2.3 4.6-9.3 9-9.3 9z"/></svg>';
+const PAGE=40;
 
-const S = {q:"",region:"",city:"",cat:"",min:"",max:"",sort:"new",photo:false,cond:"",seller:""};
-let db=null, user=null, uid=null, canWrite=null, owner=false, demo=false;
-let ads=[], myItems={}, favs=new Set(), searches=[], loaded=false, loadErr="", readOnly=false;
-let filtersOpen=false, draft=null, lastView="#home";
-let viewCounts={}, myViews=[], qa=[], myQa={}, reports=[], myReports={};
-let layoutMode=(()=>{try{return localStorage.getItem("zis-layout")||"grid"}catch(_){return "grid"}})();
-const REASONS=["Мошенничество","Товар уже продан","Неверная цена или категория","Запрещённый товар","Оскорбления или спам","Другое"];
-function getRecent(){try{return JSON.parse(localStorage.getItem("zis-recent")||"[]")}catch(_){return []}}
-function addRecent(k){try{const r=getRecent().filter(x=>x!==k);r.unshift(k);localStorage.setItem("zis-recent",JSON.stringify(r.slice(0,12)))}catch(_){}}
-const bumpAt=a=>a.bumped||a.created||0;
-
+/* ================= УТИЛИТЫ ================= */
 const $ = s=>document.querySelector(s);
+const view = ()=>$("#view");
 const esc = s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const rid = ()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
-const key = a=>a.uid+"|"+a.id;
+function plural(n,f){const m=n%10,h=n%100;return f[(m===1&&h!==11)?0:(m>=2&&m<=4&&(h<12||h>14))?1:2]}
+const nAds=n=>n+" "+plural(n,["объявление","объявления","объявлений"]);
 function fmtPrice(a){
-  if(a.priceType==="free"||a.cat==="free") return '<span class="price free">Бесплатно</span>';
-  if(a.priceType==="deal"||a.price==null) return '<span class="price">Договорная</span>';
+  if(a.price_type==="free"||a.cat==="free") return '<span class="price free">Бесплатно</span>';
+  if(a.price_type==="deal"||a.price==null) return '<span class="price">Договорная</span>';
   return `<span class="price">${Number(a.price).toLocaleString("ru-RU")} р.</span>`;
 }
 function fmtDate(t){
   if(!t) return ""; const d=new Date(t), n=new Date();
   const hm=d.toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});
   const day=x=>new Date(x.getFullYear(),x.getMonth(),x.getDate()).getTime();
-  const diff=(day(n)-day(d))/864e5;
+  const diff=Math.round((day(n)-day(d))/864e5);
   if(diff===0) return "Сегодня, "+hm; if(diff===1) return "Вчера, "+hm;
   return d.toLocaleDateString("ru-RU",{day:"numeric",month:"short",year:d.getFullYear()===n.getFullYear()?undefined:"numeric"});
 }
-function toast(msg){const t=$("#toast");t.textContent=msg;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2600)}
-function regionOptions(sel,withAll=true){
-  return (withAll?`<option value="">Вся Беларусь</option>`:`<option value="">Выберите область</option>`)+Object.keys(REGIONS).map(r=>`<option ${r===sel?"selected":""}>${esc(r)}</option>`).join("");
+const sinceText=t=>{const d=new Date(t);return "на сайте с "+d.toLocaleDateString("ru-RU",{month:"long",year:"numeric"})};
+function toast(msg){const t=$("#toast");t.textContent=msg;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,3000)}
+function regionOptions(sel,all="Вся Беларусь"){
+  return `<option value="">${all}</option>`+Object.keys(REGIONS).map(r=>`<option ${r===sel?"selected":""}>${esc(r)}</option>`).join("");
 }
+function cityOptions(region,sel,all="Все города"){
+  return `<option value="">${all}</option>`+(REGIONS[region]||[]).map(c=>`<option ${c===sel?"selected":""}>${esc(c)}</option>`).join("");
+}
+function stars(r){const n=Math.round(r||0);return `<span class="stars" aria-label="Оценка ${r?r.toFixed(1):0} из 5">${"★".repeat(n)}<span class="off">${"★".repeat(5-n)}</span></span>`}
+function avatarHtml(p,cls=""){
+  const name=(p&&p.name)||"?";
+  if(p&&p.avatar) return `<span class="avatar ${cls}"><img alt="" src="${esc(avatarUrl(p.avatar))}"></span>`;
+  return `<span class="avatar ${cls}" aria-hidden="true">${esc(name.trim().charAt(0).toUpperCase()||"?")}</span>`;
+}
+function emptyBlock(title,text,cta=""){
+  return `<div class="empty">${NOPH.replace("<svg",'<svg width="48" height="48" style="color:var(--brand)"')}<h2>${title}</h2>${text?`<p>${text}</p>`:""}${cta}</div>`;
+}
+const loadingBlock=(t="Загружаем…")=>`<div class="empty"><p>${t}</p></div>`;
+function errText(e){
+  const m=(e&&(e.message||e.error_description))||"";
+  if(/раз в сутки/.test(m)) return "Поднять объявление можно раз в сутки.";
+  if(/row-level security|violates/i.test(m)) return "Нет прав на это действие.";
+  if(/rate limit|too many/i.test(m)) return "Слишком много попыток. Подождите немного и попробуйте снова.";
+  if(/Failed to fetch|NetworkError/i.test(m)) return "Нет связи с сервером. Проверьте интернет.";
+  return m||"Что-то пошло не так. Попробуйте ещё раз.";
+}
+function lsGet(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(_){return d}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}}
+async function copyText(t,msg){try{await navigator.clipboard.writeText(t);toast(msg)}catch(_){prompt("Скопируйте:",t)}}
 
-/* ---------- photos stored in db ---------- */
-const picCache=new Map();
-function getPic(owner,id){
-  const k=owner+"/"+id;
-  if(!picCache.has(k)) picCache.set(k, db? db.doc("pics/"+owner+"/p/"+id).get().then(s=>s.exists?(s.data()||{}).d||null:null).catch(()=>{picCache.delete(k);return null}) : Promise.resolve(null));
-  return picCache.get(k);
+/* ================= SUPABASE ================= */
+const CFG = window.ZIS_CONFIG||{};
+let sb=null, user=null, me=null, isAdmin=false, favs=new Set(), unread=0, catCounts={}, msgChannel=null;
+const photoUrl=(base,thumb)=>sb.storage.from("photos").getPublicUrl(base+(thumb?"_t":"")+".jpg").data.publicUrl;
+const avatarUrl=base=>/^https?:/.test(base)?base:sb.storage.from("photos").getPublicUrl(base+".jpg").data.publicUrl;
+const profCache=new Map();
+async function profiles(ids){
+  const need=[...new Set(ids)].filter(id=>id&&!profCache.has(id));
+  if(need.length){const {data}=await sb.from("profiles").select("*").in("id",need);(data||[]).forEach(p=>profCache.set(p.id,p))}
+  return Object.fromEntries([...new Set(ids)].map(id=>[id,profCache.get(id)]));
 }
-const io = "IntersectionObserver" in window ? new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){io.unobserve(e.target);loadImg(e.target)}}),{rootMargin:"300px"}) : null;
-function loadImg(img){getPic(img.dataset.o,img.dataset.p).then(src=>{if(src){img.src=src;img.hidden=false;const n=img.parentElement.querySelector(".noph");if(n)n.hidden=true}})}
-function hookImgs(root){root.querySelectorAll("img[data-p]").forEach(img=>io?io.observe(img):loadImg(img))}
-function compress(file,max,limit){
+function compressToBlob(file,max,quality){
   return new Promise((res,rej)=>{
-    const url=URL.createObjectURL(file); const im=new Image();
-    im.onload=()=>{
-      let q=.82, m=max, out="";
-      for(let i=0;i<7;i++){
-        const sc=Math.min(1,m/Math.max(im.width,im.height));
-        const c=document.createElement("canvas"); c.width=Math.round(im.width*sc); c.height=Math.round(im.height*sc);
-        c.getContext("2d").drawImage(im,0,0,c.width,c.height);
-        out=c.toDataURL("image/jpeg",q);
-        if(out.length<limit) break; q=Math.max(.5,q-.08); m=Math.round(m*.85);
-      }
-      URL.revokeObjectURL(url); res(out);
-    };
-    im.onerror=()=>{URL.revokeObjectURL(url);rej(new Error("bad image"))};
+    const url=URL.createObjectURL(file), im=new Image();
+    im.onload=()=>{const sc=Math.min(1,max/Math.max(im.width,im.height));const c=document.createElement("canvas");
+      c.width=Math.round(im.width*sc);c.height=Math.round(im.height*sc);c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+      URL.revokeObjectURL(url);c.toBlob(b=>b?res(b):rej(new Error("Не удалось обработать фото")),"image/jpeg",quality)};
+    im.onerror=()=>{URL.revokeObjectURL(url);rej(new Error("Файл не похож на фото"))};
     im.src=url;
   });
 }
-
-/* ---------- writes ---------- */
-let chain=Promise.resolve();
-function saveMine(items){
-  chain=chain.catch(()=>{}).then(()=>db.collection("ads").doc(uid).set({items}));
-  return chain;
+async function uploadPhoto(file,withThumb=true){
+  const base=user.id+"/"+rid();
+  const full=await compressToBlob(file,1600,.82);
+  let r=await sb.storage.from("photos").upload(base+".jpg",full,{contentType:"image/jpeg",upsert:false});
+  if(r.error) throw r.error;
+  if(withThumb){const th=await compressToBlob(file,480,.75);r=await sb.storage.from("photos").upload(base+"_t.jpg",th,{contentType:"image/jpeg"});if(r.error) throw r.error}
+  return base;
 }
-function writeErr(e){
-  if(e&&e.code==="invalid_argument"){readOnly=true;return "У вас нет права подавать объявления на этой площадке. Попросите владельца выдать доступ «Участник» (Contributor)."}
-  if(e&&e.code==="quota_exceeded") return "Хранилище площадки заполнено. Удалите старые объявления и попробуйте снова.";
-  if(e&&e.code==="resource_exhausted") return "Слишком много действий подряд. Подождите минуту.";
-  return "Не удалось сохранить. Проверьте соединение и попробуйте ещё раз.";
-}
+function removePhotos(bases){const paths=bases.flatMap(b=>[b+".jpg",b+"_t.jpg"]);if(paths.length) sb.storage.from("photos").remove(paths).catch(()=>{})}
+function needLogin(){if(user) return false;sessionStorage.setItem("zis-after-login",location.hash);location.hash="#login";return true}
 
-/* ---------- filtering ---------- */
-function filtered(list){
-  const q=S.q.trim().toLowerCase();
-  let r=list.filter(a=>{
-    if(a.sold) return false;
-    if(S.seller&&a.uid!==S.seller) return false;
-    if(S.cat&&a.cat!==S.cat) return false;
-    if(S.region&&a.region!==S.region) return false;
-    if(S.city&&a.city!==S.city) return false;
-    if(S.cond&&a.cond!==S.cond) return false;
-    if(S.photo&&!(a.pics&&a.pics.length)) return false;
-    const p=a.priceType==="fixed"?Number(a.price):null;
-    if(S.min!==""&&(p==null||p<Number(S.min))) return false;
-    if(S.max!==""&&(p==null||p>Number(S.max))) return false;
-    if(q&&!((a.title||"")+" "+(a.desc||"")).toLowerCase().includes(q)) return false;
-    return true;
-  });
-  const pv=a=>a.priceType==="fixed"?Number(a.price):(a.priceType==="free"?0:Infinity);
-  if(S.sort==="new") r.sort((a,b)=>bumpAt(b)-bumpAt(a));
-  if(S.sort==="views") r.sort((a,b)=>(viewCounts[key(b)]||0)-(viewCounts[key(a)]||0));
-  if(S.sort==="cheap") r.sort((a,b)=>pv(a)-pv(b));
-  if(S.sort==="dear") r.sort((a,b)=>{const x=pv(a),y=pv(b);return (y===Infinity?-1:y)-(x===Infinity?-1:x)});
-  return r;
+/* ================= ПОИСК ================= */
+let S=freshFilters();
+function freshFilters(){return {q:"",cat:"",sub:"",region:"",city:"",cond:"",photo:false,min:"",max:"",eq:{},nmin:{},nmax:{},sort:"new",user:""}}
+function searchParams(s,offset=0,limit=PAGE){
+  const p={sort:s.sort,limit,offset};
+  ["q","cat","sub","region","city","cond","min","max","user"].forEach(k=>{if(s[k]!==""&&s[k]!=null)p[k]=String(s[k]).trim()});
+  if(s.photo)p.photo=true;
+  ["eq","nmin","nmax"].forEach(k=>{const o={};for(const [a,v] of Object.entries(s[k]||{}))if(v!==""&&v!=null)o[a]=String(v);if(Object.keys(o).length)p[k]=o});
+  return p;
+}
+async function search(s,offset=0,limit=PAGE){
+  const {data,error}=await sb.rpc("search_ads",{p:searchParams(s,offset,limit)});
+  if(error) throw error; return data||{total:0,items:[]};
+}
+const anyFilter=s=>!!(s.q||s.cat||s.region||s.min||s.max||s.cond||s.photo||Object.values(s.eq).some(Boolean)||Object.values(s.nmin).some(Boolean)||Object.values(s.nmax).some(Boolean));
+function searchLabel(s){
+  const parts=[]; if(s.q)parts.push("«"+s.q+"»"); if(s.cat&&CAT[s.cat])parts.push(s.sub||CAT[s.cat].name);
+  parts.push(s.city||s.region||"Вся Беларусь"); if(s.min||s.max)parts.push((s.min?"от "+s.min:"")+(s.max?" до "+s.max:"")+" р.");
+  if(s.cond)parts.push(s.cond==="new"?"новое":"б/у"); if(s.photo)parts.push("с фото");
+  for(const [k,v] of Object.entries(s.eq||{}))if(v)parts.push(v);
+  return parts.join(" · ");
 }
 
-/* ---------- rendering ---------- */
-function renderCats(){
-  const counts={}; ads.forEach(a=>counts[a.cat]=(counts[a.cat]||0)+1);
-  $("#catRow").innerHTML=CATS.map(c=>`<button class="cat" data-cat="${c.id}" aria-pressed="${S.cat===c.id}"><span class="ic">${c.ic}</span>${esc(c.name)}<span class="n">${loaded?(counts[c.id]||0):"…"}</span></button>`).join("");
-}
+/* ================= КАРТОЧКИ ================= */
 function card(a){
-  const n=(a.pics||[]).length;
-  const tags=(a.sold?'<span class="tag sold">Продано</span>':"")+(a.haggle&&a.priceType==="fixed"?'<span class="tag">Торг</span>':"")+(a.cond==="new"?'<span class="tag">Новое</span>':"");
-  return `<div class="card${a.sold?" is-sold":""}" role="button" tabindex="0" data-open="${esc(key(a))}">
-    <div class="ph"><div class="noph">${NOPH}</div>${n?`<img alt="" hidden data-o="${esc(a.uid)}" data-p="${esc(a.pics[0])}t">`:""}${n>1?`<span class="np">${n} фото</span>`:""}
-      <button class="fav" data-fav="${esc(key(a))}" aria-pressed="${favs.has(key(a))}" aria-label="В избранное">${HEART}</button></div>
+  const n=(a.photos||[]).length;
+  const tags=(a.status==="sold"?'<span class="tag sold">Продано</span>':"")+(a.haggle&&a.price_type==="fixed"?'<span class="tag">Торг</span>':"")+(a.cond==="new"?'<span class="tag">Новое</span>':"");
+  return `<a class="card${a.status==="sold"?" is-sold":""}" href="#ad/${a.id}">
+    <div class="ph"><div class="noph"${n?" hidden":""}>${NOPH}</div>${n?`<img alt="" loading="lazy" src="${esc(photoUrl(a.photos[0],true))}">`:""}${n>1?`<span class="np">${n} фото</span>`:""}
+      <button type="button" class="fav" data-fav="${a.id}" aria-pressed="${favs.has(a.id)}" aria-label="В избранное">${HEART}</button></div>
     <div class="cbody">${fmtPrice(a)}<div class="ctitle">${esc(a.title)}</div>${tags?`<div class="tags">${tags}</div>`:""}
-      <div class="meta"><span>${esc(a.city)}</span><span>${esc(fmtDate(bumpAt(a)))}</span></div></div></div>`;
+      <div class="meta"><span>${esc(a.city)}</span><span>${esc(fmtDate(a.bumped_at))}</span></div></div></a>`;
 }
-function emptyBlock(title,text,cta=true){
-  return `<div class="empty">${NOPH.replace("<svg",'<svg width="48" height="48" style="color:var(--brand)"')}<h2>${title}</h2><p>${text}</p>${cta&&canPost()?'<a class="btn" href="#post">Подать объявление</a>':""}</div>`;
-}
-const canPost=()=>!!db&&!!uid&&canWrite!==false&&!readOnly;
+const grid=(items,list)=>`<div class="grid${list?" list":""}">${items.map(card).join("")}</div>`;
+let layoutMode=lsGet("zis-layout","grid");
 
-function renderHome(){
-  const r=filtered(ads);
-  const sellerAd=S.seller?ads.find(a=>a.uid===S.seller):null;
-  const title=S.seller?`Объявления продавца ${esc(sellerAd?sellerAd.name:"")}`:S.cat?CAT[S.cat].name:(S.q?`Поиск: «${esc(S.q)}»`:"Все объявления");
-  const anyFilter=!!(S.q||S.region||S.cat||S.min||S.max||S.cond||S.photo);
-  const recent=(!anyFilter&&!S.seller)?getRecent().map(k=>ads.find(a=>key(a)===k)).filter(a=>a&&!a.sold).slice(0,6):[];
-  const where=S.city||S.region||"Вся Беларусь";
-  let body;
-  if(!loaded&&!loadErr) body=`<div class="empty"><p>Загружаем объявления…</p></div>`;
-  else if(loadErr) body=emptyBlock("Объявления сейчас недоступны",esc(loadErr),false);
-  else if(!ads.length) body=emptyBlock("Здесь пока нет объявлений","Продайте ненужное или найдите нужное по всей Беларуси. Первое объявление появится здесь сразу после публикации.");
-  else if(!r.length) body=emptyBlock("Ничего не найдено","Попробуйте изменить запрос, убрать часть фильтров или выбрать другой регион.",false);
-  else body=`<div class="grid ${layoutMode==="list"?"list":""}">${r.map(card).join("")}</div>`;
-  if(recent.length&&loaded) body=`<div class="recent"><h3 class="sub">Вы недавно смотрели</h3><div class="grid">${recent.map(card).join("")}</div></div>`+body;
-  if(S.seller) body=`<div class="sellerbar"><button class="link" id="sellerBack">← Все объявления</button><span class="note">${r.length} ${plural(r.length,["активное объявление","активных объявления","активных объявлений"])}</span></div>`+body;
-  const cities=S.region?REGIONS[S.region]:[];
-  $("#view").innerHTML=`<div class="layout">
+/* ================= КАТЕГОРИИ ================= */
+function renderCats(){
+  $("#catRow").innerHTML=CATS.map(c=>`<button class="cat" data-cat="${c.id}" aria-pressed="${S.cat===c.id}"><span class="ic">${c.ic}</span>${esc(c.name)}<span class="n">${catCounts[c.id]||0}</span></button>`).join("");
+}
+async function loadCatCounts(){const {data}=await sb.rpc("cat_counts");catCounts=data||{};renderCats()}
+
+/* ================= ГЛАВНАЯ / ПОИСК ================= */
+let homeItems=[], homeTotal=0, filtersOpen=false;
+function fieldFilters(cat){
+  const c=CAT[cat]; if(!c) return "";
+  let h=c.subs.length?`<div class="field"><label for="fSub">Подкатегория</label><select class="inp" id="fSub"><option value="">Все</option>${c.subs.map(s=>`<option ${s===S.sub?"selected":""}>${esc(s)}</option>`).join("")}</select></div>`:"";
+  for(const f of c.fields){
+    if(f.t==="sel") h+=`<div class="field"><label for="fe-${f.k}">${esc(f.l)}</label><select class="inp" data-eq="${f.k}" id="fe-${f.k}"><option value="">Любой</option>${f.o.map(o=>`<option ${S.eq[f.k]===o?"selected":""}>${esc(o)}</option>`).join("")}</select></div>`;
+    if(f.t==="num") h+=`<div class="field"><span class="flabel">${esc(f.l)}${f.u?", "+f.u:""}</span><div class="row2"><input class="inp" inputmode="numeric" data-nmin="${f.k}" placeholder="от" value="${esc(S.nmin[f.k]||"")}" aria-label="${esc(f.l)} от"><input class="inp" inputmode="numeric" data-nmax="${f.k}" placeholder="до" value="${esc(S.nmax[f.k]||"")}" aria-label="${esc(f.l)} до"></div></div>`;
+  }
+  return h;
+}
+async function renderHome(){
+  const seller=S.user?(await profiles([S.user]))[S.user]:null;
+  const title=S.user?`Объявления: ${esc(seller?seller.name:"")}`:S.sub?esc(S.sub):S.cat?CAT[S.cat].name:(S.q?`Поиск: «${esc(S.q)}»`:"Все объявления");
+  view().innerHTML=`<div class="layout">
     <aside class="panel ${filtersOpen?"open":""}" aria-label="Фильтры">
       <h3>Фильтры</h3>
+      ${fieldFilters(S.cat)}
       <div class="field"><label for="fRegion">Область</label><select class="inp" id="fRegion">${regionOptions(S.region)}</select></div>
-      ${cities.length>1?`<div class="field"><label for="fCity">Город</label><select class="inp" id="fCity"><option value="">Все города</option>${cities.map(c=>`<option ${c===S.city?"selected":""}>${esc(c)}</option>`).join("")}</select></div>`:""}
+      ${S.region&&REGIONS[S.region].length>1?`<div class="field"><label for="fCity">Город</label><select class="inp" id="fCity">${cityOptions(S.region,S.city)}</select></div>`:""}
       <div class="field"><span class="flabel">Цена, р.</span><div class="row2"><input class="inp" id="fMin" inputmode="numeric" placeholder="от" value="${esc(S.min)}" aria-label="Цена от"><input class="inp" id="fMax" inputmode="numeric" placeholder="до" value="${esc(S.max)}" aria-label="Цена до"></div></div>
       <div class="field"><label for="fCond">Состояние</label><select class="inp" id="fCond"><option value="">Любое</option><option value="new" ${S.cond==="new"?"selected":""}>Новое</option><option value="used" ${S.cond==="used"?"selected":""}>Б/у</option></select></div>
       <label class="chk"><input type="checkbox" id="fPhoto" ${S.photo?"checked":""}> Только с фото</label>
       <button class="link" id="fReset">Сбросить фильтры</button>
     </aside>
     <section style="min-width:0">
-      <div class="toolbar"><div><h1>${title}</h1><span class="cnt">${loaded?r.length+" "+plural(r.length,["объявление","объявления","объявлений"])+" · ":""}${esc(where)}</span></div>
-        <div class="tools">${anyFilter&&uid?'<button class="btn sec" id="saveSearch">Сохранить поиск</button>':""}<button class="btn sec filters-toggle" id="fToggle">Фильтры</button>
-        <select class="inp" id="fSort" aria-label="Сортировка"><option value="new">Сначала новые</option><option value="cheap" ${S.sort==="cheap"?"selected":""}>Сначала дешёвые</option><option value="dear" ${S.sort==="dear"?"selected":""}>Сначала дорогие</option><option value="views" ${S.sort==="views"?"selected":""}>Популярные</option></select>
+      ${S.user?`<div class="sellerbar"><button class="link" id="sellerBack">← Все объявления</button><a class="link" href="#user/${esc(S.user)}">Профиль продавца</a></div>`:""}
+      <div class="toolbar"><div><h1>${title}</h1><span class="cnt" id="cnt">${esc(S.city||S.region||"Вся Беларусь")}</span></div>
+        <div class="tools">${anyFilter(S)?'<button class="btn sec" id="saveSearch">Сохранить поиск</button>':""}<button class="btn sec filters-toggle" id="fToggle">Фильтры</button>
+        <select class="inp" id="fSort" aria-label="Сортировка"><option value="new">Сначала новые</option><option value="cheap" ${S.sort==="cheap"?"selected":""}>Сначала дешёвые</option><option value="dear" ${S.sort==="dear"?"selected":""}>Сначала дорогие</option><option value="popular" ${S.sort==="popular"?"selected":""}>Популярные</option></select>
         <div class="seg2" role="group" aria-label="Вид"><button id="vGrid" aria-pressed="${layoutMode!=="list"}" title="Плиткой">▦</button><button id="vList" aria-pressed="${layoutMode==="list"}" title="Списком">☰</button></div></div></div>
-      ${body}
+      <div id="recent"></div>
+      <div id="results">${loadingBlock()}</div>
     </section></div>`;
-  hookImgs($("#view"));
+  renderRecent();
+  try{
+    const r=await search(S); homeItems=r.items; homeTotal=r.total;
+    if(currentView()!=="home") return;
+    $("#cnt").textContent=nAds(homeTotal)+" · "+(S.city||S.region||"Вся Беларусь");
+    paintResults();
+  }catch(e){$("#results").innerHTML=emptyBlock("Не удалось загрузить объявления",esc(errText(e)))}
 }
-function plural(n,f){const m=n%10,h=n%100;return f[(m===1&&h!==11)?0:(m>=2&&m<=4&&(h<12||h>14))?1:2]}
+function paintResults(){
+  const box=$("#results"); if(!box) return;
+  if(!homeItems.length){box.innerHTML=anyFilter(S)||S.user?emptyBlock("Ничего не найдено","Попробуйте изменить запрос, убрать часть фильтров или выбрать другой регион."):emptyBlock("Здесь пока нет объявлений","Продайте ненужное или найдите нужное по всей Беларуси.",'<a class="btn" href="#post">Подать объявление</a>');return}
+  box.innerHTML=grid(homeItems,layoutMode==="list")+(homeItems.length<homeTotal?`<div class="more"><button class="btn sec" id="loadMore">Показать ещё</button></div>`:"");
+}
+async function renderRecent(){
+  const box=$("#recent"); if(!box) return;
+  const ids=lsGet("zis-recent",[]); if(anyFilter(S)||S.user||!ids.length){box.innerHTML="";return}
+  const {data}=await sb.from("ads").select("*").in("id",ids.slice(0,8)).eq("status","active");
+  const items=ids.map(id=>(data||[]).find(a=>a.id===id)).filter(Boolean).slice(0,6);
+  if(!items.length||!$("#recent")) return;
+  $("#recent").innerHTML=`<div class="recent"><h3 class="sub">Вы недавно смотрели</h3>${grid(items)}</div>`;
+}
+function goHome(){if(currentView()==="home")renderHome();else location.hash="#"}
 
-function renderMy(){
-  if(!db||!uid){$("#view").innerHTML=emptyBlock("Войдите в аккаунт","Чтобы подавать объявления и видеть свои, откройте площадку, войдя в аккаунт Claude.",false);return}
-  const mine=ads.filter(a=>a.uid===uid).sort((a,b)=>(b.created||0)-(a.created||0));
-  $("#view").innerHTML=`<div class="toolbar"><div><h1>Мои объявления</h1><span class="cnt">${mine.length} ${plural(mine.length,["объявление","объявления","объявлений"])}</span></div>${canPost()?'<a class="btn" href="#post">Подать объявление</a>':""}</div>
-  ${mine.length?`<div class="grid">${mine.map(card).join("")}</div>`:emptyBlock("У вас пока нет объявлений",canPost()?"Подайте первое: это займёт пару минут. Добавьте фото, цену и телефон, и покупатели смогут с вами связаться.":"Подавать объявления могут участники с доступом «Участник» (Contributor). Попросите владельца площадки выдать его.")}`;
-  hookImgs($("#view"));
-}
-function renderFavs(){
-  const list=ads.filter(a=>favs.has(key(a)));
-  const ss=searches.length?`<div class="panel" style="margin-bottom:16px"><h3>Сохранённые поиски</h3><div class="sslist">${searches.map((s,i)=>`<div class="ssrow"><button class="link" data-ss="${i}">${esc(searchLabel(s))}</button><span class="note">${filteredBy(s).length} сейчас</span><button class="link danger-link" data-ssdel="${i}" aria-label="Удалить поиск">Удалить</button></div>`).join("")}</div></div>`:"";
-  $("#view").innerHTML=`<div class="toolbar"><div><h1>Избранное</h1><span class="cnt">${list.length} ${plural(list.length,["объявление","объявления","объявлений"])}</span></div></div>${ss}
-  ${list.length?`<div class="grid">${list.map(card).join("")}</div>`:emptyBlock("В избранном пусто","Нажмите на сердечко на карточке объявления, чтобы сохранить его здесь.",false)}`;
-  hookImgs($("#view"));
+/* ================= ОБЪЯВЛЕНИЕ ================= */
+async function renderAd(id){
+  view().innerHTML=loadingBlock();
+  const {data:a,error}=await sb.from("ads").select("*").eq("id",id).maybeSingle();
+  if(error||!a){view().innerHTML=emptyBlock("Объявление не найдено","Возможно, его удалили.",'<a class="btn sec" href="#">На главную</a>');return}
+  const viewed=lsGet("zis-viewed",[]); if(!viewed.includes(a.id)){sb.rpc("increment_views",{ad:a.id});lsSet("zis-viewed",[...viewed,a.id].slice(-500));a.views++}
+  lsSet("zis-recent",[a.id,...lsGet("zis-recent",[]).filter(x=>x!==a.id)].slice(0,12));
+  const seller=(await profiles([a.user_id]))[a.user_id]||{name:"Продавец"};
+  const {data:revs}=await sb.from("reviews").select("rating").eq("seller_id",a.user_id);
+  const avg=revs&&revs.length?revs.reduce((s,r)=>s+r.rating,0)/revs.length:0;
+  const {count:sellerCount}=await sb.from("ads").select("id",{count:"exact",head:true}).eq("user_id",a.user_id).eq("status","active");
+  const mine=user&&a.user_id===user.id; const c=CAT[a.cat]||{name:a.cat,fields:[]};
+  const photos=a.photos||[];
+  const attrs=(c.fields||[]).filter(f=>a.attrs&&a.attrs[f.k]!=null&&a.attrs[f.k]!=="").map(f=>`<div><dt>${esc(f.l)}</dt><dd>${esc(a.attrs[f.k])}${f.u?" "+f.u:""}</dd></div>`).join("");
+  const canBump=mine&&a.status==="active"&&Date.now()-new Date(a.bumped_at)>=864e5-6e5;
+  const hoursLeft=Math.max(1,Math.ceil((864e5-(Date.now()-new Date(a.bumped_at)))/36e5));
+  document.title=a.title+" — ЗИС Барахолка";
+  view().innerHTML=`<div class="crumbs"><a href="#">Главная</a>›<a href="#" data-gocat="${esc(a.cat)}">${esc(c.name)}</a>${a.sub?`›<a href="#" data-gocat="${esc(a.cat)}" data-gosub="${esc(a.sub)}">${esc(a.sub)}</a>`:""}</div>
+  <div class="adpage">
+    <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+      <div class="gal"><div class="main">${photos.length?`<img id="mMain" alt="${esc(a.title)}" src="${esc(photoUrl(photos[0]))}">`:`<div style="color:#8fa3c8">${NOPH.replace("<svg",'<svg width="64" height="64"')}</div>`}</div>
+        ${photos.length>1?`<div class="thumbs">${photos.map((p,i)=>`<button data-th="${i}" aria-current="${i===0}" aria-label="Фото ${i+1}"><img alt="" loading="lazy" src="${esc(photoUrl(p,true))}"></button>`).join("")}</div>`:""}</div>
+      ${attrs?`<div class="box"><h2 class="sub2">Характеристики</h2><dl class="attrs">${attrs}</dl></div>`:""}
+      <div class="box"><h2 class="sub2">Описание</h2><div class="desc">${a.descr?esc(a.descr):'<span class="note">Продавец не добавил описание.</span>'}</div>
+        <dl class="kv"><dt>Состояние</dt><dd>${a.cond==="new"?"Новое":"Б/у"}</dd><dt>Где</dt><dd>${esc(a.city)}, ${esc(a.region)}</dd><dt>Размещено</dt><dd>${esc(fmtDate(a.created_at))}${a.bumped_at!==a.created_at?` · поднято ${esc(fmtDate(a.bumped_at))}`:""}</dd><dt>Просмотры</dt><dd>${a.views}</dd><dt>Номер</dt><dd>${a.id}</dd></dl></div>
+      <div id="similar"></div>
+    </div>
+    <aside class="adside">
+      <div class="box">
+        <div class="tags">${a.status==="sold"?'<span class="tag sold">Продано</span>':""}${a.haggle&&a.price_type==="fixed"?'<span class="tag">Торг уместен</span>':""}${a.cond==="new"?'<span class="tag">Новое</span>':""}</div>
+        <h1>${esc(a.title)}</h1>${fmtPrice(a)}
+        ${a.status==="sold"?'<p class="note">Товар продан.</p>':mine?"":`<div class="actions">
+          ${a.show_phone&&a.phone?`<span id="phoneBox"><button class="btn" id="showPhone">Показать телефон</button></span>`:""}
+          <button class="btn ${a.show_phone&&a.phone?"sec":""}" id="writeSeller">Написать продавцу</button></div>`}
+        <div class="actions"><button class="btn sec" id="mFav" aria-pressed="${favs.has(a.id)}">${favs.has(a.id)?"В избранном":"В избранное"}</button><button class="btn sec" id="mShare">Поделиться</button></div>
+        ${mine?`<div class="actions"><a class="btn sec" href="#edit/${a.id}">Редактировать</a>${a.status==="active"?`<button class="btn sec" id="mBump" ${canBump?"":"disabled"}>${canBump?"Поднять в поиске":"Поднять через "+hoursLeft+" ч"}</button>`:""}<button class="btn sec" id="mSold">${a.status==="sold"?"Вернуть в продажу":"Отметить проданным"}</button><button class="btn danger" id="mDel">Удалить</button></div>`
+          :isAdmin?`<div class="actions"><button class="btn danger" id="mMod">Удалить (модерация)</button></div>`:""}
+        <div id="mConfirm"></div>
+      </div>
+      <div class="box">
+        <a class="sellercard" href="#user/${esc(a.user_id)}">${avatarHtml(seller)}<div><div class="nm">${esc(seller.name)}</div><div class="note">${revs&&revs.length?stars(avg)+" "+avg.toFixed(1)+" · "+revs.length+" "+plural(revs.length,["отзыв","отзыва","отзывов"]):"Пока без отзывов"}</div><div class="note">${seller.created_at?esc(sinceText(seller.created_at)):""}</div></div></a>
+        <a class="link" href="#" data-seller="${esc(a.user_id)}">Все объявления продавца (${sellerCount||0})</a>
+      </div>
+      ${!mine&&user?`<button class="link danger-link" id="mReport">Пожаловаться на объявление</button>`:""}
+    </aside>
+  </div>`;
+  const vw=view();
+  vw.onclick=async e=>{
+    const t=e.target, id=t.id;
+    const th=t.closest("[data-th]"); if(th){$("#mMain").src=photoUrl(photos[+th.dataset.th]);vw.querySelectorAll("[data-th]").forEach(b=>b.setAttribute("aria-current",b===th));return}
+    if(id==="showPhone"){$("#phoneBox").innerHTML=`<a class="btn" href="tel:${esc(a.phone.replace(/[^\d+]/g,""))}">${esc(a.phone)}</a>`}
+    if(id==="writeSeller"){if(needLogin())return;openChat(a)}
+    if(id==="mFav") toggleFav(a.id).then(()=>{t.textContent=favs.has(a.id)?"В избранном":"В избранное";t.setAttribute("aria-pressed",favs.has(a.id))});
+    if(id==="mShare"){const url=location.href;if(navigator.share)navigator.share({title:a.title,url}).catch(()=>{});else copyText(url,"Ссылка скопирована")}
+    if(id==="mBump"){const {error}=await sb.from("ads").update({bumped_at:new Date().toISOString()}).eq("id",a.id);if(error)toast(errText(error));else{toast("Объявление поднято наверх");renderAd(a.id)}}
+    if(id==="mSold"){const {error}=await sb.from("ads").update({status:a.status==="sold"?"active":"sold"}).eq("id",a.id);if(error)toast(errText(error));else{toast(a.status==="sold"?"Объявление снова в продаже":"Отмечено как проданное");loadCatCounts();renderAd(a.id)}}
+    if(id==="mDel"||id==="mMod"){$("#mConfirm").innerHTML=`<p class="note">Объявление исчезнет для всех. Удалить?</p><div class="actions"><button class="btn danger" id="delYes">Да, удалить</button><button class="btn sec" id="mNo">Отмена</button></div>`}
+    if(id==="mNo") $("#mConfirm").innerHTML="";
+    if(id==="delYes"){const {error}=await sb.from("ads").delete().eq("id",a.id);if(error){toast(errText(error));return}removePhotos(photos);toast("Объявление удалено");loadCatCounts();location.hash=mine?"#my":"#"}
+    if(id==="mReport"){$("#mConfirm").innerHTML=`<form id="repForm" class="panel" style="padding:12px"><div class="field"><label for="repReason">Причина жалобы</label><select class="inp" id="repReason">${REASONS.map(r=>`<option>${r}</option>`).join("")}</select></div><input class="inp" id="repText" maxlength="300" placeholder="Комментарий (необязательно)" aria-label="Комментарий"><div class="actions"><button class="btn danger" type="submit">Отправить жалобу</button><button class="btn sec" type="button" id="mNo">Отмена</button></div></form>`;$("#mConfirm").scrollIntoView({block:"nearest"})}
+    const sel=t.closest("[data-seller]"); if(sel){e.preventDefault();S=freshFilters();S.user=sel.dataset.seller;goHome()}
+    const gc=t.closest("[data-gocat]"); if(gc){e.preventDefault();S=freshFilters();S.cat=gc.dataset.gocat;S.sub=gc.dataset.gosub||"";goHome()}
+  };
+  vw.onsubmit=async e=>{if(e.target.id!=="repForm")return;e.preventDefault();
+    const {error}=await sb.from("reports").insert({ad_id:a.id,reason:$("#repReason").value,body:$("#repText").value.trim()||null});
+    $("#mConfirm").innerHTML=error?`<p class="err">${esc(errText(error))}</p>`:'<p class="note">Спасибо, жалоба отправлена модератору.</p>'};
+  try{const r=await search({...freshFilters(),cat:a.cat,sub:a.sub||""},0,9);const sim=r.items.filter(x=>x.id!==a.id).slice(0,8);
+    if(sim.length&&$("#similar")) $("#similar").innerHTML=`<div class="box"><h2 class="sub2">Похожие объявления</h2>${grid(sim)}</div>`}catch(_){}
 }
 
-function searchLabel(s){
-  const parts=[]; if(s.q)parts.push("«"+s.q+"»"); if(s.cat&&CAT[s.cat])parts.push(CAT[s.cat].name);
-  parts.push(s.city||s.region||"Вся Беларусь"); if(s.min||s.max)parts.push((s.min?"от "+s.min:"")+(s.max?" до "+s.max:"")+" р.");
-  if(s.cond)parts.push(s.cond==="new"?"новое":"б/у"); if(s.photo)parts.push("с фото"); return parts.join(" · ");
-}
-function filteredBy(s){const keep={...S};Object.assign(S,{q:"",region:"",city:"",cat:"",min:"",max:"",cond:"",photo:false,seller:""},s);const r=filtered(ads);Object.assign(S,keep);return r}
-function renderReports(){
-  if(!owner){$("#view").innerHTML=emptyBlock("Раздел для владельца","Жалобы видит только владелец площадки.",false);return}
-  const rows=reports.slice().sort((a,b)=>b.t-a.t);
-  $("#view").innerHTML=`<div class="toolbar"><div><h1>Жалобы</h1><span class="cnt">${rows.length} ${plural(rows.length,["жалоба","жалобы","жалоб"])}</span></div></div>
-  ${rows.length?`<div class="panel">${rows.map(r=>{const a=ads.find(x=>key(x)===r.ad);return `<div class="ssrow"><div style="min-width:0"><strong>${esc(r.reason)}</strong>${r.text?` — ${esc(r.text)}`:""}<div class="note">${a?esc(a.title):"Объявление уже удалено"} · ${esc(fmtDate(r.t))}</div></div>${a?`<button class="link" data-open="${esc(r.ad)}">Открыть</button>`:""}</div>`}).join("")}</div>`:emptyBlock("Жалоб нет","Когда посетители пожалуются на объявление, жалоба появится здесь.",false)}`;
-}
-async function saveFavDoc(){
-  if(!db||!uid) return;
-  favChain=favChain.catch(()=>{}).then(()=>db.collection("data/users/"+uid).doc("favs").set({ids:[...favs],searches}));
-  return favChain;
-}
-
-/* ---------- post / edit form ---------- */
-function renderPost(){
-  if(!db||!uid){$("#view").innerHTML=emptyBlock("Войдите в аккаунт","Подать объявление можно после входа в аккаунт Claude.",false);return}
-  if(!canPost()){$("#view").innerHTML=emptyBlock("Нет доступа к подаче","Подавать объявления могут участники с доступом «Участник» (Contributor). Попросите владельца площадки выдать его.",false);return}
-  if(!draft) draft={id:null,cat:"",title:"",desc:"",priceType:"fixed",price:"",haggle:false,cond:"used",region:"",city:"",name:"",phone:"",pics:[],newPics:[]};
-  const d=draft; const cities=d.region?REGIONS[d.region]:[];
-  $("#view").innerHTML=`<form class="form" id="postForm" novalidate>
+/* ================= ПОДАЧА / РЕДАКТИРОВАНИЕ ================= */
+let draft=null;
+async function renderPost(editId){
+  if(needLogin()) return;
+  if(editId){
+    if(!draft||draft.id!==+editId){
+      const {data:a}=await sb.from("ads").select("*").eq("id",editId).maybeSingle();
+      if(!a||a.user_id!==user.id){view().innerHTML=emptyBlock("Нельзя редактировать","Это объявление не ваше или его удалили.");return}
+      draft={...a,price:a.price==null?"":String(a.price),attrs:{...a.attrs},photos:[...a.photos],newFiles:[],removed:[]};
+    }
+  } else if(!draft||draft.id){
+    draft={id:null,cat:"",sub:"",title:"",descr:"",price_type:"fixed",price:"",haggle:false,cond:"used",region:"",city:me&&me.city?"":"",phone:(me&&me.phone)||"",show_phone:true,attrs:{},photos:[],newFiles:[],removed:[]};
+    if(me&&me.city){for(const [r,cs] of Object.entries(REGIONS))if(cs.includes(me.city)){draft.region=r;draft.city=me.city}}
+  }
+  const d=draft, c=CAT[d.cat];
+  view().innerHTML=`<form class="form" id="postForm" novalidate>
     <div class="toolbar"><h1>${d.id?"Редактирование объявления":"Новое объявление"}</h1></div>
     <div class="panel">
-      <div class="field"><label for="pCat">Категория</label><select class="inp" id="pCat" required><option value="">Выберите категорию</option>${CATS.map(c=>`<option value="${c.id}" ${d.cat===c.id?"selected":""}>${esc(c.name)}</option>`).join("")}</select></div>
-      <div class="field"><label for="pTitle">Заголовок</label><input class="inp" id="pTitle" maxlength="70" placeholder="Например: iPhone 13, 128 ГБ, синий" value="${esc(d.title)}"></div>
-      <div class="field"><label for="pDesc">Описание</label><textarea class="inp" id="pDesc" maxlength="4000" placeholder="Состояние, комплектация, причина продажи, условия встречи">${esc(d.desc)}</textarea></div>
-      <div class="field"><span class="flabel">Фотографии <span class="note">(до 6)</span></span>
-        <div class="pics" id="picBox"></div>
+      <div class="row2"><div class="field"><label for="pCat">Категория</label><select class="inp" id="pCat"><option value="">Выберите категорию</option>${CATS.map(x=>`<option value="${x.id}" ${d.cat===x.id?"selected":""}>${esc(x.name)}</option>`).join("")}</select></div>
+      ${c&&c.subs.length?`<div class="field"><label for="pSub">Подкатегория</label><select class="inp" id="pSub"><option value="">Выберите</option>${c.subs.map(s=>`<option ${s===d.sub?"selected":""}>${esc(s)}</option>`).join("")}</select></div>`:"<div></div>"}</div>
+      <div class="field"><label for="pTitle">Заголовок</label><input class="inp" id="pTitle" maxlength="80" placeholder="Например: iPhone 13, 128 ГБ, синий" value="${esc(d.title)}"></div>
+      ${c&&c.fields.length?`<div class="row2">${c.fields.map(f=>`<div class="field"><label for="pa-${f.k}">${esc(f.l)}${f.u?", "+f.u:""}</label>${f.t==="sel"?`<select class="inp" id="pa-${f.k}" data-attr="${f.k}"><option value="">Не указано</option>${f.o.map(o=>`<option ${d.attrs[f.k]===o?"selected":""}>${esc(o)}</option>`).join("")}</select>`:`<input class="inp" id="pa-${f.k}" data-attr="${f.k}" ${f.t==="num"?'inputmode="numeric"':""} maxlength="40" value="${esc(d.attrs[f.k]??"")}">`}</div>`).join("")}</div>`:""}
+      <div class="field"><label for="pDesc">Описание</label><textarea class="inp" id="pDesc" maxlength="5000" placeholder="Состояние, комплектация, причина продажи, условия встречи">${esc(d.descr)}</textarea></div>
+      <div class="field"><span class="flabel">Фотографии <span class="note">(до 10, первое станет обложкой)</span></span><div class="pics" id="picBox"></div>
         <input type="file" id="pFiles" accept="image/*" multiple hidden></div>
     </div>
     <div class="panel">
-      <div class="field"><span class="flabel">Цена</span>
-        <div class="seg" role="radiogroup">${[["fixed","Указать цену"],["deal","Договорная"],["free","Бесплатно"]].map(([v,l])=>`<label><input type="radio" name="pt" value="${v}" ${d.priceType===v?"checked":""}>${l}</label>`).join("")}</div>
-        <div class="row2" ${d.priceType==="fixed"?"":"hidden"} id="priceRow"><input class="inp" id="pPrice" inputmode="decimal" placeholder="Цена в белорусских рублях" value="${esc(d.price)}" aria-label="Цена"><label class="chk"><input type="checkbox" id="pHaggle" ${d.haggle?"checked":""}> Возможен торг</label></div></div>
-      <div class="field"><span class="flabel">Состояние</span>
-        <div class="seg">${[["used","Б/у"],["new","Новое"]].map(([v,l])=>`<label><input type="radio" name="cond" value="${v}" ${d.cond===v?"checked":""}>${l}</label>`).join("")}</div></div>
+      <div class="field"><span class="flabel">${d.cat==="jobs"?"Зарплата":"Цена"}</span>
+        <div class="seg" role="radiogroup">${[["fixed",d.cat==="jobs"?"Указать":"Указать цену"],["deal","Договорная"],["free","Бесплатно"]].filter(x=>d.cat!=="jobs"||x[0]!=="free").map(([v,l])=>`<label><input type="radio" name="pt" value="${v}" ${d.price_type===v?"checked":""}>${l}</label>`).join("")}</div>
+        <div class="row2" ${d.price_type==="fixed"?"":"hidden"}><input class="inp" id="pPrice" inputmode="decimal" placeholder="В белорусских рублях" value="${esc(d.price)}" aria-label="Цена"><label class="chk"><input type="checkbox" id="pHaggle" ${d.haggle?"checked":""}> Возможен торг</label></div></div>
+      ${["jobs","services"].includes(d.cat)?"":`<div class="field"><span class="flabel">Состояние</span><div class="seg">${[["used","Б/у"],["new","Новое"]].map(([v,l])=>`<label><input type="radio" name="cond" value="${v}" ${d.cond===v?"checked":""}>${l}</label>`).join("")}</div></div>`}
     </div>
     <div class="panel">
-      <div class="row2"><div class="field"><label for="pRegion">Область</label><select class="inp" id="pRegion">${regionOptions(d.region,false)}</select></div>
-      <div class="field"><label for="pCity">Город</label><select class="inp" id="pCity" ${cities.length?"":"disabled"}><option value="">Выберите город</option>${cities.map(c=>`<option ${c===d.city?"selected":""}>${esc(c)}</option>`).join("")}</select></div></div>
-      <div class="row2"><div class="field"><label for="pName">Ваше имя</label><input class="inp" id="pName" maxlength="40" value="${esc(d.name)}" autocomplete="given-name"></div>
-      <div class="field"><label for="pPhone">Телефон</label><input class="inp" id="pPhone" maxlength="20" inputmode="tel" placeholder="+375 29 123-45-67" value="${esc(d.phone)}" autocomplete="tel"></div></div>
+      <div class="row2"><div class="field"><label for="pRegion">Область</label><select class="inp" id="pRegion">${regionOptions(d.region,"Выберите область")}</select></div>
+      <div class="field"><label for="pCity">Город</label><select class="inp" id="pCity" ${d.region?"":"disabled"}>${cityOptions(d.region,d.city,"Выберите город")}</select></div></div>
+      <div class="row2"><div class="field"><label for="pPhone">Телефон</label><input class="inp" id="pPhone" maxlength="20" inputmode="tel" placeholder="+375 29 123-45-67" value="${esc(d.phone||"")}" autocomplete="tel"></div>
+      <label class="chk" style="align-self:end;padding-bottom:10px"><input type="checkbox" id="pShowPhone" ${d.show_phone?"checked":""}> Показывать телефон в объявлении</label></div>
+      <p class="note">Покупатели смогут написать вам в сообщениях на сайте, даже если телефон скрыт.</p>
     </div>
     <div class="err" id="pErr" hidden></div>
-    <div class="actions"><button class="btn" type="submit" id="pSubmit">${d.id?"Сохранить изменения":"Опубликовать"}</button><a class="btn sec" href="${d.id?"#my":"#home"}">Отмена</a></div>
+    <div class="actions"><button class="btn" type="submit" id="pSubmit">${d.id?"Сохранить изменения":"Опубликовать"}</button><a class="btn sec" href="${d.id?"#ad/"+d.id:"#"}">Отмена</a></div>
   </form>`;
   renderPicBox();
 }
 function renderPicBox(){
   const d=draft, box=$("#picBox"); if(!box) return;
-  const total=d.pics.length+d.newPics.length;
-  box.innerHTML=d.pics.map((p,i)=>`<div class="pic"><img alt="" hidden data-o="${esc(uid)}" data-p="${esc(p)}t"><button type="button" data-rmold="${i}" aria-label="Удалить фото">×</button></div>`).join("")
-   +d.newPics.map((p,i)=>`<div class="pic"><img alt="" src="${p.t}"><button type="button" data-rmnew="${i}" aria-label="Удалить фото">×</button></div>`).join("")
-   +(total<6?`<label class="addpic" for="pFiles">+ Добавить фото</label>`:"");
-  box.querySelectorAll("img[data-p]").forEach(loadImg);
+  const total=d.photos.length+d.newFiles.length;
+  box.innerHTML=d.photos.map((p,i)=>`<div class="pic"><img alt="" src="${esc(photoUrl(p,true))}"><button type="button" data-rmold="${i}" aria-label="Удалить фото">×</button></div>`).join("")
+   +d.newFiles.map((f,i)=>`<div class="pic"><img alt="" src="${f.preview}"><button type="button" data-rmnew="${i}" aria-label="Удалить фото">×</button></div>`).join("")
+   +(total<10?`<label class="addpic" for="pFiles">+ Добавить фото</label>`:"");
 }
 function readForm(){
   const d=draft, v=id=>($("#"+id)||{}).value||"";
-  d.cat=v("pCat");d.title=v("pTitle").trim();d.desc=v("pDesc").trim();d.price=v("pPrice").trim();
-  d.region=v("pRegion");d.city=v("pCity");d.name=v("pName").trim();d.phone=v("pPhone").trim();
-  d.priceType=(document.querySelector('input[name="pt"]:checked')||{}).value||"fixed";
-  d.cond=(document.querySelector('input[name="cond"]:checked')||{}).value||"used";
-  const hg=$("#pHaggle"); if(hg) d.haggle=hg.checked;
+  d.cat=v("pCat");d.sub=v("pSub");d.title=v("pTitle").trim();d.descr=v("pDesc").trim();d.price=v("pPrice").trim();
+  d.region=v("pRegion");d.city=v("pCity");d.phone=v("pPhone").trim();
+  const sp=$("#pShowPhone");if(sp)d.show_phone=sp.checked; const hg=$("#pHaggle");if(hg)d.haggle=hg.checked;
+  d.price_type=(document.querySelector('input[name="pt"]:checked')||{}).value||"fixed";
+  d.cond=(document.querySelector('input[name="cond"]:checked')||{}).value||d.cond||"used";
+  document.querySelectorAll("[data-attr]").forEach(el=>{d.attrs[el.dataset.attr]=el.value.trim()});
 }
 async function submitPost(e){
-  e.preventDefault(); readForm(); const d=draft, er=$("#pErr");
-  const price=Number(d.price.replace(",",".").replace(/\s/g,""));
-  const problem=!d.cat?"Выберите категорию.":d.title.length<3?"Заголовок должен быть не короче 3 символов.":
-    (d.priceType==="fixed"&&!(price>0))?"Укажите цену больше нуля или выберите «Договорная».":
-    !d.region||!d.city?"Укажите область и город.":!d.name?"Укажите имя, чтобы покупатели знали, как к вам обращаться.":
-    d.phone.replace(/\D/g,"").length<7?"Укажите телефон для связи.":"";
-  if(problem){er.textContent=problem;er.hidden=false;return}
-  er.hidden=true; const btn=$("#pSubmit"); btn.disabled=true; btn.textContent="Сохраняем…";
+  e.preventDefault(); readForm(); const d=draft, er=$("#pErr"), c=CAT[d.cat];
+  const price=Number(String(d.price).replace(",",".").replace(/\s/g,""));
+  const bad=!d.cat?"Выберите категорию.":(c.subs.length&&!d.sub)?"Выберите подкатегорию.":d.title.length<3?"Заголовок должен быть не короче 3 символов.":
+    (d.price_type==="fixed"&&d.cat!=="free"&&!(price>0))?"Укажите цену больше нуля или выберите «Договорная».":
+    !d.region||!d.city?"Укажите область и город.":(d.show_phone&&d.phone.replace(/\D/g,"").length<7)?"Укажите телефон или снимите галочку «Показывать телефон».":
+    c.fields.some(f=>f.t==="num"&&d.attrs[f.k]&&!/^\d+([.,]\d+)?$/.test(d.attrs[f.k]))?"В числовых полях укажите только число.":"";
+  if(bad){er.textContent=bad;er.hidden=false;er.scrollIntoView({block:"center"});return}
+  er.hidden=true; const btn=$("#pSubmit"); btn.disabled=true;
   try{
-    const newIds=[];
-    for(const p of d.newPics){
-      const id=rid();
-      await db.doc("pics/"+uid+"/p/"+id).set({d:p.f});
-      await db.doc("pics/"+uid+"/p/"+id+"t").set({d:p.t});
-      picCache.set(uid+"/"+id,Promise.resolve(p.f));picCache.set(uid+"/"+id+"t",Promise.resolve(p.t));
-      newIds.push(id);
-    }
-    const id=d.id||rid(); const prev=myItems[id];
-    const item={id,cat:d.cat,title:d.title,desc:d.desc,priceType:d.cat==="free"?"free":d.priceType,price:d.priceType==="fixed"&&d.cat!=="free"?Math.round(price*100)/100:null,
-      cond:d.cond,haggle:!!d.haggle&&d.priceType==="fixed",region:d.region,city:d.city,name:d.name,phone:d.phone,pics:[...d.pics,...newIds],created:prev?prev.created:Date.now(),updated:Date.now()};
-    if(prev&&prev.bumped) item.bumped=prev.bumped; if(prev&&prev.sold) item.sold=prev.sold;
-    const removed=prev?(prev.pics||[]).filter(p=>!item.pics.includes(p)):[];
-    await saveMine({...myItems,[id]:item});
-    removed.forEach(p=>{db.doc("pics/"+uid+"/p/"+p).delete().catch(()=>{});db.doc("pics/"+uid+"/p/"+p+"t").delete().catch(()=>{})});
-    draft=null; toast(prev?"Изменения сохранены":"Объявление опубликовано"); location.hash="#my";
-  }catch(err){er.textContent=writeErr(err);er.hidden=false;btn.disabled=false;btn.textContent=d.id?"Сохранить изменения":"Опубликовать"}
+    const newBases=[];
+    for(let i=0;i<d.newFiles.length;i++){btn.textContent=`Загружаем фото ${i+1} из ${d.newFiles.length}…`;newBases.push(await uploadPhoto(d.newFiles[i].file))}
+    btn.textContent="Сохраняем…";
+    const attrs={};for(const f of c.fields){const v=d.attrs[f.k];if(v)attrs[f.k]=f.t==="num"?Number(String(v).replace(",",".")):v}
+    const row={cat:d.cat,sub:d.sub||null,title:d.title,descr:d.descr,price_type:d.cat==="free"?"free":d.price_type,
+      price:d.price_type==="fixed"&&d.cat!=="free"?Math.round(price*100)/100:null,haggle:!!d.haggle&&d.price_type==="fixed",
+      cond:["jobs","services"].includes(d.cat)?"used":d.cond,region:d.region,city:d.city,phone:d.phone||null,show_phone:!!d.show_phone&&!!d.phone,attrs,photos:[...d.photos,...newBases]};
+    let id=d.id;
+    if(id){const {error}=await sb.from("ads").update(row).eq("id",id);if(error)throw error;removePhotos(d.removed)}
+    else{const {data,error}=await sb.from("ads").insert(row).select("id").single();if(error)throw error;id=data.id}
+    if(d.phone&&me&&!me.phone){await sb.from("profiles").update({phone:d.phone,city:d.city}).eq("id",user.id);me.phone=d.phone;me.city=d.city}
+    d.newFiles.forEach(f=>URL.revokeObjectURL(f.preview)); draft=null;
+    toast(d.id?"Изменения сохранены":"Объявление опубликовано"); loadCatCounts(); location.hash="#ad/"+id;
+  }catch(err){er.textContent=errText(err);er.hidden=false;btn.disabled=false;btn.textContent=d.id?"Сохранить изменения":"Опубликовать"}
 }
 
-/* ---------- detail modal ---------- */
-let openKey=null;
-function similar(a){return ads.filter(x=>!x.sold&&x.cat===a.cat&&key(x)!==key(a)).sort((x,y)=>(x.region===a.region?0:1)-(y.region===a.region?0:1)||bumpAt(y)-bumpAt(x)).slice(0,4)}
-function openAd(k){
-  const a=ads.find(x=>key(x)===k); if(!a) return;
-  openKey=k; addRecent(k); markViewed(k);
-  if(location.hash!=="#ad-"+a.id){ location.hash="#ad-"+a.id; }
-  const pics=a.pics||[]; const mine=a.uid===uid;
-  const canBump=mine&&!a.sold&&Date.now()-bumpAt(a)>=864e5;
-  const hoursLeft=Math.ceil((864e5-(Date.now()-bumpAt(a)))/36e5);
-  const sim=similar(a); const sellerCount=ads.filter(x=>x.uid===a.uid&&!x.sold).length;
-  const reported=Object.values(myReports).some(r=>r.ad===k);
-  $("#modalRoot").innerHTML=`<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="${esc(a.title)}"><div class="sheet">
-    <button class="close" id="mClose" aria-label="Закрыть">×</button>
-    <div class="gal"><div class="main">${pics.length?`<img id="mMain" alt="${esc(a.title)}">`:`<div style="color:#8fa3c8">${NOPH.replace("<svg",'<svg width="64" height="64"')}</div>`}</div>
-      ${pics.length>1?`<div class="thumbs">${pics.map((p,i)=>`<button data-th="${i}" aria-current="${i===0}" aria-label="Фото ${i+1}"><img alt="" data-o="${esc(a.uid)}" data-p="${esc(p)}t"></button>`).join("")}</div>`:""}</div>
-    <div class="info">
-      <div class="tags"><span class="tag">${esc((CAT[a.cat]||{}).name||"")}</span>${a.sold?'<span class="tag sold">Продано</span>':""}${a.haggle&&a.priceType==="fixed"?'<span class="tag">Торг уместен</span>':""}</div>
-      <h2>${esc(a.title)}</h2>${fmtPrice(a)}
-      <dl class="kv"><dt>Состояние</dt><dd>${a.cond==="new"?"Новое":"Б/у"}</dd><dt>Где</dt><dd>${esc(a.city)}, ${esc(a.region)}</dd><dt>Размещено</dt><dd>${esc(fmtDate(a.created))}${a.bumped?` · поднято ${esc(fmtDate(a.bumped))}`:""}</dd><dt>Просмотры</dt><dd>${viewCounts[k]||1}</dd><dt>Номер</dt><dd>${esc(a.id)}</dd></dl>
-      ${a.desc?`<div class="desc">${esc(a.desc)}</div>`:""}
-      <div class="seller"><div><div class="note">Продавец</div><strong>${esc(a.name)}</strong> <button class="link" id="mSeller">${sellerCount>1?`все объявления (${sellerCount})`:"страница продавца"}</button></div>
-        ${a.sold?'<p class="note">Товар продан, связаться с продавцом по нему уже нельзя.</p>':'<div id="phoneBox"><button class="btn" id="showPhone">Показать телефон</button></div>'}
-        <div class="actions"><button class="btn sec" id="mFav" aria-pressed="${favs.has(k)}">${favs.has(k)?"В избранном":"В избранное"}</button>
-        ${demo?'<button class="btn sec" id="mShare">Скопировать ссылку</button>':""}
-        ${mine?`<button class="btn sec" id="mEdit">Редактировать</button>${a.sold?"":`<button class="btn sec" id="mBump" ${canBump?"":"disabled"} title="${canBump?"":"Поднять можно раз в сутки"}">${canBump?"Поднять в поиске":"Поднять через "+hoursLeft+" ч"}</button>`}<button class="btn sec" id="mSold">${a.sold?"Вернуть в продажу":"Отметить проданным"}</button><button class="btn danger" id="mDel">Удалить</button>`:(owner?`<button class="btn danger" id="mMod">Удалить (модерация)</button>`:"")}</div>
-        ${!mine&&uid&&!a.sold?`<div><button class="link danger-link" id="mReport" ${reported?"disabled":""}>${reported?"Жалоба отправлена":"Пожаловаться на объявление"}</button></div>`:""}
-        <div id="mConfirm"></div></div>
-      <div class="qa"><h3 class="sub">Вопросы продавцу</h3><div id="qaList"></div>
-        ${!mine&&uid&&!a.sold&&canPost()?`<form id="qaForm" class="qaform"><input class="inp" id="qaText" maxlength="500" placeholder="Задайте вопрос: его увидят все посетители" aria-label="Ваш вопрос"><input class="inp" id="qaName" maxlength="40" placeholder="Ваше имя" aria-label="Ваше имя" style="max-width:9em"><button class="btn sec" type="submit">Спросить</button></form>`:""}
-        ${!uid?'<p class="note">Задавать вопросы можно после входа в аккаунт.</p>':""}</div>
-      ${sim.length?`<div><h3 class="sub">Похожие объявления</h3><div class="simgrid">${sim.map(card).join("")}</div></div>`:""}
-    </div></div></div>`;
-  const setMain=i=>{const m=$("#mMain");if(!m)return;getPic(a.uid,pics[i]).then(s=>{if(s)m.src=s});document.querySelectorAll("[data-th]").forEach(b=>b.setAttribute("aria-current",b.dataset.th==i))};
-  if(pics.length) setMain(0);
-  $("#modalRoot").querySelectorAll("img[data-p]").forEach(loadImg);
-  renderQa(k);
-  const onKey=e=>{if(e.key==="Escape"&&openKey)closeAd()};
-  document.addEventListener("keydown",onKey); closeAd.off=()=>document.removeEventListener("keydown",onKey);
-  const m=$("#modal");
-  m.addEventListener("submit",e=>{
-    e.preventDefault();
-    if(e.target.id==="qaForm"){const t=$("#qaText").value.trim(),n=$("#qaName").value.trim();if(t.length<3)return toast("Напишите вопрос подробнее");
-      saveQa({ad:k,text:t,name:n||"Покупатель",t:Date.now()}).then(()=>{toast("Вопрос опубликован")}).catch(err=>toast(writeErr(err)))}
-    if(e.target.id==="repForm"){const r=$("#repReason").value,t=$("#repText").value.trim();
-      const id=rid(); const next={...myReports,[id]:{ad:k,reason:r,text:t,t:Date.now()}};
-      db.collection("reports").doc(uid).set({items:next}).then(()=>{myReports=next;$("#mConfirm").innerHTML='<p class="note">Спасибо, жалоба отправлена модератору.</p>';const b=$("#mReport");if(b){b.disabled=true;b.textContent="Жалоба отправлена"}}).catch(err=>{$("#mConfirm").innerHTML=`<p class="err">${esc(writeErr(err))}</p>`})}
-    if(e.target.matches(".ansform")){const qid=e.target.dataset.q,t=e.target.querySelector("input").value.trim();if(!t)return;
-      saveQa({ad:k,replyTo:qid,text:t,name:a.name,t:Date.now()}).catch(err=>toast(writeErr(err)))}
+/* ================= КАБИНЕТ ================= */
+let myTab="active";
+async function renderMy(){
+  if(needLogin()) return;
+  view().innerHTML=`<div class="page">
+    <div class="box" style="margin-bottom:16px"><div class="userhead">${avatarHtml(me,"lg")}<div style="flex:1;min-width:0"><h1 style="font-size:20px">${esc(me?me.name:"")}</h1><div class="note">${esc(user.email||"")}</div></div>
+      <div class="actions"><a class="btn sec" href="#profile">Настройки профиля</a><a class="btn sec" href="#user/${user.id}">Мой профиль глазами покупателя</a><button class="btn danger" id="logout">Выйти</button></div></div></div>
+    <div class="toolbar"><h1>Мои объявления</h1><a class="btn" href="#post">Подать объявление</a></div>
+    <div class="tabs"><button class="chip" data-tab="active" aria-pressed="${myTab==="active"}">Активные</button><button class="chip" data-tab="sold" aria-pressed="${myTab==="sold"}">Проданные</button></div>
+    <div id="myList">${loadingBlock()}</div></div>`;
+  const {data,error}=await sb.from("ads").select("*").eq("user_id",user.id).eq("status",myTab).order("bumped_at",{ascending:false});
+  if(!$("#myList")) return;
+  $("#myList").innerHTML=error?emptyBlock("Не удалось загрузить",esc(errText(error))):data.length?grid(data):emptyBlock(myTab==="active"?"У вас нет активных объявлений":"Проданных пока нет",myTab==="active"?"Подайте первое объявление: это займёт пару минут.":"",myTab==="active"?'<a class="btn" href="#post">Подать объявление</a>':"");
+}
+async function renderProfile(){
+  if(needLogin()) return;
+  let region="";for(const [r,cs] of Object.entries(REGIONS))if(me&&cs.includes(me.city))region=r;
+  view().innerHTML=`<form class="form narrow" id="profForm">
+    <div class="toolbar"><h1>Настройки профиля</h1></div>
+    <div class="panel">
+      <div class="userhead">${avatarHtml(me,"lg")}<label class="btn sec" for="avFile">Сменить фото</label><input type="file" id="avFile" accept="image/*" hidden></div>
+      <div class="field"><label for="prName">Имя</label><input class="inp" id="prName" maxlength="40" value="${esc(me?me.name:"")}"></div>
+      <div class="field"><label for="prPhone">Телефон для объявлений</label><input class="inp" id="prPhone" maxlength="20" inputmode="tel" value="${esc(me&&me.phone||"")}"></div>
+      <div class="row2"><div class="field"><label for="prRegion">Область</label><select class="inp" id="prRegion">${regionOptions(region,"Не указана")}</select></div>
+      <div class="field"><label for="prCity">Город</label><select class="inp" id="prCity">${cityOptions(region,me&&me.city,"Не указан")}</select></div></div>
+    </div>
+    <div class="err" id="prErr" hidden></div>
+    <div class="actions"><button class="btn" type="submit">Сохранить</button><a class="btn sec" href="#my">Назад</a></div></form>`;
+}
+
+/* ================= ИЗБРАННОЕ ================= */
+async function loadFavs(){favs=new Set();if(!user)return;const {data}=await sb.from("favorites").select("ad_id");(data||[]).forEach(r=>favs.add(r.ad_id))}
+async function toggleFav(id){
+  if(needLogin()) return;
+  id=+id; const on=!favs.has(id);
+  on?favs.add(id):favs.delete(id); syncFavButtons();
+  const {error}=on?await sb.from("favorites").insert({ad_id:id}):await sb.from("favorites").delete().eq("ad_id",id).eq("user_id",user.id);
+  if(error){on?favs.delete(id):favs.add(id);syncFavButtons();toast(errText(error))}
+  else toast(on?"Добавлено в избранное":"Убрано из избранного");
+}
+function syncFavButtons(){document.querySelectorAll("[data-fav]").forEach(el=>el.setAttribute("aria-pressed",favs.has(+el.dataset.fav)))}
+async function renderFavs(){
+  if(needLogin()) return;
+  view().innerHTML=`<div class="toolbar"><h1>Избранное</h1></div><div id="ssBox"></div><div id="favList">${loadingBlock()}</div>`;
+  const [{data:ss},{data:fv}]=await Promise.all([sb.from("saved_searches").select("*").order("created_at",{ascending:false}),sb.from("favorites").select("ad_id, ads(*)").order("created_at",{ascending:false})]);
+  if(!$("#favList")) return;
+  if(ss&&ss.length) $("#ssBox").innerHTML=`<div class="panel" style="margin-bottom:16px"><h3>Сохранённые поиски</h3><div class="sslist">${ss.map(s=>`<div class="ssrow"><button class="link" data-ss='${esc(JSON.stringify(s.params))}'>${esc(searchLabel({...freshFilters(),...s.params}))}</button><button class="link danger-link" data-ssdel="${s.id}">Удалить</button></div>`).join("")}</div></div>`;
+  const items=(fv||[]).map(r=>r.ads).filter(Boolean);
+  $("#favList").innerHTML=items.length?grid(items):emptyBlock("В избранном пусто","Нажмите на сердечко на карточке объявления, чтобы сохранить его здесь.");
+}
+
+/* ================= СООБЩЕНИЯ ================= */
+async function openChat(a){
+  let {data:c}=await sb.from("conversations").select("id").eq("ad_id",a.id).eq("buyer_id",user.id).maybeSingle();
+  if(!c){const r=await sb.from("conversations").insert({ad_id:a.id,ad_title:a.title,buyer_id:user.id,seller_id:a.user_id}).select("id").single();
+    if(r.error){toast(errText(r.error));return} c=r.data}
+  location.hash="#chat/"+c.id;
+}
+async function refreshUnread(){
+  if(!user){unread=0;paintUnread();return}
+  const {count}=await sb.from("messages").select("id",{count:"exact",head:true}).is("read_at",null).neq("sender_id",user.id);
+  unread=count||0; paintUnread();
+}
+function paintUnread(){document.querySelectorAll("[data-unread]").forEach(el=>{el.textContent=unread>99?"99+":unread;el.hidden=!unread});document.title=(unread?`(${unread}) `:"")+"ЗИС Барахолка"}
+function subscribeMessages(){
+  if(msgChannel){sb.removeChannel(msgChannel);msgChannel=null}
+  if(!user) return;
+  msgChannel=sb.channel("inbox-"+user.id).on("postgres_changes",{event:"INSERT",schema:"public",table:"messages"},p=>{
+    const m=p.new; if(m.sender_id===user.id) return;
+    if(currentView()==="chat"&&+currentArg()===m.conversation_id){appendMsg(m);markRead(m.conversation_id);return}
+    unread++;paintUnread();
+    if(currentView()==="msgs") renderMsgs();
+    toast("Новое сообщение");
+    if(document.hidden&&"Notification" in window&&Notification.permission==="granted"){try{new Notification("ЗИС Барахолка",{body:m.body.slice(0,100)})}catch(_){}}
+  }).subscribe();
+}
+async function renderMsgs(){
+  if(needLogin()) return;
+  if(!$("#convList")) view().innerHTML=`<div class="page"><div class="toolbar"><h1>Сообщения</h1>${"Notification" in window&&Notification.permission==="default"?'<button class="btn sec" id="notifOn">Включить уведомления</button>':""}</div><div id="convList">${loadingBlock()}</div></div>`;
+  const {data:cs,error}=await sb.from("conversations").select("*, ads(photos,status)").order("last_at",{ascending:false});
+  if(error){$("#convList").innerHTML=emptyBlock("Не удалось загрузить",esc(errText(error)));return}
+  if(!cs.length){$("#convList").innerHTML=emptyBlock("Сообщений пока нет","Откройте объявление и нажмите «Написать продавцу», чтобы начать переписку.");return}
+  const others=cs.map(c=>c.buyer_id===user.id?c.seller_id:c.buyer_id);
+  const [ps,{data:un}]=await Promise.all([profiles(others),sb.from("messages").select("conversation_id").is("read_at",null).neq("sender_id",user.id)]);
+  const uc={};(un||[]).forEach(m=>uc[m.conversation_id]=(uc[m.conversation_id]||0)+1);
+  $("#convList").innerHTML=`<div class="convs">${cs.map(c=>{const o=ps[c.buyer_id===user.id?c.seller_id:c.buyer_id]||{name:"Пользователь"};const ph=c.ads&&c.ads.photos&&c.ads.photos[0];
+    return `<a class="conv" href="#chat/${c.id}">${ph?`<img class="cthumb" alt="" src="${esc(photoUrl(ph,true))}">`:`<span class="cthumb"></span>`}<div class="cmain"><div class="ct">${esc(c.ad_title||"Объявление удалено")}</div><div class="cl"><strong>${esc(o.name)}</strong>${c.buyer_id===user.id?"":" · покупатель"}: ${esc(c.last_text||"Нет сообщений")}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><span class="note">${esc(fmtDate(c.last_at))}</span>${uc[c.id]?`<span class="unread">${uc[c.id]}</span>`:""}</div></a>`}).join("")}</div>`;
+}
+let chatConv=null;
+async function renderChat(id){
+  if(needLogin()) return;
+  view().innerHTML=loadingBlock();
+  const {data:c}=await sb.from("conversations").select("*, ads(id,title,photos,price,price_type,cat,status)").eq("id",id).maybeSingle();
+  if(!c){view().innerHTML=emptyBlock("Диалог не найден","",'<a class="btn sec" href="#msgs">К сообщениям</a>');return}
+  chatConv=c; const otherId=c.buyer_id===user.id?c.seller_id:c.buyer_id; const o=(await profiles([otherId]))[otherId]||{name:"Пользователь"};
+  view().innerHTML=`<div class="page"><div class="crumbs"><a href="#msgs">← Все сообщения</a></div><div class="chat">
+    <div class="chathead"><a href="#user/${esc(otherId)}">${avatarHtml(o)}</a><div style="min-width:0;flex:1"><a href="#user/${esc(otherId)}" style="font-weight:700;text-decoration:none">${esc(o.name)}</a>
+      <div class="note" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.ads?`<a class="link" href="#ad/${c.ads.id}">${esc(c.ads.title)}</a> · ${fmtPrice(c.ads).replace(/class="price[^"]*"/,"")}`:esc(c.ad_title||"Объявление удалено")}</div></div></div>
+    <div class="msgs" id="msgs" aria-live="polite"></div>
+    <form class="chatform" id="chatForm"><textarea class="inp" id="chatText" maxlength="2000" placeholder="Сообщение" aria-label="Сообщение" rows="1"></textarea><button class="btn" type="submit">Отправить</button></form>
+  </div>${c.buyer_id===user.id?`<p class="note" style="margin-top:8px">После переписки можно <a class="link" href="#user/${esc(otherId)}">оставить отзыв о продавце</a>.</p>`:""}</div>`;
+  const {data:ms}=await sb.from("messages").select("*").eq("conversation_id",id).order("created_at").limit(500);
+  const box=$("#msgs"); if(!box) return;
+  box.innerHTML=(ms||[]).length?"":'<p class="note" style="text-align:center">Напишите первое сообщение. Например, спросите, актуально ли объявление.</p>';
+  (ms||[]).forEach(appendMsg);
+  markRead(c.id);
+  $("#chatText").focus();
+}
+function appendMsg(m){
+  const box=$("#msgs"); if(!box||document.getElementById("m"+m.id)) return;
+  const hint=box.querySelector("p.note"); if(hint) hint.remove();
+  const el=document.createElement("div"); el.className="msg"+(m.sender_id===user.id?" me":""); el.id="m"+m.id;
+  el.textContent=m.body; const t=document.createElement("time"); t.textContent=fmtDate(m.created_at); el.appendChild(t);
+  box.appendChild(el); box.scrollTop=box.scrollHeight;
+}
+async function markRead(convId){await sb.from("messages").update({read_at:new Date().toISOString()}).eq("conversation_id",convId).neq("sender_id",user.id).is("read_at",null);refreshUnread()}
+async function sendMsg(e){
+  e.preventDefault(); const ta=$("#chatText"); const body=ta.value.trim(); if(!body||!chatConv) return;
+  ta.value=""; ta.disabled=true;
+  const {data,error}=await sb.from("messages").insert({conversation_id:chatConv.id,body}).select().single();
+  ta.disabled=false; ta.focus();
+  if(error){ta.value=body;toast(errText(error));return}
+  appendMsg(data);
+}
+
+/* ================= ПРОФИЛЬ ПРОДАВЦА И ОТЗЫВЫ ================= */
+let pickRating=0;
+async function renderUser(uid){
+  view().innerHTML=loadingBlock();
+  const p=(await profiles([uid]))[uid];
+  if(!p){view().innerHTML=emptyBlock("Пользователь не найден");return}
+  const [{data:revs},r]=await Promise.all([sb.from("reviews").select("*").eq("seller_id",uid).order("created_at",{ascending:false}),search({...freshFilters(),user:uid},0,24)]);
+  const authors=await profiles((revs||[]).map(x=>x.author_id));
+  const avg=revs.length?revs.reduce((s,x)=>s+x.rating,0)/revs.length:0;
+  const mineRev=user&&revs.find(x=>x.author_id===user.id); pickRating=mineRev?mineRev.rating:0;
+  view().innerHTML=`<div class="page">
+    <div class="box" style="margin-bottom:16px"><div class="userhead">${avatarHtml(p,"lg")}<div><h1 style="font-size:22px">${esc(p.name)}</h1>
+      <div>${revs.length?stars(avg)+` <strong>${avg.toFixed(1)}</strong> · ${revs.length} ${plural(revs.length,["отзыв","отзыва","отзывов"])}`:'<span class="note">Пока без отзывов</span>'}</div>
+      <div class="note">${esc(sinceText(p.created_at))}${p.city?" · "+esc(p.city):""}</div></div></div></div>
+    <div class="toolbar"><h2 class="sub2">Объявления (${r.total})</h2></div>
+    ${r.items.length?grid(r.items):emptyBlock("Активных объявлений нет")}
+    ${r.total>r.items.length?`<div class="more"><button class="btn sec" data-seller="${esc(uid)}">Все объявления продавца</button></div>`:""}
+    <div class="box" style="margin-top:20px"><h2 class="sub2">Отзывы</h2>
+      ${user&&user.id!==uid?`<form id="revForm" class="panel" style="padding:12px;gap:10px"><span class="flabel">${mineRev?"Изменить ваш отзыв":"Оставить отзыв"}</span>
+        <div class="starpick" role="radiogroup" aria-label="Оценка">${[1,2,3,4,5].map(n=>`<button type="button" data-star="${n}" class="${n<=pickRating?"on":""}" aria-label="${n} из 5">★</button>`).join("")}</div>
+        <textarea class="inp" id="revText" maxlength="1000" placeholder="Как прошла сделка?" style="min-height:80px">${esc(mineRev?mineRev.body:"")}</textarea>
+        <div class="err" id="revErr" hidden></div><div class="actions"><button class="btn" type="submit">${mineRev?"Сохранить отзыв":"Опубликовать отзыв"}</button></div>
+        <p class="note">Отзыв можно оставить после переписки с продавцом на сайте.</p></form>`:""}
+      ${revs.length?revs.map(x=>{const au=authors[x.author_id]||{name:"Пользователь"};return `<div class="review"><div style="display:flex;gap:8px;align-items:center">${avatarHtml(au,"sm")}<strong>${esc(au.name)}</strong>${stars(x.rating)}<span class="note">${esc(fmtDate(x.created_at))}</span>${isAdmin||(user&&x.author_id===user.id)?`<button class="link danger-link" data-revdel="${x.id}">удалить</button>`:""}</div>${x.body?`<div class="qt">${esc(x.body)}</div>`:""}</div>`}).join(""):'<p class="note">Отзывов пока нет.</p>'}
+    </div></div>`;
+  view().onclick=async e=>{
+    const st=e.target.closest("[data-star]"); if(st){pickRating=+st.dataset.star;view().querySelectorAll("[data-star]").forEach(b=>b.classList.toggle("on",+b.dataset.star<=pickRating));return}
+    const sel=e.target.closest("[data-seller]"); if(sel){S=freshFilters();S.user=sel.dataset.seller;goHome()}
+    const rd=e.target.closest("[data-revdel]"); if(rd){const {error}=await sb.from("reviews").delete().eq("id",rd.dataset.revdel);if(error)toast(errText(error));else{toast("Отзыв удалён");renderUser(uid)}}
+  };
+  view().onsubmit=async e=>{if(e.target.id!=="revForm")return;e.preventDefault();const er=$("#revErr");
+    if(!pickRating){er.textContent="Поставьте оценку от 1 до 5 звёзд.";er.hidden=false;return}
+    const {error}=await sb.from("reviews").upsert({seller_id:uid,author_id:user.id,rating:pickRating,body:$("#revText").value.trim()},{onConflict:"seller_id,author_id"});
+    if(error){er.textContent=/security|violates/i.test(error.message)?"Отзыв можно оставить только после переписки с этим продавцом.":errText(error);er.hidden=false;return}
+    toast("Спасибо за отзыв");renderUser(uid)};
+}
+
+/* ================= ВХОД ================= */
+let loginEmail="";
+function renderLogin(){
+  if(user){location.hash=sessionStorage.getItem("zis-after-login")||"#my";return}
+  view().innerHTML=`<div class="narrow" style="margin-top:20px"><div class="box">
+    <h1 style="font-size:22px">Вход и регистрация</h1>
+    <p class="note">Аккаунт создаётся автоматически при первом входе.</p>
+    ${CFG.google?`<button class="btn sec" id="gLogin" style="justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.3c0-.8-.1-1.5-.2-2.3H12v4.3h5.9a5 5 0 0 1-2.2 3.3v2.7h3.5c2-1.9 3.3-4.7 3.3-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.5-2.7c-1 .7-2.3 1.1-3.8 1.1-2.9 0-5.4-2-6.3-4.6H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.7 14.1a6.6 6.6 0 0 1 0-4.2V7.1H2.1a11 11 0 0 0 0 9.8z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.1-3.1A11 11 0 0 0 2.1 7.1l3.6 2.8C6.6 7.3 9.1 5.4 12 5.4z"/></svg> Войти через Google</button><div class="note" style="text-align:center">или по почте</div>`:""}
+    <form id="emailForm" class="form" style="gap:10px"><div class="field"><label for="lEmail">Электронная почта</label><input class="inp" id="lEmail" type="email" autocomplete="email" required value="${esc(loginEmail)}" placeholder="you@example.com"></div>
+      <button class="btn" type="submit" style="justify-content:center">Получить код для входа</button></form>
+    <form id="codeForm" class="form" style="gap:10px" hidden><p class="note" id="codeNote"></p><div class="field"><label for="lCode">Код из письма</label><input class="inp" id="lCode" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="123456"></div>
+      <button class="btn" type="submit" style="justify-content:center">Войти</button><button class="link" type="button" id="codeBack">Изменить почту</button></form>
+    <div class="err" id="lErr" hidden></div>
+  </div></div>`;
+}
+
+/* ================= МОДЕРАЦИЯ ================= */
+async function renderAdmin(){
+  if(!isAdmin){view().innerHTML=emptyBlock("Раздел для модераторов");return}
+  view().innerHTML=`<div class="page"><div class="toolbar"><h1>Жалобы</h1></div><div id="repList">${loadingBlock()}</div></div>`;
+  const {data,error}=await sb.from("reports").select("*, ads(id,title,user_id,photos)").order("created_at",{ascending:false});
+  if(error){$("#repList").innerHTML=emptyBlock("Ошибка",esc(errText(error)));return}
+  $("#repList").innerHTML=data.length?`<div class="panel">${data.map(r=>`<div class="ssrow"><div style="min-width:0"><strong>${esc(r.reason)}</strong>${r.body?" — "+esc(r.body):""}<div class="note">${r.ads?`<a class="link" href="#ad/${r.ads.id}">${esc(r.ads.title)}</a>`:"Объявление уже удалено"} · ${esc(fmtDate(r.created_at))}</div></div><div class="actions">${r.ads?`<button class="btn danger" data-addel="${r.ads.id}">Удалить объявление</button>`:""}<button class="btn sec" data-repdel="${r.id}">Отклонить жалобу</button></div></div>`).join("")}</div>`:emptyBlock("Жалоб нет","Когда посетители пожалуются на объявление, жалоба появится здесь.");
+  view().onclick=async e=>{
+    const ad=e.target.closest("[data-addel]"); if(ad){const r=data.find(x=>x.ads&&x.ads.id==ad.dataset.addel);const {error}=await sb.from("ads").delete().eq("id",ad.dataset.addel);if(error)toast(errText(error));else{if(r)removePhotos(r.ads.photos||[]);toast("Объявление удалено");loadCatCounts();renderAdmin()}}
+    const rp=e.target.closest("[data-repdel]"); if(rp){await sb.from("reports").delete().eq("id",rp.dataset.repdel);renderAdmin()}
+  };
+}
+
+/* ================= МАРШРУТЫ ================= */
+const currentView=()=>(location.hash.slice(1).split("/")[0])||"home";
+const currentArg=()=>location.hash.slice(1).split("/")[1];
+async function route(){
+  const v=currentView(), arg=currentArg();
+  view().onclick=null; view().onsubmit=null; document.title=(unread?`(${unread}) `:"")+"ЗИС Барахолка";
+  if(v!=="post"&&v!=="edit"&&draft&&!draft.id&&!draft.title) draft=null;
+  if(v!=="chat") chatConv=null;
+  $("#catsBar").hidden=!["home"].includes(v);
+  document.querySelectorAll("[data-nav]").forEach(a=>a.setAttribute("aria-current",a.dataset.nav===v||(v==="profile"&&a.dataset.nav==="my")?"page":"false"));
+  window.scrollTo(0,0);
+  try{
+    if(v==="home") await renderHome();
+    else if(v==="ad") await renderAd(arg);
+    else if(v==="post") await renderPost();
+    else if(v==="edit") await renderPost(arg);
+    else if(v==="my") await renderMy();
+    else if(v==="profile") await renderProfile();
+    else if(v==="favs") await renderFavs();
+    else if(v==="msgs") await renderMsgs();
+    else if(v==="chat") await renderChat(arg);
+    else if(v==="user") await renderUser(arg);
+    else if(v==="login") renderLogin();
+    else if(v==="admin") await renderAdmin();
+    else await renderHome();
+  }catch(e){view().innerHTML=emptyBlock("Ошибка загрузки",esc(errText(e)),'<button class="btn sec" onclick="route()">Повторить</button>')}
+  renderCats();
+}
+
+/* ================= СОБЫТИЯ ================= */
+function wire(){
+  $("#regionTop").innerHTML=regionOptions("");
+  addEventListener("hashchange",route);
+  $("#searchForm").addEventListener("submit",e=>{e.preventDefault();S.q=$("#q").value.trim();S.region=$("#regionTop").value;S.city="";S.user="";goHome()});
+  $("#catRow").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;const c=b.dataset.cat;const keep={q:S.q,region:S.region,city:S.city,sort:S.sort};S={...freshFilters(),...keep,cat:S.cat===c?"":c};goHome()});
+  document.addEventListener("click",async e=>{
+    const f=e.target.closest("[data-fav]"); if(f){e.preventDefault();e.stopPropagation();toggleFav(f.dataset.fav);return}
+    const t=e.target, id=t.id;
+    if(id==="loadMore"){t.disabled=true;t.textContent="Загружаем…";try{const r=await search(S,homeItems.length);homeItems=homeItems.concat(r.items);homeTotal=r.total;paintResults()}catch(err){toast(errText(err));t.disabled=false}}
+    if(id==="sellerBack"){S.user="";goHome()}
+    if(id==="vGrid"||id==="vList"){layoutMode=id==="vList"?"list":"grid";lsSet("zis-layout",layoutMode);document.querySelectorAll(".seg2 button").forEach(b=>b.setAttribute("aria-pressed",b.id===id));paintResults()}
+    if(id==="fReset"){S={...freshFilters(),q:S.q,cat:S.cat,sort:S.sort};$("#regionTop").value="";goHome()}
+    if(id==="fToggle"){filtersOpen=!filtersOpen;document.querySelector("aside.panel").classList.toggle("open",filtersOpen)}
+    if(id==="saveSearch"){if(needLogin())return;const p=searchParams(S);delete p.limit;delete p.offset;const {error}=await sb.from("saved_searches").insert({params:{...S}});toast(error?errText(error):"Поиск сохранён в «Избранном»")}
+    const ss=t.closest("[data-ss]"); if(ss){S={...freshFilters(),...JSON.parse(ss.dataset.ss)};$("#q").value=S.q||"";$("#regionTop").value=S.region||"";location.hash="#"}
+    const sd=t.closest("[data-ssdel]"); if(sd){await sb.from("saved_searches").delete().eq("id",sd.dataset.ssdel);renderFavs()}
+    const ro=t.closest("[data-rmold]"); if(ro){draft.removed.push(draft.photos.splice(+ro.dataset.rmold,1)[0]);renderPicBox()}
+    const rn=t.closest("[data-rmnew]"); if(rn){const [x]=draft.newFiles.splice(+rn.dataset.rmnew,1);URL.revokeObjectURL(x.preview);renderPicBox()}
+    if(id==="logout"){await sb.auth.signOut();toast("Вы вышли из аккаунта");location.hash="#"}
+    if(id==="notifOn"){const r=await Notification.requestPermission();toast(r==="granted"?"Уведомления включены":"Уведомления не разрешены");t.remove()}
+    if(id==="gLogin"){const {error}=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname}});if(error){$("#lErr").textContent=errText(error);$("#lErr").hidden=false}}
+    if(id==="codeBack"){$("#codeForm").hidden=true;$("#emailForm").hidden=false}
+    const tab=t.closest("[data-tab]"); if(tab){myTab=tab.dataset.tab;renderMy()}
   });
-  m.addEventListener("click",e=>{
-    if(e.target.id==="modal"||e.target.id==="mClose") return closeAd();
-    const th=e.target.closest("[data-th]"); if(th) return setMain(+th.dataset.th);
-    const c=e.target.closest(".simgrid [data-open]"); if(c&&!e.target.closest("[data-fav]")){e.stopPropagation();openAd(c.dataset.open);return}
+  document.addEventListener("change",async e=>{
+    const t=e.target, id=t.id;
+    if(id==="fRegion"){S.region=t.value;S.city="";$("#regionTop").value=t.value;renderHome()}
+    if(id==="fCity"){S.city=t.value;renderHome()}
+    if(id==="fCond"){S.cond=t.value;renderHome()}
+    if(id==="fPhoto"){S.photo=t.checked;renderHome()}
+    if(id==="fSort"){S.sort=t.value;renderHome()}
+    if(id==="fSub"){S.sub=t.value;renderHome()}
+    if(id==="fMin"||id==="fMax"){S[id==="fMin"?"min":"max"]=t.value.replace(/[^\d.]/g,"");renderHome()}
+    if(t.dataset.eq){S.eq[t.dataset.eq]=t.value;renderHome()}
+    if(t.dataset.nmin){S.nmin[t.dataset.nmin]=t.value.replace(/[^\d.]/g,"");renderHome()}
+    if(t.dataset.nmax){S.nmax[t.dataset.nmax]=t.value.replace(/[^\d.]/g,"");renderHome()}
+    if(id==="pCat"){readForm();draft.sub="";draft.attrs={};renderPost(draft.id)}
+    if(id==="pRegion"){readForm();draft.city="";renderPost(draft.id)}
+    if(t.name==="pt"){readForm();renderPost(draft.id)}
+    if(id==="prRegion"){$("#prCity").innerHTML=cityOptions(t.value,"","Не указан")}
+    if(id==="pFiles"){const room=10-draft.photos.length-draft.newFiles.length;[...t.files].slice(0,room).forEach(file=>draft.newFiles.push({file,preview:URL.createObjectURL(file)}));if(t.files.length>room)toast("Можно добавить не больше 10 фото");t.value="";renderPicBox()}
+    if(id==="avFile"&&t.files[0]){try{toast("Загружаем фото…");const old=me.avatar;const base=await uploadPhoto(t.files[0],false);const {error}=await sb.from("profiles").update({avatar:base}).eq("id",user.id);if(error)throw error;if(old&&!/^https?:/.test(old))sb.storage.from("photos").remove([old+".jpg"]);me.avatar=base;profCache.set(user.id,me);renderProfile();paintMe();toast("Фото профиля обновлено")}catch(err){toast(errText(err))}}
+  });
+  document.addEventListener("submit",async e=>{
     const id=e.target.id;
-    if(id==="showPhone"){ $("#phoneBox").innerHTML=`<div class="phone">${esc(a.phone)}</div><div class="actions" style="margin-top:6px"><button class="btn sec" id="copyPhone">Скопировать номер</button></div>`; }
-    if(id==="copyPhone") copyText(a.phone,".phone","Номер скопирован");
-    if(id==="mShare") copyText(location.href,null,"Ссылка скопирована");
-    if(id==="mSeller"){ Object.assign(S,{seller:a.uid,q:"",cat:"",region:"",city:"",min:"",max:"",cond:"",photo:false}); lastView="#home"; closeAd(true); location.hash="#home"; route(); }
-    if(id==="mFav"){ toggleFav(k).then(()=>{const b=$("#mFav");if(b){b.textContent=favs.has(k)?"В избранном":"В избранное";b.setAttribute("aria-pressed",favs.has(k))}}); }
-    if(id==="mEdit"){ draft={...a,price:a.price==null?"":String(a.price),pics:[...(a.pics||[])],newPics:[]}; closeAd(true); location.hash="#post"; }
-    if(id==="mBump"){ saveMine({...myItems,[a.id]:{...myItems[a.id],bumped:Date.now()}}).then(()=>{toast("Объявление поднято наверх");openAd(k)}).catch(err=>toast(writeErr(err))); }
-    if(id==="mSold"){ saveMine({...myItems,[a.id]:{...myItems[a.id],sold:!a.sold}}).then(()=>{toast(a.sold?"Объявление снова в продаже":"Отмечено как проданное");closeAd()}).catch(err=>toast(writeErr(err))); }
-    if(id==="mReport"&&!e.target.disabled){ $("#mConfirm").innerHTML=`<form id="repForm" class="panel" style="padding:12px"><div class="field"><label for="repReason">Причина</label><select class="inp" id="repReason">${REASONS.map(r=>`<option>${r}</option>`).join("")}</select></div><input class="inp" id="repText" maxlength="300" placeholder="Комментарий (необязательно)" aria-label="Комментарий"><div class="actions"><button class="btn danger" type="submit">Отправить жалобу</button><button class="btn sec" type="button" id="mNo">Отмена</button></div></form>`; }
-    if(id==="mDel"||id==="mMod"){ $("#mConfirm").innerHTML=`<p class="note">Объявление исчезнет для всех. Удалить?</p><div class="actions"><button class="btn danger" id="${id}Yes">Да, удалить</button><button class="btn sec" id="mNo">Отмена</button></div>`; }
-    if(id==="mNo") $("#mConfirm").innerHTML="";
-    if(id==="mDelYes"||id==="mModYes"){ removeAd(a).then(()=>{closeAd();toast("Объявление удалено")}).catch(err=>{$("#mConfirm").innerHTML=`<p class="err">${esc(writeErr(err))}</p>`}); }
-    const dq=e.target.closest("[data-qdel]"); if(dq){ const next={...myQa}; delete next[dq.dataset.qdel]; db.collection("qa").doc(uid).set({items:next}).catch(err=>toast(writeErr(err))); }
+    if(id==="postForm") return submitPost(e);
+    if(id==="chatForm") return sendMsg(e);
+    if(id==="emailForm"){e.preventDefault();const er=$("#lErr");er.hidden=true;loginEmail=$("#lEmail").value.trim();
+      const btn=e.target.querySelector("button");btn.disabled=true;
+      const {error}=await sb.auth.signInWithOtp({email:loginEmail,options:{emailRedirectTo:location.origin+location.pathname}});
+      btn.disabled=false;
+      if(error){er.textContent=errText(error);er.hidden=false;return}
+      $("#emailForm").hidden=true;$("#codeForm").hidden=false;$("#codeNote").innerHTML=`Мы отправили письмо на <strong>${esc(loginEmail)}</strong>. Откройте его <strong>в этом же браузере</strong> и нажмите ссылку для входа. Письмо может попасть в «Спам». Если в письме есть код из цифр, введите его ниже.`}
+    if(id==="codeForm"){e.preventDefault();const er=$("#lErr");er.hidden=true;
+      const {error}=await sb.auth.verifyOtp({email:loginEmail,token:$("#lCode").value.trim(),type:"email"});
+      if(error){er.textContent=/expired|invalid/i.test(error.message)?"Код неверный или устарел. Запросите новый.":errText(error);er.hidden=false}}
+    if(id==="profForm"){e.preventDefault();const er=$("#prErr");er.hidden=true;
+      const upd={name:$("#prName").value.trim()||"Пользователь",phone:$("#prPhone").value.trim()||null,city:$("#prCity").value||null};
+      const {error}=await sb.from("profiles").update(upd).eq("id",user.id);
+      if(error){er.textContent=errText(error);er.hidden=false;return}
+      Object.assign(me,upd);profCache.set(user.id,me);paintMe();toast("Профиль сохранён");location.hash="#my"}
   });
-  hookImgs(m); $("#mClose").focus();
+  document.addEventListener("keydown",e=>{if(e.target.id==="chatText"&&e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("#chatForm").requestSubmit()}});
 }
-function closeAd(keepHash){
-  openKey=null; $("#modalRoot").innerHTML=""; if(closeAd.off)closeAd.off();
-  if(!keepHash&&location.hash.startsWith("#ad-")) location.hash=lastView;
+function paintMe(){
+  $("#meLabel").textContent=user?(me&&me.name||"Кабинет"):"Войти";
+  $("#meLink").href=user?"#my":"#login";
+  $("#adminLink").hidden=!isAdmin;
 }
-function copyText(t,sel,msg){
-  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast(msg)).catch(()=>{const el=sel&&$(sel);if(el){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);toast("Текст выделен, скопируйте его")}else toast(t)});
-}
-function renderQa(k){
-  const box=$("#qaList"); if(!box) return;
-  const a=ads.find(x=>key(x)===k); const mine=a&&a.uid===uid;
-  const qs=qa.filter(q=>q.ad===k&&!q.replyTo).sort((x,y)=>x.t-y.t);
-  const ans=id=>qa.filter(q=>q.ad===k&&q.replyTo===id&&a&&q.uid===a.uid).sort((x,y)=>x.t-y.t);
-  box.innerHTML=qs.length?qs.map(q=>`<div class="q"><div><strong>${esc(q.name)}</strong> <span class="note">${esc(fmtDate(q.t))}</span>${q.uid===uid?` <button class="link danger-link" data-qdel="${esc(q.id)}">удалить</button>`:""}</div><div class="qt">${esc(q.text)}</div>
-    ${ans(q.id).map(r=>`<div class="ans"><span class="note">Ответ продавца</span><div class="qt">${esc(r.text)}</div>${mine?`<button class="link danger-link" data-qdel="${esc(r.id)}">удалить</button>`:""}</div>`).join("")}
-    ${mine?`<form class="ansform qaform" data-q="${esc(q.id)}"><input class="inp" maxlength="500" placeholder="Ответить покупателю" aria-label="Ответ"><button class="btn sec" type="submit">Ответить</button></form>`:""}</div>`).join(""):'<p class="note">Вопросов пока нет.</p>';
-}
-let qaChain=Promise.resolve();
-function saveQa(item){
-  const id=rid(); const next={...myQa,[id]:item};
-  qaChain=qaChain.catch(()=>{}).then(()=>db.collection("qa").doc(uid).set({items:next})).then(()=>{myQa=next});
-  return qaChain;
-}
-let viewChain=Promise.resolve();
-function markViewed(k){
-  if(!db||!uid||myViews.includes(k)) return;
-  myViews=[...myViews,k].slice(-400); viewCounts[k]=(viewCounts[k]||0)+1; const ids=myViews.slice();
-  viewChain=viewChain.catch(()=>{}).then(()=>db.collection("views").doc(uid).set({ids})).catch(()=>{});
-}
-async function removeAd(a){
-  if(a.uid===uid){ const next={...myItems}; delete next[a.id]; await saveMine(next); }
-  else { const ref=db.collection("ads").doc(a.uid); const s=await ref.get(); const items={...((s.data()||{}).items||{})}; delete items[a.id]; await ref.set({items}); }
-  (a.pics||[]).forEach(p=>{db.doc("pics/"+a.uid+"/p/"+p).delete().catch(()=>{});db.doc("pics/"+a.uid+"/p/"+p+"t").delete().catch(()=>{})});
+async function onAuth(session){
+  const prev=user&&user.id; user=session?session.user:null;
+  if(user){
+    let {data}=await sb.from("profiles").select("*").eq("id",user.id).maybeSingle();
+    if(!data){const r=await sb.from("profiles").insert({id:user.id,name:(user.email||"Пользователь").split("@")[0]}).select().single();data=r.data}
+    me=data; if(me) profCache.set(me.id,me);
+    const {data:adm}=await sb.from("admins").select("user_id").eq("user_id",user.id).maybeSingle(); isAdmin=!!adm;
+  } else {me=null;isAdmin=false}
+  paintMe();
+  if(prev!==(user&&user.id)){await loadFavs();refreshUnread();subscribeMessages();
+    if(user&&currentView()==="login"){const to=sessionStorage.getItem("zis-after-login")||"#my";sessionStorage.removeItem("zis-after-login");location.hash=to}
+    else route();}
 }
 
-/* ---------- favourites (private per person) ---------- */
-let favChain=Promise.resolve();
-function toggleFav(k){
-  if(!db||!uid){toast("Избранное доступно после входа в аккаунт");return Promise.resolve()}
-  favs.has(k)?favs.delete(k):favs.add(k); syncFavUI();
-  return saveFavDoc().catch(()=>toast("Не удалось сохранить избранное"));
-}
-function syncFavUI(){
-  const n=[...favs].filter(k=>ads.some(a=>key(a)===k)).length;
-  const b=$("#favCount"); b.textContent=n; b.hidden=!n;
-  document.querySelectorAll("[data-fav]").forEach(el=>el.setAttribute("aria-pressed",favs.has(el.dataset.fav)));
-}
-
-/* ---------- routing & events ---------- */
-function renderView(h){
-  if(h==="post") renderPost(); else if(h==="my") renderMy(); else if(h==="favs") renderFavs(); else if(h==="reports") renderReports(); else renderHome();
-  renderCats(); syncFavUI();
-}
-function route(){
-  const h=location.hash.slice(1)||"home";
-  if(h.startsWith("ad-")){
-    const id=h.slice(3), a=ads.find(x=>x.id===id);
-    if(!$("#view").innerHTML.trim()) renderView(lastView.slice(1)||"home");
-    if(a){ if(openKey!==key(a)) openAd(key(a)); }
-    else if(loaded){ toast("Объявление не найдено или уже удалено"); location.hash=lastView; }
+/* ================= СТАРТ ================= */
+(async function start(){
+  if(!window.supabase||!CFG.url||!CFG.anonKey||/ВСТАВЬТЕ|ВАШ_/.test(CFG.anonKey)){
+    $("#catsBar").hidden=true;
+    view().innerHTML=`<div class="setup box"><h1 style="font-size:22px">Сайт почти готов</h1>
+      <p>Нужно подключить базу данных. Создайте в репозитории файл <code>config.js</code> с адресом проекта Supabase и публичным ключом (Publishable key из Settings → API Keys):</p>
+      <pre style="background:var(--bg);padding:12px;border-radius:10px;overflow-x:auto">window.ZIS_CONFIG = {\n  url: "https://ВАШ-ПРОЕКТ.supabase.co",\n  anonKey: "ВАШ_PUBLISHABLE_КЛЮЧ",\n  google: false\n};</pre>
+      ${!window.supabase?'<p class="err">Не загрузилась библиотека Supabase. Проверьте интернет и обновите страницу.</p>':""}</div>`;
     return;
   }
-  if(openKey) closeAd(true);
-  lastView="#"+h; renderView(h); window.scrollTo(0,0);
-}
-function render(){
-  const h=location.hash.slice(1)||"home";
-  if(h==="post") return;
-  if(h.startsWith("ad-")){ renderView(lastView.slice(1)||"home"); if(!openKey) route(); return; }
-  const y=window.scrollY; renderView(h); window.scrollTo(0,y);
-}
-addEventListener("hashchange",route);
-
-$("#regionTop").innerHTML=regionOptions("");
-$("#searchForm").addEventListener("submit",e=>{e.preventDefault();S.q=$("#q").value;S.region=$("#regionTop").value;S.city="";if(location.hash&&location.hash!=="#home")location.hash="#home";else route()});
-$("#catRow").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;S.cat=S.cat===b.dataset.cat?"":b.dataset.cat;if(location.hash&&location.hash!=="#home")location.hash="#home";else route()});
-document.addEventListener("click",e=>{
-  const f=e.target.closest("[data-fav]"); if(f){e.stopPropagation();toggleFav(f.dataset.fav);return}
-  const c=e.target.closest("[data-open]"); if(c&&!e.target.closest("#modalRoot")){openAd(c.dataset.open);return}
-  if(e.target.id==="sellerBack"){S.seller="";route()}
-  if(e.target.id==="vGrid"||e.target.id==="vList"){layoutMode=e.target.id==="vList"?"list":"grid";try{localStorage.setItem("zis-layout",layoutMode)}catch(_){}render()}
-  if(e.target.id==="saveSearch"){const s={};["q","region","city","cat","min","max","cond","photo"].forEach(k=>{if(S[k])s[k]=S[k]});
-    if(searches.some(x=>JSON.stringify(x)===JSON.stringify(s))){toast("Этот поиск уже сохранён");return}
-    searches=[...searches,s].slice(-20);saveFavDoc().then(()=>toast("Поиск сохранён в «Избранном»")).catch(()=>toast("Не удалось сохранить поиск"))}
-  const ss=e.target.closest("[data-ss]"); if(ss){Object.assign(S,{q:"",region:"",city:"",cat:"",min:"",max:"",cond:"",photo:false,seller:""},searches[+ss.dataset.ss]);$("#q").value=S.q;$("#regionTop").value=S.region;location.hash="#home"}
-  const sd=e.target.closest("[data-ssdel]"); if(sd){searches=searches.filter((_,i)=>i!==+sd.dataset.ssdel);saveFavDoc();renderFavs()}
-  if(e.target.id==="fReset"){Object.assign(S,{region:"",city:"",min:"",max:"",cond:"",photo:false});$("#regionTop").value="";route()}
-  if(e.target.id==="fToggle"){filtersOpen=!filtersOpen;document.querySelector("aside.panel").classList.toggle("open",filtersOpen)}
-  const ro=e.target.closest("[data-rmold]"); if(ro){draft.pics.splice(+ro.dataset.rmold,1);renderPicBox()}
-  const rn=e.target.closest("[data-rmnew]"); if(rn){draft.newPics.splice(+rn.dataset.rmnew,1);renderPicBox()}
-});
-document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("[data-open]")){e.preventDefault();openAd(e.target.dataset.open)}});
-document.addEventListener("change",e=>{
-  const t=e.target, id=t.id;
-  if(id==="fRegion"){S.region=t.value;S.city="";$("#regionTop").value=t.value;route()}
-  if(id==="fCity"){S.city=t.value;route()}
-  if(id==="fCond"){S.cond=t.value;route()}
-  if(id==="fPhoto"){S.photo=t.checked;route()}
-  if(id==="fSort"){S.sort=t.value;route()}
-  if(id==="fMin"||id==="fMax"){S[id==="fMin"?"min":"max"]=t.value.replace(/[^\d.]/g,"");route()}
-  if(id==="pRegion"||t.name==="pt"){readForm();if(id==="pRegion")draft.city="";renderPost()}
-  if(id==="pFiles"){
-    const files=[...t.files].slice(0,6-draft.pics.length-draft.newPics.length); t.value="";
-    readForm();
-    Promise.all(files.map(f=>Promise.all([compress(f,1280,200000),compress(f,420,40000)]).then(([full,th])=>({f:full,t:th})).catch(()=>null)))
-      .then(r=>{const ok=r.filter(Boolean);draft.newPics.push(...ok);if(ok.length<r.length)toast("Часть файлов не удалось открыть как фото");renderPicBox()});
-  }
-});
-document.addEventListener("submit",e=>{if(e.target.id==="postForm")submitPost(e)});
-
-/* ---------- local demo store (used only outside claude.ai, e.g. GitHub Pages) ---------- */
-function localDB(){
-  let store={}; try{store=JSON.parse(localStorage.getItem("zis-db")||"{}")}catch(_){}
-  const subs=new Set();
-  const save=()=>{try{localStorage.setItem("zis-db",JSON.stringify(store))}catch(_){throw {code:"quota_exceeded"}}subs.forEach(f=>f())};
-  const snapOf=(p)=>({id:p.split("/").pop(),exists:p in store,data:()=>store[p]});
-  const doc=p=>({id:p.split("/").pop(),path:p,
-    get:async()=>snapOf(p),
-    set:async d=>{const old=store[p];store[p]=JSON.parse(JSON.stringify(d));try{save()}catch(e){if(old===undefined)delete store[p];else store[p]=old;throw e}},
-    delete:async()=>{delete store[p];save()},
-    onSnapshot(next){const f=()=>next(snapOf(p));subs.add(f);f();return()=>subs.delete(f)}});
-  const coll=c=>{const q={path:c,doc:id=>doc(c+"/"+(id||rid())),limit:()=>q,
-    onSnapshot(next){const f=()=>{const docs=Object.keys(store).filter(k=>k.startsWith(c+"/")&&!k.slice(c.length+1).includes("/")).map(snapOf);next({docs,size:docs.length,empty:!docs.length})};subs.add(f);f();return()=>subs.delete(f)}};return q};
-  return {doc,collection:coll};
-}
-
-/* ---------- boot ---------- */
-route();
-(async()=>{
-  const timer=setTimeout(()=>{if(!loaded){loadErr="Не удалось загрузить объявления. Обновите страницу чуть позже.";render()}},10000);
-  if(!window.claude){
-    db=localDB(); uid="local"; canWrite=true; owner=true; demo=true;
-    const b=document.createElement("div"); b.className="wrap note"; b.style.paddingBlock="8px";
-    b.textContent="Демо-режим: объявления сохраняются только в этом браузере. Общая база работает в версии на claude.ai.";
-    document.querySelector(".cats").after(b);
-  }
-  try{ if(!db) db = window.claude ? await window.claude.use("db") : null; }catch(_){db=null}
-  if(!db){clearTimeout(timer);loadErr="Войдите в аккаунт Claude, чтобы смотреть и подавать объявления.";render();return}
-  if(window.claude){ try{ user = await window.claude.use("user"); }catch(_){user=null} }
-  if(user){ try{uid=await user.id()}catch(_){} try{canWrite=await user.can("data.write")}catch(_){} try{owner=await user.isOwner()}catch(_){} }
-  db.collection("ads").limit(1000).onSnapshot(snap=>{
-    clearTimeout(timer); loadErr="";
-    const list=[]; let mine={};
-    snap.docs.forEach(d=>{const items=(d.data()||{}).items||{};for(const k in items){const it=items[k];if(it&&it.title)list.push({...it,id:k,uid:d.id})}if(d.id===uid)mine={...items}});
-    ads=list; myItems=mine; loaded=true; render();
-  },err=>{clearTimeout(timer);loadErr="Не удалось загрузить объявления. Обновите страницу чуть позже.";render()});
-  if(uid) db.collection("data/users/"+uid).doc("favs").onSnapshot(s=>{const d=s.data()||{};favs=new Set(d.ids||[]);searches=Array.isArray(d.searches)?d.searches:[];syncFavUI();if(location.hash==="#favs")route()},()=>{});
-  db.collection("views").limit(1000).onSnapshot(snap=>{
-    const c={}; snap.docs.forEach(d=>{const ids=(d.data()||{}).ids||[];ids.forEach(k=>c[k]=(c[k]||0)+1);if(d.id===uid)myViews=ids.slice()});
-    viewCounts=c;
-  },()=>{});
-  db.collection("qa").limit(1000).onSnapshot(snap=>{
-    const list=[]; snap.docs.forEach(d=>{const items=(d.data()||{}).items||{};for(const k in items)list.push({...items[k],id:k,uid:d.id});if(d.id===uid)myQa={...items}});
-    qa=list; if(openKey) renderQa(openKey);
-  },()=>{});
-  if(owner) db.collection("reports").limit(1000).onSnapshot(snap=>{
-    const list=[]; snap.docs.forEach(d=>{const items=(d.data()||{}).items||{};for(const k in items)list.push({...items[k],id:k,uid:d.id})});
-    reports=list; const b=$("#repLink"); if(b){b.hidden=false;b.querySelector(".badge").textContent=list.length} if(location.hash==="#reports")route();
-  },()=>{});
-  if(uid) db.collection("reports").doc(uid).onSnapshot(s=>{myReports={...((s.data()||{}).items||{})}},()=>{});
-  if(location.hash.startsWith("#ad-")) route();
+  sb=window.supabase.createClient(CFG.url,CFG.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"pkce"}});
+  wire(); renderCats(); loadCatCounts();
+  const {data:{session}}=await sb.auth.getSession();
+  await onAuth(session);
+  if(!user) route();
+  sb.auth.onAuthStateChange((ev,s)=>{if(ev==="SIGNED_IN"||ev==="SIGNED_OUT"||ev==="USER_UPDATED")setTimeout(()=>onAuth(s),0)});
 })();
 </script>
-</body></html>
+</body>
+</html>
