@@ -106,7 +106,7 @@ main{padding-block:20px 48px}
 .empty{background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:40px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}
 .empty h2{font-family:var(--f-display);font-weight:600;font-size:19px;margin:0;text-wrap:balance}
 .empty p{margin:0;color:var(--muted);max-width:52ch}
-.btn{border:0;border-radius:10px;padding:11px 18px;font-weight:700;background:var(--accent);color:var(--accent-ink);display:inline-flex;align-items:center;gap:8px}
+.btn{text-decoration:none;border:0;border-radius:10px;padding:11px 18px;font-weight:700;background:var(--accent);color:var(--accent-ink);display:inline-flex;align-items:center;gap:8px}
 .btn.sec{background:var(--brand-soft);color:var(--brand)}
 .btn.danger{background:transparent;color:var(--danger);border:1px solid var(--danger)}
 .btn:disabled{opacity:.55;cursor:default}
@@ -267,6 +267,7 @@ textarea.inp{min-height:130px;resize:vertical}
   .bottomnav a[aria-current="page"]{color:var(--brand)}
   .bottomnav .dot{position:absolute;top:0;right:4px;background:var(--danger);color:#fff;border-radius:99px;font-size:10px;min-width:16px;height:16px;line-height:16px;text-align:center;padding:0 4px}
   .chat{height:calc(100vh - 220px)}
+  .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 }
 </style>
 </head>
