@@ -365,6 +365,28 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 .legal{max-width:820px;margin:20px auto;line-height:1.6;gap:6px}
 .legal h1{font-size:26px;margin:0 0 4px}.legal h2{font-size:18px;margin:16px 0 2px}
 .legal ul{margin:4px 0;padding-left:22px}.legal li{margin:4px 0}.legal p{margin:6px 0}
+/* ---- этап 2: заглушки, панель, отзывы, уведомления ---- */
+.catph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:var(--ph-bg);color:var(--ph-fg);text-align:center;padding:8px}
+.catph svg{width:38%;max-width:64px;height:auto;opacity:.85}
+.catph span{font-size:12px;font-weight:700;opacity:.8}
+.catph.big{position:relative;min-height:320px;border-radius:14px}.catph.big svg{max-width:96px}.catph.big span{font-size:15px}
+.mph{position:relative}
+.gal .main .catph.big{position:absolute;inset:0;width:100%;height:100%;min-height:0;border-radius:inherit}
+.gal .main:has(.catph){min-height:280px;position:relative}
+@media (max-width:640px){.hrow .search{flex-basis:100%}}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .catph{background:#1e1e1e}}
+.adbar{display:none}
+@media (max-width:860px){
+  body.has-adbar .bottomnav{display:none}
+  .adbar{display:flex;gap:10px;position:fixed;left:0;right:0;bottom:0;z-index:26;background:var(--surface);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -4px 16px rgba(0,0,0,.06)}
+  .adbar .btn{flex:1;justify-content:center;height:48px;font-size:16px}
+  body.has-adbar #view{padding-bottom:84px}
+}
+.rev{border-top:1px solid var(--line);padding:10px 0}.rev:first-of-type{border-top:0}
+.rev-h{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.rev p{margin:6px 0 0;white-space:pre-line}
+.bell{display:inline-flex;align-items:center;gap:4px;font-size:14px;cursor:pointer;white-space:nowrap}
+.ssrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.ssrow .link:first-child{flex:1;text-align:left}
+.tgnote{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#eaf6fd;border-radius:12px;padding:10px 12px;font-size:14px}
 /* ---- подкатегории ---- */
 .subchips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;scrollbar-width:thin}
 .subchips .chip{white-space:nowrap;padding:8px 14px;font-size:14px}
@@ -707,12 +729,17 @@ function searchLabel(s){
 
 /* ================= КАРТОЧКИ ================= */
 const adCache=new Map();
+const CAT_TINT=["#e9f3ff:#2f6fd6","#fff1e6:#d9661c","#eef9ee:#2e9a4a","#f3efff:#6b4fd8","#fff8dc:#b88a00","#ffecec:#d23c3c","#fdeefa:#c03aa5","#e8faf8:#1a9c8f","#eef2ff:#3d5bd9","#f6f2ea:#9a6b2f","#fff0f5:#d4467a","#eaf6ff:#1f86c7","#f1f8e8:#5d9a23","#fff6e0:#c98a00"];
+function catPh(cat,big){
+  const i=Math.max(0,CATS.findIndex(c=>c.id===cat)), [bg,fg]=CAT_TINT[i%CAT_TINT.length].split(":"), c=CAT[cat];
+  return `<div class="catph${big?" big":""}" style="--ph-bg:${bg};--ph-fg:${fg}">${c?c.ic:NOPH}<span>${c?esc(c.name):"Без фото"}</span></div>`;
+}
 function card(a){
   adCache.set(a.id,a);
   const n=(a.photos||[]).length;
   const tags=(a.status==="sold"?'<span class="tag sold">Продано</span>':"")+(a.haggle&&a.price_type==="fixed"?'<span class="tag">Торг</span>':"")+(a.cond==="new"&&hasCond(a.cat)?'<span class="tag">Новое</span>':"");
   return `<a class="card${a.status==="sold"?" is-sold":""}" href="#ad/${a.id}">
-    <div class="ph"><div class="noph"${n?" hidden":""}>${NOPH}</div>${n?`<img alt="" loading="lazy" src="${esc(photoUrl(a.photos[0],true))}">`:""}${n>1?`<span class="np">${n} фото</span>`:""}
+    <div class="ph">${n?"":catPh(a.cat)}${n?`<img alt="" loading="lazy" src="${esc(photoUrl(a.photos[0],true))}">`:""}${n>1?`<span class="np">${n} фото</span>`:""}
       <button type="button" class="fav" data-fav="${a.id}" aria-pressed="${favs.has(a.id)}" aria-label="В избранное">${HEART}</button></div>
     <div class="cbody">${fmtPrice(a)}<div class="ctitle">${esc(a.title)}</div>${tags?`<div class="tags">${tags}</div>`:""}
       <div class="meta"><span>${esc(a.city)}</span><span>${esc(fmtDate(a.bumped_at))}</span></div></div></a>`;
@@ -846,6 +873,19 @@ const LEGAL_PRIVACY=`<h1>Политика обработки персональ�
 <p>Доступ к данным ограничен правилами базы данных: каждый пользователь может менять только свои объявления и профиль. Соединение с сайтом защищено (HTTPS), пароли хранятся только в виде хеша, их не видит никто, включая администрацию.</p>
 <h2>9. Изменения</h2>
 <p>Мы можем обновлять эту политику. Новая редакция действует с момента публикации на этой странице.</p>`;
+const tgLinked=()=>!!(me&&(me.notify_chat_id||me.tg_chat_id));
+function tgNotifyBlock(){
+  return tgLinked()?`<p class="note" style="margin:0">🔔 Новые объявления по отмеченным поискам приходят в Telegram-бот @abisto_bot.</p>`
+    :`<div class="tgnote"><span>Подключите Telegram — бот пришлёт новые объявления по вашим поискам.</span><button class="btn tg-btn sm" type="button" id="tgLinkBtn">Подключить Telegram</button><span id="tgLinkBox"></span></div>`;
+}
+async function tgLink(){
+  const box=$("#tgLinkBox"), b=$("#tgLinkBtn"); if(!box) return; b.disabled=true; box.textContent="Готовим ссылку…";
+  const {data:{session}}=await sb.auth.getSession(); let r={};
+  try{r=await (await fetch(CFG.url+"/functions/v1/tg",{method:"POST",headers:{"Content-Type":"application/json",apikey:CFG.anonKey,Authorization:"Bearer "+(session&&session.access_token)},body:JSON.stringify({action:"link_start"})})).json()}catch(_){}
+  b.disabled=false;
+  if(!r.link){box.textContent="Не получилось. Попробуйте позже.";return}
+  box.innerHTML=`<a class="btn tg-btn sm" target="_blank" rel="noopener" href="${esc(r.link)}">Открыть бота</a> Нажмите «Старт», затем обновите страницу.`;
+}
 function renderAllCats(){
   view().innerHTML=`<div class="page"><div class="toolbar"><h1>Все категории</h1></div><div class="allcat-grid">${CATS.map(c=>`<section class="allcat">
     <a href="#" class="allcat-h" data-gocat="${c.id}"><span class="ic">${c.ic}</span><span>${esc(c.name)}${catCounts[c.id]?` <span class="cnt">${catCounts[c.id]}</span>`:""}</span></a>
@@ -923,7 +963,7 @@ async function renderAd(id,fresh){
   const viewed=lsGet("zis-viewed",[]); if(!viewed.includes(a.id)){sb.rpc("increment_views",{ad:a.id});lsSet("zis-viewed",[...viewed,a.id].slice(-500));a.views++}
   lsSet("zis-recent",[a.id,...lsGet("zis-recent",[]).filter(x=>x!==a.id)].slice(0,12));
   const seller=profCache.get(a.user_id)||{name:"Продавец"}; const revs=null, avg=0, sellerCount=null;
-  const sellerP=Promise.all([profiles([a.user_id]),sb.from("reviews").select("rating").eq("seller_id",a.user_id),sb.from("ads").select("id",{count:"exact",head:true}).eq("user_id",a.user_id).eq("status","active")]);
+  const sellerP=Promise.all([profiles([a.user_id]),sb.from("reviews").select("rating,body,author_id,created_at").eq("seller_id",a.user_id).order("created_at",{ascending:false}),sb.from("ads").select("id",{count:"exact",head:true}).eq("user_id",a.user_id).eq("status","active")]);
   const mine=user&&a.user_id===user.id; const c=CAT[a.cat]||{name:a.cat,fields:[]};
   const photos=a.photos||[];
   const attrs=(c.fields||[]).filter(f=>a.attrs&&a.attrs[f.k]!=null&&a.attrs[f.k]!=="").map(f=>`<div><dt>${esc(f.l)}</dt><dd>${esc(a.attrs[f.k])}${f.u?" "+f.u:""}</dd></div>`).join("");
@@ -933,11 +973,12 @@ async function renderAd(id,fresh){
   view().innerHTML=`<div class="crumbs"><a href="#">Главная</a>›<a href="#" data-gocat="${esc(a.cat)}">${esc(c.name)}</a>${a.sub?`›<a href="#" data-gocat="${esc(a.cat)}" data-gosub="${esc(a.sub)}">${esc(a.sub)}</a>`:""}</div>
   <div class="adpage">
     <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
-      <div class="gal"><div class="main">${photos.length?`<img id="mMain" alt="${esc(a.title)}" src="${esc(photoUrl(photos[0]))}">`:`<div style="color:#8fa3c8">${NOPH.replace("<svg",'<svg width="64" height="64"')}</div>`}</div>
+      <div class="gal"><div class="main">${photos.length?`<img id="mMain" alt="${esc(a.title)}" src="${esc(photoUrl(photos[0]))}">`:catPh(a.cat,true)}</div>
         ${photos.length>1?`<div class="thumbs">${photos.map((p,i)=>`<button data-th="${i}" aria-current="${i===0}" aria-label="Фото ${i+1}"><img alt="" loading="lazy" src="${esc(photoUrl(p,true))}"></button>`).join("")}</div>`:""}</div>
       ${attrs?`<div class="box"><h2 class="sub2">Характеристики</h2><dl class="attrs">${attrs}</dl></div>`:""}
       <div class="box"><h2 class="sub2">Описание</h2><div class="desc">${a.descr?esc(a.descr):'<span class="note">Продавец не добавил описание.</span>'}</div>
         <dl class="kv">${hasCond(a.cat)?`<dt>Состояние</dt><dd>${a.cond==="new"?"Новое":"Б/у"}</dd>`:""}<dt>Где</dt><dd>${esc(a.city)}, ${esc(a.region)}</dd><dt>Размещено</dt><dd>${esc(fmtDate(a.created_at))}${a.bumped_at!==a.created_at?` · поднято ${esc(fmtDate(a.bumped_at))}`:""}</dd><dt>Просмотры</dt><dd>${a.views}</dd><dt>Номер</dt><dd>${a.id}</dd></dl></div>
+      <div class="box" id="adReviews" hidden></div>
       <div id="similar"></div>
     </div>
     <aside class="adside">
@@ -958,19 +999,29 @@ async function renderAd(id,fresh){
       </div>
       ${!mine&&user?`<button class="link danger-link" id="mReport">Пожаловаться на объявление</button>`:""}
     </aside>
-  </div>`;
+  </div>
+  ${!mine&&a.status!=="sold"?`<div class="adbar">${a.show_phone&&a.phone?`<a class="btn" id="barCall" href="tel:${esc(a.phone.replace(/[^\d+]/g,""))}">Позвонить</a>`:""}<button class="btn ${a.show_phone&&a.phone?"sec":""}" id="barWrite" type="button">Написать</button></div>`:""}`;
+  document.body.classList.toggle("has-adbar",!mine&&a.status!=="sold");
   sellerP.then(([ps,{data:rv},{count}])=>{
     const box=$("#sellerBox"); if(!box||currentView()!=="ad"||+currentArg()!==id) return;
     const sl=ps[a.user_id]||{name:"Продавец"}; const n=(rv||[]).length, av=n?rv.reduce((x,r)=>x+r.rating,0)/n:0;
     box.innerHTML=`<a class="sellercard" href="#user/${esc(a.user_id)}">${avatarHtml(sl)}<div><div class="nm">${esc(sl.name)}</div><div class="note">${n?stars(av)+" "+av.toFixed(1)+" · "+n+" "+plural(n,["отзыв","отзыва","отзывов"]):"Пока без отзывов"}</div><div class="note">${sl.created_at?esc(sinceText(sl.created_at)):""}</div></div></a>
       <a class="link" href="#" data-seller="${esc(a.user_id)}">Все объявления продавца (${count||0})</a>`;
+    const rb=$("#adReviews"); if(!rb) return;
+    const last=(rv||[]).filter(r=>r.body).slice(0,3);
+    profiles(last.map(r=>r.author_id)).then(au=>{ if(!$("#adReviews")) return;
+      rb.innerHTML=`<h2 class="sub2">Отзывы о продавце ${n?`<span class="note">${stars(av)} ${av.toFixed(1)} · ${n} ${plural(n,["отзыв","отзыва","отзывов"])}</span>`:""}</h2>
+        ${last.length?last.map(r=>`<div class="rev"><div class="rev-h"><b>${esc((au[r.author_id]||{}).name||"Покупатель")}</b> ${stars(r.rating)} <span class="note">${esc(fmtDate(r.created_at))}</span></div><p>${esc(r.body)}</p></div>`).join(""):`<p class="note">${n?"Покупатели поставили оценки без текста.":"Отзывов пока нет."} Отзыв можно оставить после переписки с продавцом.</p>`}
+        <a class="link" href="#user/${esc(a.user_id)}">${n?"Все отзывы":"Профиль продавца"}${user&&user.id!==a.user_id?" · оставить отзыв":""}</a>`;
+      rb.hidden=false;});
   }).catch(()=>{});
   const vw=view();
   vw.onclick=async e=>{
     const t=e.target, id=t.id;
     const th=t.closest("[data-th]"); if(th){$("#mMain").src=photoUrl(photos[+th.dataset.th]);vw.querySelectorAll("[data-th]").forEach(b=>b.setAttribute("aria-current",b===th));return}
     if(id==="showPhone"){if(!user||user.id!==a.user_id)sb.rpc("track_phone",{ad:a.id}).then(()=>{},()=>{});$("#phoneBox").innerHTML=`<a class="btn" href="tel:${esc(a.phone.replace(/[^\d+]/g,""))}">${esc(a.phone)}</a>`}
-    if(id==="writeSeller"){if(needLogin())return;openChat(a)}
+    if(id==="writeSeller"||id==="barWrite"){if(needLogin())return;openChat(a)}
+    if(id==="barCall"&&(!user||user.id!==a.user_id))sb.rpc("track_phone",{ad:a.id}).then(()=>{},()=>{});
     if(id==="mFav") toggleFav(a.id).then(()=>{t.textContent=favs.has(a.id)?"В избранном":"В избранное";t.setAttribute("aria-pressed",favs.has(a.id))});
     if(id==="mShare"){const url=location.href;if(navigator.share)navigator.share({title:a.title,url}).catch(()=>{});else copyText(url,"Ссылка скопирована")}
     if(id==="mBump"){const {error}=await sb.from("ads").update({bumped_at:new Date().toISOString()}).eq("id",a.id);if(error)toast(errText(error));else{toast("Объявление поднято наверх");renderAd(a.id)}}
@@ -1102,7 +1153,7 @@ function myRow(a,st,fc){
     sold:[B("activate","Вернуть в продажу"),B("archive","В архив")],
     archived:[B("activate","Активировать","",false),`<a class="btn sec sm" href="#edit/${a.id}">Редактировать</a>`]}[a.status]||[];
   return `<div class="mrow"><label class="mchk"><input type="checkbox" data-sel="${a.id}" ${mySel.has(a.id)?"checked":""} aria-label="Выбрать"></label>
-    <a class="mph" href="#ad/${a.id}">${n?`<img alt="" loading="lazy" src="${esc(photoUrl(a.photos[0],true))}">`:NOPH}</a>
+    <a class="mph" href="#ad/${a.id}">${n?`<img alt="" loading="lazy" src="${esc(photoUrl(a.photos[0],true))}">`:catPh(a.cat)}</a>
     <div class="minfo"><a class="mtitle" href="#ad/${a.id}">${esc(a.title)}</a>${a.status==="draft"?'<span class="note">Черновик</span>':fmtPrice(a)}
       <div class="note">${esc(a.city||"")}${a.status==="draft"?"":" · "+(a.status==="active"?"поднято ":"")+esc(fmtDate(a.bumped_at))}</div>
       ${a.status==="draft"?"":`<div class="mstat"><span title="Просмотров всего">${IC_EYE}${a.views||0}</span><span title="Просмотров за ${myRange} дн.">+${s.views||0}</span><span title="Показов телефона за ${myRange} дн.">${IC_TEL}${s.phone_views||0}</span><span title="В избранном">${IC_HEART}${fc[a.id]||0}</span><span title="Новых чатов за ${myRange} дн.">${IC_CHAT}${s.chats||0}</span></div>`}</div>
@@ -1184,6 +1235,7 @@ async function renderProfile(){
       <div class="row2"><div class="field"><label for="prRegion">Область</label><select class="inp" id="prRegion">${regionOptions(region,"Не указана")}</select></div>
       <div class="field"><label for="prCity">Город</label><select class="inp" id="prCity">${cityOptions(region,me&&me.city,"Не указан")}</select></div></div>
     </div>
+    <div class="panel"><h2 class="sub2">Уведомления в Telegram</h2>${tgNotifyBlock()}</div>
     <div class="panel"><h2 class="sub2">Магазин или мастерская</h2>
       <label class="check"><input type="checkbox" id="prBiz" ${me&&me.is_business?"checked":""}> Я продаю как компания или ИП</label>
       <div class="field"><label for="prShop">Название</label><input class="inp" id="prShop" maxlength="60" placeholder="Например, «Сервисный центр на Брестской»" value="${esc(me&&me.shop_name||"")}"></div>
@@ -1212,7 +1264,7 @@ async function renderFavs(){
   view().innerHTML=`<div class="toolbar"><h1>Избранное</h1></div><div id="ssBox"></div><div id="favList">${loadingBlock()}</div>`;
   const [{data:ss},{data:fv}]=await Promise.all([sb.from("saved_searches").select("*").order("created_at",{ascending:false}),sb.from("favorites").select("ad_id, ads(*)").order("created_at",{ascending:false})]);
   if(!$("#favList")) return;
-  if(ss&&ss.length) $("#ssBox").innerHTML=`<div class="panel" style="margin-bottom:16px"><h3>Сохранённые поиски</h3><div class="sslist">${ss.map(s=>`<div class="ssrow"><button class="link" data-ss='${esc(JSON.stringify(s.params))}'>${esc(searchLabel({...freshFilters(),...s.params}))}</button><button class="link danger-link" data-ssdel="${s.id}">Удалить</button></div>`).join("")}</div></div>`;
+  if(ss&&ss.length) $("#ssBox").innerHTML=`<div class="panel" style="margin-bottom:16px"><h3>Сохранённые поиски</h3>${tgNotifyBlock()}<div class="sslist">${ss.map(s=>`<div class="ssrow"><button class="link" data-ss='${esc(JSON.stringify(s.params))}'>${esc(searchLabel({...freshFilters(),...s.params}))}</button><label class="bell" title="Уведомлять о новых объявлениях"><input type="checkbox" data-ssnotify="${s.id}" ${s.notify!==false?"checked":""}> 🔔</label><button class="link danger-link" data-ssdel="${s.id}">Удалить</button></div>`).join("")}</div></div>`;
   const items=(fv||[]).map(r=>r.ads).filter(Boolean);
   $("#favList").innerHTML=items.length?grid(items):emptyBlock("В избранном пусто","Нажмите на сердечко на карточке объявления, чтобы сохранить его здесь.");
 }
@@ -1414,7 +1466,7 @@ async function route(){
   if(v!=="chat") chatConv=null;
   $("#catsBar").hidden=!["home"].includes(v);
   document.querySelectorAll("[data-nav]").forEach(a=>a.setAttribute("aria-current",a.dataset.nav===v||(v==="profile"&&a.dataset.nav==="my")?"page":"false"));
-  window.scrollTo(0,0);
+  window.scrollTo(0,0); document.body.classList.remove("has-adbar");
   try{
     if(v==="home") await renderHome();
     else if(v==="cats") renderAllCats();
@@ -1465,8 +1517,9 @@ function wire(){
     if(id==="vGrid"||id==="vList"){layoutMode=id==="vList"?"list":"grid";lsSet("zis-layout",layoutMode);document.querySelectorAll(".seg2 button").forEach(b=>b.setAttribute("aria-pressed",b.id===id));paintResults()}
     if(id==="fReset"){S={...freshFilters(),q:S.q,cat:S.cat,sort:S.sort};$("#regionTop").value="";goHome()}
     if(id==="fToggle"){filtersOpen=!filtersOpen;document.querySelector("aside.panel").classList.toggle("open",filtersOpen)}
-    if(id==="saveSearch"){if(needLogin())return;const p=searchParams(S);delete p.limit;delete p.offset;const {error}=await sb.from("saved_searches").insert({params:{...S}});toast(error?errText(error):"Поиск сохранён в «Избранном»")}
+    if(id==="saveSearch"){if(needLogin())return;const p=searchParams(S);delete p.limit;delete p.offset;const {error}=await sb.from("saved_searches").insert({params:{...S}});toast(error?errText(error):tgLinked()?"Поиск сохранён. Новые объявления придут в Telegram":"Поиск сохранён в «Избранном». Подключите там Telegram для уведомлений")}
     const ss=t.closest("[data-ss]"); if(ss){S={...freshFilters(),...JSON.parse(ss.dataset.ss)};$("#q").value=S.q||"";$("#regionTop").value=S.region||"";location.hash="#"}
+    if(id==="tgLinkBtn"){tgLink();return}
     const sd=t.closest("[data-ssdel]"); if(sd){await sb.from("saved_searches").delete().eq("id",sd.dataset.ssdel);renderFavs()}
     const ro=t.closest("[data-rmold]"); if(ro){draft.removed.push(draft.photos.splice(+ro.dataset.rmold,1)[0]);renderPicBox()}
     const rn=t.closest("[data-rmnew]"); if(rn){const [x]=draft.newFiles.splice(+rn.dataset.rmnew,1);URL.revokeObjectURL(x.preview);renderPicBox()}
@@ -1489,6 +1542,7 @@ function wire(){
     const t=e.target, id=t.id;
     if(t.dataset.sel){const n=+t.dataset.sel;t.checked?mySel.add(n):mySel.delete(n);paintBulk()}
     if(id==="selAll"){myAds.filter(a=>a.status===myTab).forEach(a=>t.checked?mySel.add(a.id):mySel.delete(a.id));document.querySelectorAll("[data-sel]").forEach(c=>c.checked=t.checked);paintBulk()}
+    if(t.dataset.ssnotify){const {error}=await sb.from("saved_searches").update({notify:t.checked}).eq("id",+t.dataset.ssnotify);toast(error?errText(error):t.checked?"Уведомления включены":"Уведомления выключены")}
     if(id==="fRegion"){S.region=t.value;S.city="";$("#regionTop").value=t.value;renderHome()}
     if(id==="fCity"){S.city=t.value;renderHome()}
     if(id==="fCond"){S.cond=t.value;renderHome()}
