@@ -417,6 +417,9 @@ img.logo-mark,.logo-img{background:none!important;border-radius:0!important;disp
 .catph svg.art{width:46%;max-width:84px;opacity:1}
 .catph.big svg.art{max-width:140px}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .cat .ic{background:#1e1e1e!important}}
+.tag.demo{background:#fff3cd;color:#7a5a00}
+.admap{height:70vh;min-height:360px;border-radius:14px;border:1px solid var(--line);z-index:0}
+.leaflet-popup-content a{color:#007aa3}
 /* ---- подкатегории ---- */
 .subchips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;scrollbar-width:thin}
 .subchips .chip{white-space:nowrap;padding:8px 14px;font-size:14px}
@@ -807,7 +810,7 @@ function catPh(cat,big){
 function card(a){
   adCache.set(a.id,a);
   const n=(a.photos||[]).length;
-  const tags=(a.status==="sold"?'<span class="tag sold">Продано</span>':"")+(a.haggle&&a.price_type==="fixed"?'<span class="tag">Торг</span>':"")+(a.cond==="new"&&hasCond(a.cat)?'<span class="tag">Новое</span>':"");
+  const tags=(a.is_demo?'<span class="tag demo">Пример объявления</span>':"")+(a.status==="sold"?'<span class="tag sold">Продано</span>':"")+(a.haggle&&a.price_type==="fixed"?'<span class="tag">Торг</span>':"")+(a.cond==="new"&&hasCond(a.cat)?'<span class="tag">Новое</span>':"");
   return `<a class="card${a.status==="sold"?" is-sold":""}" href="#ad/${a.id}">
     <div class="ph">${n?"":catPh(a.cat)}${n?`<img alt="" loading="lazy" src="${esc(photoUrl(a.photos[0],true))}">`:""}${n>1?`<span class="np">${n} фото</span>`:""}
       <button type="button" class="fav" data-fav="${a.id}" aria-pressed="${favs.has(a.id)}" aria-label="В избранное">${HEART}</button></div>
@@ -981,7 +984,7 @@ async function renderHome(){
       <div class="toolbar"><div><h1>${title}</h1><span class="cnt" id="cnt">${esc(S.city||S.region||"Вся Беларусь")}</span></div>
         <div class="tools">${anyFilter(S)?'<button class="btn sec" id="saveSearch">Сохранить поиск</button>':""}<button class="btn sec filters-toggle" id="fToggle">Фильтры</button>
         <select class="inp" id="fSort" aria-label="Сортировка"><option value="new">Сначала новые</option><option value="cheap" ${S.sort==="cheap"?"selected":""}>Сначала дешёвые</option><option value="dear" ${S.sort==="dear"?"selected":""}>Сначала дорогие</option><option value="popular" ${S.sort==="popular"?"selected":""}>Популярные</option></select>
-        <div class="seg2" role="group" aria-label="Вид"><button id="vGrid" aria-pressed="${layoutMode!=="list"}" title="Плиткой">▦</button><button id="vList" aria-pressed="${layoutMode==="list"}" title="Списком">☰</button></div></div></div>
+        <div class="seg2" role="group" aria-label="Вид"><button id="vGrid" aria-pressed="${layoutMode!=="list"}" title="Плиткой">▦</button><button id="vList" aria-pressed="${layoutMode==="list"}" title="Списком">☰</button><button id="vMap" aria-pressed="${layoutMode==="map"}" title="На карте">🗺</button></div></div></div>
       ${S.cat&&CAT[S.cat]&&CAT[S.cat].subs.length?`<div class="subchips" id="subChips">${subChips()}</div>`:""}
       <div id="recent"></div>
       <div id="results">${loadingBlock()}</div>
@@ -997,7 +1000,46 @@ async function renderHome(){
 function paintResults(){
   const box=$("#results"); if(!box) return;
   if(!homeItems.length){box.innerHTML=anyFilter(S)||S.user?emptyBlock("Ничего не найдено","Попробуйте изменить запрос, убрать часть фильтров или выбрать другой регион."):emptyBlock("Здесь пока нет объявлений","Продайте ненужное или найдите нужное по всей Беларуси.",'<a class="btn" href="#post">Подать объявление</a>');return}
+  if(layoutMode==="map"){paintMap(box);return}
   box.innerHTML=grid(homeItems,layoutMode==="list")+(homeItems.length<homeTotal?`<div class="more"><button class="btn sec" id="loadMore">Показать ещё</button></div>`:"");
+}
+/* ---- карта объявлений (Leaflet + OpenStreetMap, бесплатно) ---- */
+let leafletP=null, mapObj=null;
+function loadLeaflet(){
+  if(window.L) return Promise.resolve();
+  return leafletP||(leafletP=new Promise((ok,no)=>{
+    const l=document.createElement("link"); l.rel="stylesheet"; l.href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"; document.head.appendChild(l);
+    const sc=document.createElement("script"); sc.src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"; sc.onload=ok; sc.onerror=()=>{leafletP=null;no()}; document.head.appendChild(sc);
+  }));
+}
+const geoCache=lsGet("zis-geo",{});
+let geoLast=0;
+async function geoCity(city){
+  if(geoCache[city]) return geoCache[city];
+  const wait=Math.max(0,geoLast+1100-Date.now()); geoLast=Date.now()+wait; if(wait) await new Promise(r=>setTimeout(r,wait));
+  try{
+    const r=await (await fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=by&accept-language=ru&q="+encodeURIComponent(city+", Беларусь"))).json();
+    if(r[0]){geoCache[city]=[+r[0].lat,+r[0].lon]; lsSet("zis-geo",geoCache); return geoCache[city]}
+  }catch(_){}
+  return null;
+}
+async function paintMap(box){
+  box.innerHTML=`<div id="adMap" class="admap"></div><p class="note" id="mapNote">Загружаем карту…</p>`;
+  try{await loadLeaflet()}catch(_){box.innerHTML=emptyBlock("Карта недоступна","Проверьте соединение и попробуйте ещё раз.");return}
+  if(!$("#adMap")) return;
+  if(mapObj){try{mapObj.remove()}catch(_){}}
+  const m=mapObj=L.map("adMap").setView([53.7,27.9],6);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:"© OpenStreetMap"}).addTo(m);
+  const by={}; homeItems.forEach(a=>(by[a.city]=by[a.city]||[]).push(a));
+  const cities=Object.keys(by), pts=[]; let done=0;
+  for(const c of cities){
+    const ll=await geoCity(c); if(mapObj!==m) return;
+    done++; const nt=$("#mapNote"); if(nt) nt.textContent=done<cities.length?`Ставим точки: ${done} из ${cities.length}…`:`Показано ${homeItems.length} из ${homeTotal} объявлений. Города без точки на карте не показаны.`;
+    if(!ll) continue; pts.push(ll);
+    const list=by[c].slice(0,6).map(a=>`<a href="#ad/${a.id}">${esc(a.title)}</a> — ${a.price_type==="fixed"&&a.price!=null?esc(String(a.price))+" р.":a.price_type==="free"?"даром":"договорная"}`).join("<br>");
+    L.marker(ll).addTo(m).bindPopup(`<b>${esc(c)}</b> · ${by[c].length}<br>${list}`);
+    if(pts.length>1) m.fitBounds(pts,{padding:[30,30],maxZoom:10});
+  }
 }
 async function renderRecent(){
   const box=$("#recent"); if(!box) return;
@@ -1053,7 +1095,7 @@ async function renderAd(id,fresh){
     </div>
     <aside class="adside">
       <div class="box">
-        <div class="tags">${a.status==="sold"?'<span class="tag sold">Продано</span>':""}${a.haggle&&a.price_type==="fixed"?'<span class="tag">Торг уместен</span>':""}${a.cond==="new"&&hasCond(a.cat)?'<span class="tag">Новое</span>':""}</div>
+        <div class="tags">${a.is_demo?'<span class="tag demo">Пример объявления</span>':""}${a.status==="sold"?'<span class="tag sold">Продано</span>':""}${a.haggle&&a.price_type==="fixed"?'<span class="tag">Торг уместен</span>':""}${a.cond==="new"&&hasCond(a.cat)?'<span class="tag">Новое</span>':""}</div>
         <h1>${esc(a.title)}</h1>${fmtPrice(a)}
         ${a.status==="sold"?'<p class="note">Товар продан.</p>':mine?"":`<div class="actions">
           ${a.show_phone&&a.phone?`<span id="phoneBox"><button class="btn" id="showPhone">Показать телефон</button></span>`:""}
@@ -1584,7 +1626,7 @@ function wire(){
     const ac=t.closest(".allcat [data-gocat]"); if(ac){e.preventDefault();S=freshFilters();S.cat=ac.dataset.gocat;S.sub=ac.dataset.gosub||"";location.hash="#";return}
     if(id==="loadMore"){t.disabled=true;t.textContent="Загружаем…";try{const r=await search(S,homeItems.length);homeItems=homeItems.concat(r.items);homeTotal=r.total;paintResults()}catch(err){toast(errText(err));t.disabled=false}}
     if(id==="sellerBack"){S.user="";goHome()}
-    if(id==="vGrid"||id==="vList"){layoutMode=id==="vList"?"list":"grid";lsSet("zis-layout",layoutMode);document.querySelectorAll(".seg2 button").forEach(b=>b.setAttribute("aria-pressed",b.id===id));paintResults()}
+    if(id==="vGrid"||id==="vList"||id==="vMap"){layoutMode=id==="vList"?"list":id==="vMap"?"map":"grid";lsSet("zis-layout",layoutMode);document.querySelectorAll(".seg2 button").forEach(b=>b.setAttribute("aria-pressed",b.id===id));paintResults()}
     if(id==="fReset"){S={...freshFilters(),q:S.q,cat:S.cat,sort:S.sort};$("#regionTop").value="";goHome()}
     if(id==="fToggle"){filtersOpen=!filtersOpen;document.querySelector("aside.panel").classList.toggle("open",filtersOpen)}
     if(id==="saveSearch"){if(needLogin())return;const p=searchParams(S);delete p.limit;delete p.offset;const {error}=await sb.from("saved_searches").insert({params:{...S}});toast(error?errText(error):tgLinked()?"Поиск сохранён. Новые объявления придут в Telegram":"Поиск сохранён в «Избранном». Подключите там Telegram для уведомлений")}
