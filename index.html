@@ -7,6 +7,8 @@
 <meta name="description" content="Абисто: бесплатные объявления по всей Беларуси. Продайте ненужное и найдите нужное рядом с домом.">
 <meta name="theme-color" content="#10a34a">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2310a34a'/%3E%3Ctext x='32' y='46' font-family='Arial' font-weight='900' font-size='40' text-anchor='middle' fill='%23ffffff'%3EA%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://gmksjjksvlkmhicbnbtj.supabase.co" crossorigin>
+<link rel="dns-prefetch" href="https://gmksjjksvlkmhicbnbtj.supabase.co">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Manrope:wght@400;500;600;700&display=swap">
 <style>
@@ -354,6 +356,15 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
   .mega-subs li{border-bottom:1px solid var(--line);padding:12px 0}
   body.mega-open{overflow:hidden}
 }
+/* ---- подвал и правовые страницы ---- */
+.sitefoot{border-top:1px solid var(--line);margin-top:40px;padding:22px 0 calc(22px + env(safe-area-inset-bottom));color:var(--muted);font-size:14px}
+.foot-in{display:flex;justify-content:space-between;gap:12px 24px;flex-wrap:wrap}
+.foot-links{display:flex;gap:8px 20px;flex-wrap:wrap}
+.foot-links a{color:var(--muted);text-decoration:none}.foot-links a:hover{color:var(--accent);text-decoration:underline}
+@media (max-width:860px){.sitefoot{padding-bottom:90px}}
+.legal{max-width:820px;margin:20px auto;line-height:1.6;gap:6px}
+.legal h1{font-size:26px;margin:0 0 4px}.legal h2{font-size:18px;margin:16px 0 2px}
+.legal ul{margin:4px 0;padding-left:22px}.legal li{margin:4px 0}.legal p{margin:6px 0}
 /* ---- подкатегории ---- */
 .subchips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;scrollbar-width:thin}
 .subchips .chip{white-space:nowrap;padding:8px 14px;font-size:14px}
@@ -487,6 +498,10 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 <div class="cats" id="catsBar"><div class="wrap cat-scroll"><div class="cat-row" id="catRow"></div></div></div>
 
 <main class="wrap" id="view"></main>
+<footer class="sitefoot"><div class="wrap foot-in">
+  <span>© <span id="footYear"></span> Абисто — объявления по Беларуси</span>
+  <nav class="foot-links"><a href="#rules">Правила</a><a href="#privacy">Политика персональных данных</a><a href="#cats">Все категории</a><a href="#post">Подать объявление</a></nav>
+</div></footer>
 
 <nav class="bottomnav" aria-label="Навигация">
   <a href="#" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Главная</a>
@@ -513,16 +528,19 @@ const REGIONS = {
 };
 const I = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
 const BRAND={k:"brand",l:"Марка / бренд",t:"text"};
+const AUTO_VEH=["Легковые авто","Грузовики и автобусы","Мотоциклы и мототехника","Спецтехника","Сельхозтехника"];
+const ROOMS_SUBS=["Квартиры","Комнаты","Дома, дачи, коттеджи","Новостройки","Недвижимость за рубежом"];
+const PHONE_SUBS=["Мобильные телефоны","Планшеты","Умные часы и браслеты"];
 const CATS = [
   {id:"realty",name:"Недвижимость",ic:I('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>'),
    subs:["Квартиры","Комнаты","Дома, дачи, коттеджи","Участки","Гаражи и машиноместа","Коммерческая","Новостройки","Недвижимость за рубежом"],
-   fields:[{k:"deal",l:"Тип сделки",t:"sel",o:["Продажа","Долгосрочная аренда","Посуточно"]},{k:"rooms",l:"Комнат",t:"num"},{k:"area",l:"Площадь",t:"num",u:"м²"},{k:"floor",l:"Этаж",t:"num"},{k:"year",l:"Год постройки",t:"num"}]},
+   fields:[{k:"deal",l:"Тип сделки",t:"sel",o:["Продажа","Долгосрочная аренда","Посуточно"]},{k:"rooms",l:"Комнат",t:"num",s:ROOMS_SUBS},{k:"area",l:"Площадь",t:"num",u:"м²"},{k:"floor",l:"Этаж",t:"num",s:["Квартиры","Комнаты","Новостройки","Коммерческая"]},{k:"year",l:"Год постройки",t:"num",s:ROOMS_SUBS}]},
   {id:"auto",name:"Авто и транспорт",ic:I('<path d="M5 16l1.5-5h11L19 16"/><rect x="3" y="16" width="18" height="3" rx="1"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/>'),
    subs:["Легковые авто","Грузовики и автобусы","Мотоциклы и мототехника","Спецтехника","Сельхозтехника","Прицепы","Водный транспорт","Запчасти","Шины и диски","Аксессуары и автозвук","Инструменты и оборудование"],
-   fields:[{k:"brand",l:"Марка",t:"text"},{k:"model",l:"Модель",t:"text"},{k:"year",l:"Год выпуска",t:"num"},{k:"mileage",l:"Пробег",t:"num",u:"км"},{k:"fuel",l:"Топливо",t:"sel",o:["Бензин","Дизель","Газ/бензин","Гибрид","Электро"]},{k:"gear",l:"Коробка",t:"sel",o:["Механика","Автомат","Робот","Вариатор"]},{k:"body",l:"Кузов",t:"sel",o:["Седан","Универсал","Хэтчбек","Внедорожник","Минивэн","Купе","Пикап","Фургон"]}]},
+   fields:[{k:"brand",l:"Марка",t:"sel",o:["Audi","BMW","Chevrolet","Citroen","Fiat","Ford","Geely","Honda","Hyundai","Kia","Lada (ВАЗ)","Land Rover","Lexus","Mazda","Mercedes-Benz","Mitsubishi","Nissan","Opel","Peugeot","Renault","Skoda","Subaru","Toyota","Volkswagen","Volvo","Другая"],s:AUTO_VEH},{k:"model",l:"Модель",t:"text",s:AUTO_VEH},{k:"year",l:"Год выпуска",t:"num",s:AUTO_VEH},{k:"mileage",l:"Пробег",t:"num",u:"км",s:AUTO_VEH},{k:"gear",l:"Коробка",t:"sel",o:["Механика","Автомат","Робот","Вариатор"],s:AUTO_VEH},{k:"fuel",l:"Топливо",t:"sel",o:["Бензин","Дизель","Газ/бензин","Гибрид","Электро"],s:AUTO_VEH},{k:"body",l:"Кузов",t:"sel",o:["Седан","Универсал","Хэтчбек","Внедорожник","Минивэн","Купе","Пикап","Фургон"],s:["Легковые авто"]}]},
   {id:"phones",name:"Телефоны и планшеты",ic:I('<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>'),
    subs:["Мобильные телефоны","Планшеты","Умные часы и браслеты","Чехлы и аксессуары","Зарядки и аккумуляторы","Стационарные телефоны"],
-   fields:[BRAND,{k:"model",l:"Модель",t:"text"},{k:"memory",l:"Память",t:"num",u:"ГБ"}]},
+   fields:[{k:"brand",l:"Бренд",t:"sel",o:["Apple","Samsung","Xiaomi","Redmi","POCO","Huawei","Honor","Realme","OnePlus","Google","Nokia","Motorola","Oppo","Vivo","Tecno","Infinix","Другой"]},{k:"model",l:"Модель",t:"text"},{k:"memory",l:"Встроенная память",t:"sel",o:["8","16","32","64","128","256","512","1024"],u:"ГБ",s:PHONE_SUBS},{k:"ram",l:"Оперативная память",t:"num",u:"ГБ",s:PHONE_SUBS}]},
   {id:"electronics",name:"Электроника",ic:I('<rect x="3" y="5" width="18" height="12" rx="1.5"/><path d="M8 21h8"/><path d="M10 9l4 2-4 2z"/>'),
    subs:["Телевизоры","Аудиотехника","Наушники","Портативные колонки","Фото и видеокамеры","Объективы и вспышки","Игровые приставки и игры","Квадрокоптеры","Видеонаблюдение","Электронные книги","Проекторы","Аксессуары"],
    fields:[BRAND,{k:"model",l:"Модель",t:"text"}]},
@@ -569,6 +587,9 @@ const CATS = [
   {id:"free",name:"Отдам даром",ic:I('<rect x="3" y="9" width="18" height="12" rx="1"/><path d="M3 13h18M12 9v12M12 9c-2-4-6-4-6-1s6 1 6 1 6 2 6-1-4-3-6 1"/>'),subs:[],fields:[]}
 ];
 const CAT = Object.fromEntries(CATS.map(c=>[c.id,c]));
+const NOCOND=new Set(["services","jobs","realty","animals"]);
+const hasCond=cat=>!NOCOND.has(cat);
+const fieldFor=(f,sub)=>!f.s||!sub||f.s.includes(sub);
 const REASONS=["Мошенничество","Товар уже продан","Неверная цена или категория","Запрещённый товар","Оскорбления или спам","Другое"];
 const NOPH = I('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 17l-5-5-9 7"/>');
 const HEART = '<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 21s-7-4.4-9.3-9A5.3 5.3 0 0 1 12 6a5.3 5.3 0 0 1 9.3 6c-2.3 4.6-9.3 9-9.3 9z"/></svg>';
@@ -598,7 +619,8 @@ function fmtDate(t){
   if(diff===0) return "Сегодня, "+hm; if(diff===1) return "Вчера, "+hm;
   return d.toLocaleDateString("ru-RU",{day:"numeric",month:"short",year:d.getFullYear()===n.getFullYear()?undefined:"numeric"});
 }
-const sinceText=t=>{const d=new Date(t);return "на сайте с "+d.toLocaleDateString("ru-RU",{month:"long",year:"numeric"})};
+const MONTHS_GEN=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+const sinceText=t=>{const d=new Date(t);return "на сайте с "+MONTHS_GEN[d.getMonth()]+" "+d.getFullYear()+" г."};
 function toast(msg){const t=$("#toast");t.textContent=msg;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,3000)}
 function regionOptions(sel,all="Вся Беларусь"){
   return `<option value="">${all}</option>`+Object.keys(REGIONS).map(r=>`<option ${r===sel?"selected":""}>${esc(r)}</option>`).join("");
@@ -684,9 +706,11 @@ function searchLabel(s){
 }
 
 /* ================= КАРТОЧКИ ================= */
+const adCache=new Map();
 function card(a){
+  adCache.set(a.id,a);
   const n=(a.photos||[]).length;
-  const tags=(a.status==="sold"?'<span class="tag sold">Продано</span>':"")+(a.haggle&&a.price_type==="fixed"?'<span class="tag">Торг</span>':"")+(a.cond==="new"?'<span class="tag">Новое</span>':"");
+  const tags=(a.status==="sold"?'<span class="tag sold">Продано</span>':"")+(a.haggle&&a.price_type==="fixed"?'<span class="tag">Торг</span>':"")+(a.cond==="new"&&hasCond(a.cat)?'<span class="tag">Новое</span>':"");
   return `<a class="card${a.status==="sold"?" is-sold":""}" href="#ad/${a.id}">
     <div class="ph"><div class="noph"${n?" hidden":""}>${NOPH}</div>${n?`<img alt="" loading="lazy" src="${esc(photoUrl(a.photos[0],true))}">`:""}${n>1?`<span class="np">${n} фото</span>`:""}
       <button type="button" class="fav" data-fav="${a.id}" aria-pressed="${favs.has(a.id)}" aria-label="В избранное">${HEART}</button></div>
@@ -704,10 +728,14 @@ async function loadCatCounts(){const {data}=await sb.rpc("cat_counts");catCounts
 
 /* ================= ГЛАВНАЯ / ПОИСК ================= */
 let homeItems=[], homeTotal=0, filtersOpen=false;
+function pruneAttrFilters(){
+  const c=CAT[S.cat]; if(!c) return; const ok=new Set(c.fields.filter(f=>fieldFor(f,S.sub)).map(f=>f.k));
+  for(const k of ["eq","nmin","nmax"]) for(const a of Object.keys(S[k]||{})) if(!ok.has(a)) delete S[k][a];
+}
 function fieldFilters(cat){
   const c=CAT[cat]; if(!c) return "";
   let h=c.subs.length?`<div class="field"><label for="fSub">Подкатегория</label><select class="inp" id="fSub"><option value="">Все</option>${c.subs.map(s=>`<option ${s===S.sub?"selected":""}>${esc(s)}</option>`).join("")}</select></div>`:"";
-  for(const f of c.fields){
+  for(const f of c.fields.filter(f=>fieldFor(f,S.sub))){
     if(f.t==="sel") h+=`<div class="field"><label for="fe-${f.k}">${esc(f.l)}</label><select class="inp" data-eq="${f.k}" id="fe-${f.k}"><option value="">Любой</option>${f.o.map(o=>`<option ${S.eq[f.k]===o?"selected":""}>${esc(o)}</option>`).join("")}</select></div>`;
     if(f.t==="num") h+=`<div class="field"><span class="flabel">${esc(f.l)}${f.u?", "+f.u:""}</span><div class="row2"><input class="inp" inputmode="numeric" data-nmin="${f.k}" placeholder="от" value="${esc(S.nmin[f.k]||"")}" aria-label="${esc(f.l)} от"><input class="inp" inputmode="numeric" data-nmax="${f.k}" placeholder="до" value="${esc(S.nmax[f.k]||"")}" aria-label="${esc(f.l)} до"></div></div>`;
   }
@@ -749,6 +777,75 @@ function pickMega(id){
   megaCat=id; document.querySelectorAll("#mega [data-mcat]").forEach(a=>a.classList.toggle("on",a.dataset.mcat===id));
   $("#megaR").innerHTML=megaRight();
 }
+function renderLegal(kind){
+  document.title=(kind==="rules"?"Правила":"Политика персональных данных")+" — Абисто";
+  view().innerHTML=`<article class="legal box">${kind==="rules"?LEGAL_RULES:LEGAL_PRIVACY}
+    <p class="note" style="margin-top:18px"><a href="#${kind==="rules"?"privacy":"rules"}">${kind==="rules"?"Политика обработки персональных данных":"Правила размещения объявлений"}</a> · <a href="#">На главную</a></p></article>`;
+}
+const LEGAL_RULES=`<h1>Правила размещения объявлений</h1>
+<p class="note">Редакция от 10 ноября 2026 г.</p>
+<p>Абисто (abisto.by) — бесплатная доска объявлений. Сайт помогает покупателям и продавцам найти друг друга, но не участвует в сделках, не продаёт товары и не оказывает услуги от своего имени. Пользуясь сайтом, вы соглашаетесь с этими правилами.</p>
+<h2>1. Аккаунт</h2>
+<ul><li>Подавать объявления и писать продавцам могут зарегистрированные пользователи: по почте или через Telegram.</li>
+<li>Указывайте достоверные данные. Один человек или компания может вести несколько объявлений, но не должен создавать аккаунты, чтобы обойти блокировку.</li>
+<li>Вы отвечаете за действия в своём аккаунте и за сохранность доступа к нему.</li></ul>
+<h2>2. Каким должно быть объявление</h2>
+<ul><li>Одно объявление — один товар или одна услуга. Не дублируйте одно и то же объявление.</li>
+<li>Выбирайте подходящую категорию и подкатегорию, указывайте реальную цену в белорусских рублях (или в долларах — сайт покажет пересчёт по курсу НБРБ) либо «Договорная».</li>
+<li>Заголовок и описание — о самом товаре или услуге, без капслока, ссылок на другие сайты и посторонних ключевых слов.</li>
+<li>Фото — ваши, реального товара. Нельзя использовать чужие фото с водяными знаками и изображения, нарушающие чьи-то права.</li>
+<li>Проданный товар отмечайте кнопкой «Продано» или снимайте объявление с публикации.</li></ul>
+<h2>3. Что запрещено размещать</h2>
+<ul><li>Товары и услуги, запрещённые или ограниченные законодательством Республики Беларусь: оружие и боеприпасы, наркотические и психотропные вещества, рецептурные лекарства, поддельные документы, краденое, контрафакт.</li>
+<li>Персональные данные других людей без их согласия, базы данных, услуги по «пробиву» информации.</li>
+<li>Финансовые пирамиды, «заработок» с предоплатой, азартные игры, сомнительные инвестиции.</li>
+<li>Материалы экстремистского, порнографического характера, оскорбления, призывы к насилию.</li>
+<li>Объявления-приманки: несуществующие товары, заведомо заниженная цена, предложения «по ошибке» другого города.</li></ul>
+<h2>4. Общение и безопасность</h2>
+<ul><li>Общайтесь вежливо, через сообщения на сайте или по телефону из объявления.</li>
+<li>Не переходите по ссылкам «для оплаты» или «получения денег», которые присылают в переписке, и никому не сообщайте данные банковской карты, коды из SMS и пароли. Сотрудники Абисто никогда их не спрашивают.</li>
+<li>По возможности осматривайте товар и расплачивайтесь при встрече. Не вносите предоплату незнакомым людям.</li></ul>
+<h2>5. Модерация</h2>
+<ul><li>Любой пользователь может пожаловаться на объявление кнопкой «Пожаловаться».</li>
+<li>Модератор вправе без предупреждения удалить объявление, нарушающее правила или закон, и ограничить доступ аккаунту при повторных нарушениях.</li></ul>
+<h2>6. Ответственность</h2>
+<ul><li>За содержание объявления, качество товара или услуги и исполнение договорённостей отвечает автор объявления.</li>
+<li>Абисто не гарантирует, что сделка состоится, и не несёт ответственности за убытки от сделок между пользователями.</li>
+<li>Мы можем менять правила; новая редакция действует с момента публикации на этой странице.</li></ul>
+<h2>7. Связь</h2>
+<p>Вопросы по работе сайта и жалобы присылайте через кнопку «Пожаловаться» в объявлении или в Telegram-бот сайта @abisto_bot.</p>`;
+const LEGAL_PRIVACY=`<h1>Политика обработки персональных данных</h1>
+<p class="note">Редакция от 10 ноября 2026 г.</p>
+<p>Эта политика объясняет, какие данные собирает сайт объявлений Абисто (abisto.by), зачем и как мы их используем. Обработка ведётся в соответствии с Законом Республики Беларусь от 7 мая 2021 г. № 99-З «О защите персональных данных».</p>
+<h2>1. Оператор</h2>
+<p>Оператор персональных данных — владелец сайта abisto.by. Связаться по вопросам персональных данных можно через Telegram-бот сайта @abisto_bot.</p>
+<h2>2. Какие данные мы обрабатываем</h2>
+<ul><li><b>Данные аккаунта:</b> адрес электронной почты или идентификатор Telegram, имя, которое вы указали, фото профиля.</li>
+<li><b>Данные профиля и объявлений:</b> телефон для объявлений, город, название магазина, адрес, часы работы, сайт, тексты и фото объявлений.</li>
+<li><b>Переписка</b> с другими пользователями в разделе «Сообщения», отзывы и жалобы.</li>
+<li><b>Технические данные:</b> дата регистрации и входа, обезличенная статистика просмотров объявлений, настройки, сохранённые в вашем браузере (избранные фильтры, недавно просмотренные объявления).</li></ul>
+<p>Мы не запрашиваем паспортные данные, данные банковских карт и не используем рекламные трекеры.</p>
+<h2>3. Зачем</h2>
+<ul><li>регистрация и вход на сайт;</li>
+<li>публикация ваших объявлений и показ контактов, которые вы решили открыть;</li>
+<li>доставка сообщений между пользователями и уведомлений;</li>
+<li>модерация, борьба с мошенничеством и спамом;</li>
+<li>статистика для продавца в кабинете (просмотры, показы телефона, избранное).</li></ul>
+<h2>4. Правовое основание</h2>
+<p>Данные обрабатываются на основании вашего согласия, которое вы даёте при регистрации, а также для исполнения соглашения об использовании сайта (Правил). Телефон, адрес и другие сведения в объявлении вы публикуете сами и можете в любой момент изменить или скрыть.</p>
+<h2>5. Кто видит ваши данные</h2>
+<ul><li>Всем посетителям видны ваше имя, город, объявления, отзывы и телефон — если вы включили «Показывать телефон».</li>
+<li>Почта и идентификатор Telegram другим пользователям не показываются.</li>
+<li>Переписку видят только её участники; модератор — при рассмотрении жалобы.</li>
+<li>Данные хранятся у поставщика облачной базы данных Supabase; сайт размещён на GitHub Pages. Мы не продаём и не передаём данные третьим лицам для рекламы.</li></ul>
+<h2>6. Сроки хранения</h2>
+<p>Данные хранятся, пока существует ваш аккаунт. Удалённые объявления и фото удаляются из базы. После удаления аккаунта данные удаляются, кроме случаев, когда закон требует хранить их дольше.</p>
+<h2>7. Ваши права</h2>
+<p>Вы можете в любое время: узнать, какие данные о вас хранятся; изменить их в «Профиле»; отозвать согласие и потребовать удалить аккаунт и данные; получить сведения о передаче данных третьим лицам. Для этого напишите в Telegram-бот @abisto_bot. Мы ответим в течение 15 дней.</p>
+<h2>8. Защита</h2>
+<p>Доступ к данным ограничен правилами базы данных: каждый пользователь может менять только свои объявления и профиль. Соединение с сайтом защищено (HTTPS), пароли хранятся только в виде хеша, их не видит никто, включая администрацию.</p>
+<h2>9. Изменения</h2>
+<p>Мы можем обновлять эту политику. Новая редакция действует с момента публикации на этой странице.</p>`;
 function renderAllCats(){
   view().innerHTML=`<div class="page"><div class="toolbar"><h1>Все категории</h1></div><div class="allcat-grid">${CATS.map(c=>`<section class="allcat">
     <a href="#" class="allcat-h" data-gocat="${c.id}"><span class="ic">${c.ic}</span><span>${esc(c.name)}${catCounts[c.id]?` <span class="cnt">${catCounts[c.id]}</span>`:""}</span></a>
@@ -765,7 +862,7 @@ async function renderHome(){
       <div class="field"><label for="fRegion">Область</label><select class="inp" id="fRegion">${regionOptions(S.region)}</select></div>
       ${S.region&&REGIONS[S.region].length>1?`<div class="field"><label for="fCity">Город</label><select class="inp" id="fCity">${cityOptions(S.region,S.city)}</select></div>`:""}
       <div class="field"><span class="flabel">Цена, ${BYN}</span><div class="row2"><input class="inp" id="fMin" inputmode="numeric" placeholder="от" value="${esc(S.min)}" aria-label="Цена от"><input class="inp" id="fMax" inputmode="numeric" placeholder="до" value="${esc(S.max)}" aria-label="Цена до"></div></div>
-      <div class="field"><label for="fCond">Состояние</label><select class="inp" id="fCond"><option value="">Любое</option><option value="new" ${S.cond==="new"?"selected":""}>Новое</option><option value="used" ${S.cond==="used"?"selected":""}>Б/у</option></select></div>
+      ${!hasCond(S.cat)?"":`<div class="field"><label for="fCond">Состояние</label><select class="inp" id="fCond"><option value="">Любое</option><option value="new" ${S.cond==="new"?"selected":""}>Новое</option><option value="used" ${S.cond==="used"?"selected":""}>Б/у</option></select></div>`}
       <label class="chk"><input type="checkbox" id="fPhoto" ${S.photo?"checked":""}> Только с фото</label>
       <button class="link" id="fReset">Сбросить фильтры</button>
     </aside>
@@ -803,16 +900,30 @@ async function renderRecent(){
 function goHome(){if(currentView()==="home")renderHome();else location.hash="#"}
 
 /* ================= ОБЪЯВЛЕНИЕ ================= */
-async function renderAd(id){
-  view().innerHTML=loadingBlock();
-  const {data:a,error}=await sb.from("ads").select("*").eq("id",id).maybeSingle();
-  if(error||!a){view().innerHTML=emptyBlock("Объявление не найдено","Возможно, его удалили.",'<a class="btn sec" href="#">На главную</a>');return}
+async function renderAd(id,fresh){
+  id=+id; let stored=null; try{stored=JSON.parse(localStorage.getItem("zis-ad-"+id)||"null")}catch(_){}
+  const cached=fresh||adCache.get(id)||stored;
+  let a=cached;
+  if(!a){
+    view().innerHTML=loadingBlock();
+    const {data,error}=await sb.from("ads").select("*").eq("id",id).maybeSingle();
+    if(currentView()!=="ad"||+currentArg()!==id) return;
+    if(error||!data){view().innerHTML=emptyBlock("Объявление не найдено","Возможно, его удалили.",'<a class="btn sec" href="#">На главную</a>');return}
+    a=data;
+  } else if(!fresh){
+    sb.from("ads").select("*").eq("id",id).maybeSingle().then(({data})=>{
+      if(currentView()!=="ad"||+currentArg()!==id) return;
+      if(!data){try{localStorage.removeItem("zis-ad-"+id)}catch(_){};adCache.delete(id);view().innerHTML=emptyBlock("Объявление не найдено","Возможно, его удалили.",'<a class="btn sec" href="#">На главную</a>');return}
+      adCache.set(id,data);
+      if(JSON.stringify({...data,views:0})!==JSON.stringify({...a,views:0})) renderAd(id,data);
+    });
+  }
+  adCache.set(id,a); try{localStorage.setItem("zis-ad-"+id,JSON.stringify(a));const ks=Object.keys(localStorage).filter(k=>k.startsWith("zis-ad-"));if(ks.length>60)ks.slice(0,ks.length-60).forEach(k=>localStorage.removeItem(k))}catch(_){}
+  a={...a};
   const viewed=lsGet("zis-viewed",[]); if(!viewed.includes(a.id)){sb.rpc("increment_views",{ad:a.id});lsSet("zis-viewed",[...viewed,a.id].slice(-500));a.views++}
   lsSet("zis-recent",[a.id,...lsGet("zis-recent",[]).filter(x=>x!==a.id)].slice(0,12));
-  const seller=(await profiles([a.user_id]))[a.user_id]||{name:"Продавец"};
-  const {data:revs}=await sb.from("reviews").select("rating").eq("seller_id",a.user_id);
-  const avg=revs&&revs.length?revs.reduce((s,r)=>s+r.rating,0)/revs.length:0;
-  const {count:sellerCount}=await sb.from("ads").select("id",{count:"exact",head:true}).eq("user_id",a.user_id).eq("status","active");
+  const seller=profCache.get(a.user_id)||{name:"Продавец"}; const revs=null, avg=0, sellerCount=null;
+  const sellerP=Promise.all([profiles([a.user_id]),sb.from("reviews").select("rating").eq("seller_id",a.user_id),sb.from("ads").select("id",{count:"exact",head:true}).eq("user_id",a.user_id).eq("status","active")]);
   const mine=user&&a.user_id===user.id; const c=CAT[a.cat]||{name:a.cat,fields:[]};
   const photos=a.photos||[];
   const attrs=(c.fields||[]).filter(f=>a.attrs&&a.attrs[f.k]!=null&&a.attrs[f.k]!=="").map(f=>`<div><dt>${esc(f.l)}</dt><dd>${esc(a.attrs[f.k])}${f.u?" "+f.u:""}</dd></div>`).join("");
@@ -826,12 +937,12 @@ async function renderAd(id){
         ${photos.length>1?`<div class="thumbs">${photos.map((p,i)=>`<button data-th="${i}" aria-current="${i===0}" aria-label="Фото ${i+1}"><img alt="" loading="lazy" src="${esc(photoUrl(p,true))}"></button>`).join("")}</div>`:""}</div>
       ${attrs?`<div class="box"><h2 class="sub2">Характеристики</h2><dl class="attrs">${attrs}</dl></div>`:""}
       <div class="box"><h2 class="sub2">Описание</h2><div class="desc">${a.descr?esc(a.descr):'<span class="note">Продавец не добавил описание.</span>'}</div>
-        <dl class="kv"><dt>Состояние</dt><dd>${a.cond==="new"?"Новое":"Б/у"}</dd><dt>Где</dt><dd>${esc(a.city)}, ${esc(a.region)}</dd><dt>Размещено</dt><dd>${esc(fmtDate(a.created_at))}${a.bumped_at!==a.created_at?` · поднято ${esc(fmtDate(a.bumped_at))}`:""}</dd><dt>Просмотры</dt><dd>${a.views}</dd><dt>Номер</dt><dd>${a.id}</dd></dl></div>
+        <dl class="kv">${hasCond(a.cat)?`<dt>Состояние</dt><dd>${a.cond==="new"?"Новое":"Б/у"}</dd>`:""}<dt>Где</dt><dd>${esc(a.city)}, ${esc(a.region)}</dd><dt>Размещено</dt><dd>${esc(fmtDate(a.created_at))}${a.bumped_at!==a.created_at?` · поднято ${esc(fmtDate(a.bumped_at))}`:""}</dd><dt>Просмотры</dt><dd>${a.views}</dd><dt>Номер</dt><dd>${a.id}</dd></dl></div>
       <div id="similar"></div>
     </div>
     <aside class="adside">
       <div class="box">
-        <div class="tags">${a.status==="sold"?'<span class="tag sold">Продано</span>':""}${a.haggle&&a.price_type==="fixed"?'<span class="tag">Торг уместен</span>':""}${a.cond==="new"?'<span class="tag">Новое</span>':""}</div>
+        <div class="tags">${a.status==="sold"?'<span class="tag sold">Продано</span>':""}${a.haggle&&a.price_type==="fixed"?'<span class="tag">Торг уместен</span>':""}${a.cond==="new"&&hasCond(a.cat)?'<span class="tag">Новое</span>':""}</div>
         <h1>${esc(a.title)}</h1>${fmtPrice(a)}
         ${a.status==="sold"?'<p class="note">Товар продан.</p>':mine?"":`<div class="actions">
           ${a.show_phone&&a.phone?`<span id="phoneBox"><button class="btn" id="showPhone">Показать телефон</button></span>`:""}
@@ -841,13 +952,19 @@ async function renderAd(id){
           :isAdmin?`<div class="actions"><button class="btn danger" id="mMod">Удалить (модерация)</button></div>`:""}
         <div id="mConfirm"></div>
       </div>
-      <div class="box">
+      <div class="box" id="sellerBox">
         <a class="sellercard" href="#user/${esc(a.user_id)}">${avatarHtml(seller)}<div><div class="nm">${esc(seller.name)}</div><div class="note">${revs&&revs.length?stars(avg)+" "+avg.toFixed(1)+" · "+revs.length+" "+plural(revs.length,["отзыв","отзыва","отзывов"]):"Пока без отзывов"}</div><div class="note">${seller.created_at?esc(sinceText(seller.created_at)):""}</div></div></a>
         <a class="link" href="#" data-seller="${esc(a.user_id)}">Все объявления продавца (${sellerCount||0})</a>
       </div>
       ${!mine&&user?`<button class="link danger-link" id="mReport">Пожаловаться на объявление</button>`:""}
     </aside>
   </div>`;
+  sellerP.then(([ps,{data:rv},{count}])=>{
+    const box=$("#sellerBox"); if(!box||currentView()!=="ad"||+currentArg()!==id) return;
+    const sl=ps[a.user_id]||{name:"Продавец"}; const n=(rv||[]).length, av=n?rv.reduce((x,r)=>x+r.rating,0)/n:0;
+    box.innerHTML=`<a class="sellercard" href="#user/${esc(a.user_id)}">${avatarHtml(sl)}<div><div class="nm">${esc(sl.name)}</div><div class="note">${n?stars(av)+" "+av.toFixed(1)+" · "+n+" "+plural(n,["отзыв","отзыва","отзывов"]):"Пока без отзывов"}</div><div class="note">${sl.created_at?esc(sinceText(sl.created_at)):""}</div></div></a>
+      <a class="link" href="#" data-seller="${esc(a.user_id)}">Все объявления продавца (${count||0})</a>`;
+  }).catch(()=>{});
   const vw=view();
   vw.onclick=async e=>{
     const t=e.target, id=t.id;
@@ -893,7 +1010,7 @@ async function renderPost(editId){
       <div class="row2"><div class="field"><label for="pCat">Категория</label><select class="inp" id="pCat"><option value="">Выберите категорию</option>${CATS.map(x=>`<option value="${x.id}" ${d.cat===x.id?"selected":""}>${esc(x.name)}</option>`).join("")}</select></div>
       ${c&&c.subs.length?`<div class="field"><label for="pSub">Подкатегория</label><select class="inp" id="pSub"><option value="">Выберите</option>${c.subs.map(s=>`<option ${s===d.sub?"selected":""}>${esc(s)}</option>`).join("")}</select></div>`:"<div></div>"}</div>
       <div class="field"><label for="pTitle">Заголовок</label><input class="inp" id="pTitle" maxlength="80" placeholder="Например: iPhone 13, 128 ГБ, синий" value="${esc(d.title)}"></div>
-      ${c&&c.fields.length?`<div class="row2">${c.fields.map(f=>`<div class="field"><label for="pa-${f.k}">${esc(f.l)}${f.u?", "+f.u:""}</label>${f.t==="sel"?`<select class="inp" id="pa-${f.k}" data-attr="${f.k}"><option value="">Не указано</option>${f.o.map(o=>`<option ${d.attrs[f.k]===o?"selected":""}>${esc(o)}</option>`).join("")}</select>`:`<input class="inp" id="pa-${f.k}" data-attr="${f.k}" ${f.t==="num"?'inputmode="numeric"':""} maxlength="40" value="${esc(d.attrs[f.k]??"")}">`}</div>`).join("")}</div>`:""}
+      ${c&&c.fields.filter(f=>fieldFor(f,d.sub)).length?`<div class="row2">${c.fields.filter(f=>fieldFor(f,d.sub)).map(f=>`<div class="field"><label for="pa-${f.k}">${esc(f.l)}${f.u?", "+f.u:""}</label>${f.t==="sel"?`<select class="inp" id="pa-${f.k}" data-attr="${f.k}"><option value="">Не указано</option>${f.o.map(o=>`<option ${d.attrs[f.k]===o?"selected":""}>${esc(o)}</option>`).join("")}</select>`:`<input class="inp" id="pa-${f.k}" data-attr="${f.k}" ${f.t==="num"?'inputmode="numeric"':""} maxlength="40" value="${esc(d.attrs[f.k]??"")}">`}</div>`).join("")}</div>`:""}
       <div class="field"><label for="pDesc">Описание</label><textarea class="inp" id="pDesc" maxlength="5000" placeholder="Состояние, комплектация, причина продажи, условия встречи">${esc(d.descr)}</textarea></div>
       <div class="field"><span class="flabel">Фотографии <span class="note">(до 10, первое станет обложкой)</span></span><div class="pics" id="picBox"></div>
         <input type="file" id="pFiles" accept="image/*" multiple hidden></div>
@@ -902,7 +1019,7 @@ async function renderPost(editId){
       <div class="field"><span class="flabel">${d.cat==="jobs"?"Зарплата":"Цена"}</span>
         <div class="seg" role="radiogroup">${[["fixed",d.cat==="jobs"?"Указать":"Указать цену"],["deal","Договорная"],["free","Бесплатно"]].filter(x=>d.cat!=="jobs"||x[0]!=="free").map(([v,l])=>`<label><input type="radio" name="pt" value="${v}" ${d.price_type===v?"checked":""}>${l}</label>`).join("")}</div>
         <div class="row2" ${d.price_type==="fixed"?"":"hidden"}><div style="display:flex;gap:6px"><input class="inp" id="pPrice" inputmode="decimal" placeholder="Сумма" value="${esc(d.price)}" aria-label="Цена"><select class="inp" id="pCur" aria-label="Валюта" style="width:auto"><option value="BYN" ${d.currency!=="USD"?"selected":""}>BYN</option><option value="USD" ${d.currency==="USD"?"selected":""}>USD</option></select></div><label class="chk"><input type="checkbox" id="pHaggle" ${d.haggle?"checked":""}> Возможен торг</label></div></div>
-      ${["jobs","services"].includes(d.cat)?"":`<div class="field"><span class="flabel">Состояние</span><div class="seg">${[["used","Б/у"],["new","Новое"]].map(([v,l])=>`<label><input type="radio" name="cond" value="${v}" ${d.cond===v?"checked":""}>${l}</label>`).join("")}</div></div>`}
+      ${!hasCond(d.cat)?"":`<div class="field"><span class="flabel">Состояние</span><div class="seg">${[["used","Б/у"],["new","Новое"]].map(([v,l])=>`<label><input type="radio" name="cond" value="${v}" ${d.cond===v?"checked":""}>${l}</label>`).join("")}</div></div>`}
     </div>
     <div class="panel">
       <div class="row2"><div class="field"><label for="pRegion">Область</label><select class="inp" id="pRegion">${regionOptions(d.region,"Выберите область")}</select></div>
@@ -945,10 +1062,10 @@ async function submitPost(e){
     const newBases=[];
     for(let i=0;i<d.newFiles.length;i++){btn.textContent=`Загружаем фото ${i+1} из ${d.newFiles.length}…`;newBases.push(await uploadPhoto(d.newFiles[i].file))}
     btn.textContent="Сохраняем…";
-    const attrs={};for(const f of c.fields){const v=d.attrs[f.k];if(v)attrs[f.k]=f.t==="num"?Number(String(v).replace(",",".")):v}
+    const attrs={};for(const f of c.fields.filter(f=>fieldFor(f,d.sub))){const v=d.attrs[f.k];if(v)attrs[f.k]=f.t==="num"?Number(String(v).replace(",",".")):v}
     const row={cat:d.cat,sub:d.sub||null,title:d.title,descr:d.descr,price_type:d.cat==="free"?"free":d.price_type,
       price:d.price_type==="fixed"&&d.cat!=="free"&&price>0?Math.round(price*100)/100:null,haggle:!!d.haggle&&d.price_type==="fixed",
-      cond:["jobs","services"].includes(d.cat)?"used":d.cond,region:d.region,city:d.city,phone:d.phone||null,show_phone:!!d.show_phone&&(asDraft||!!d.phone),attrs,photos:[...d.photos,...newBases]};{const fx=d.price_type==="fixed"&&d.cat!=="free";const isUsd=fx&&d.currency==="USD";row.currency=isUsd?"USD":"BYN";row.price_usd=isUsd?Math.round(price*100)/100:null;if(isUsd){if(!USD_RATE)throw new Error("Не удалось получить курс доллара. Попробуйте позже или укажите цену в рублях.");row.price=Math.round(price*USD_RATE)}}
+      cond:!hasCond(d.cat)?"used":d.cond,region:d.region,city:d.city,phone:d.phone||null,show_phone:!!d.show_phone&&(asDraft||!!d.phone),attrs,photos:[...d.photos,...newBases]};{const fx=d.price_type==="fixed"&&d.cat!=="free";const isUsd=fx&&d.currency==="USD";row.currency=isUsd?"USD":"BYN";row.price_usd=isUsd?Math.round(price*100)/100:null;if(isUsd){if(!USD_RATE)throw new Error("Не удалось получить курс доллара. Попробуйте позже или укажите цену в рублях.");row.price=Math.round(price*USD_RATE)}}
     row.region=row.region||"";row.city=row.city||"";
     if(asDraft) row.status="draft"; else if(d.status==="draft") row.status="active";
     let id=d.id;
@@ -1256,12 +1373,12 @@ function renderLogin(){
     <div class="tabs" style="margin:0"><button class="chip" data-lmode="login" aria-pressed="${!reg}">Вход</button><button class="chip" data-lmode="register" aria-pressed="${reg}">Регистрация</button></div>
     ${authNotice?`<p class="err">${esc(authNotice)}</p>`:""}
     ${CFG.google?`<button class="btn sec" id="gLogin" style="justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.3c0-.8-.1-1.5-.2-2.3H12v4.3h5.9a5 5 0 0 1-2.2 3.3v2.7h3.5c2-1.9 3.3-4.7 3.3-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.5-2.7c-1 .7-2.3 1.1-3.8 1.1-2.9 0-5.4-2-6.3-4.6H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.7 14.1a6.6 6.6 0 0 1 0-4.2V7.1H2.1a11 11 0 0 0 0 9.8z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.1-3.1A11 11 0 0 0 2.1 7.1l3.6 2.8C6.6 7.3 9.1 5.4 12 5.4z"/></svg> Войти через Google</button><div class="note" style="text-align:center">или по почте</div>`:""}
-    ${CFG.telegram===false?"":`<button class="btn tg-btn" id="tgLogin" type="button"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.7 19.4c-.2 1-.9 1.3-1.7.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.6 13.1l-4.7-1.5c-1-.3-1-1 .2-1.5L20.5 3c.9-.3 1.6.2 1.4 1.3z"/></svg>Войти через Telegram</button><p class="note" id="tgMsg" hidden></p><div class="or"><span>или по почте</span></div>`}
+    ${CFG.telegram===false?"":`<button class="btn tg-btn" id="tgLogin" type="button"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.7 19.4c-.2 1-.9 1.3-1.7.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.6 13.1l-4.7-1.5c-1-.3-1-1 .2-1.5L20.5 3c.9-.3 1.6.2 1.4 1.3z"/></svg>Войти через Telegram</button><p class="note" id="tgMsg" hidden></p><p class="note" style="margin:0;text-align:center">Входя через Telegram, вы принимаете <a href="#rules">Правила</a> и <a href="#privacy">Политику персональных данных</a>.</p><div class="or"><span>или по почте</span></div>`}
     <form id="pwForm" class="form" style="gap:10px">
       ${reg?`<div class="field"><label for="lName">Ваше имя</label><input class="inp" id="lName" maxlength="40" autocomplete="given-name" placeholder="Как к вам обращаться"></div>`:""}
       <div class="field"><label for="lEmail">Электронная почта</label><input class="inp" id="lEmail" type="email" autocomplete="email" required value="${esc(loginEmail)}" placeholder="you@example.com"></div>
       <div class="field"><label for="lPass">Пароль</label><input class="inp" id="lPass" type="password" minlength="6" required autocomplete="${reg?"new-password":"current-password"}"></div>
-      ${reg?'<p class="note" style="margin:0">Не меньше 6 символов.</p>':""}
+      ${reg?'<p class="note" style="margin:0">Не меньше 6 символов.</p><p class="note" style="margin:0">Регистрируясь, вы принимаете <a href="#rules" target="_blank">Правила</a> и даёте согласие на обработку персональных данных согласно <a href="#privacy" target="_blank">Политике</a>.</p>':""}
       <button class="btn" type="submit" style="justify-content:center">${reg?"Зарегистрироваться":"Войти"}</button>
     </form>
     <form id="emailForm" class="form" style="gap:10px" hidden><div class="field"><label for="lEmail2">Электронная почта</label><input class="inp" id="lEmail2" type="email" autocomplete="email" required value="${esc(loginEmail)}" placeholder="you@example.com"></div>
@@ -1293,6 +1410,7 @@ async function route(){
   const v=currentView(), arg=currentArg();
   view().onclick=null; view().onsubmit=null; document.title=(unread?`(${unread}) `:"")+"Абисто";
   if(v!=="post"&&v!=="edit"&&draft&&!draft.id&&!draft.title) draft=null;
+  if(user&&["my","profile","post","edit","admin","favs","msgs","chat","login"].includes(v)) await meReady;
   if(v!=="chat") chatConv=null;
   $("#catsBar").hidden=!["home"].includes(v);
   document.querySelectorAll("[data-nav]").forEach(a=>a.setAttribute("aria-current",a.dataset.nav===v||(v==="profile"&&a.dataset.nav==="my")?"page":"false"));
@@ -1300,6 +1418,7 @@ async function route(){
   try{
     if(v==="home") await renderHome();
     else if(v==="cats") renderAllCats();
+    else if(v==="rules"||v==="privacy") renderLegal(v);
     else if(v==="ad") await renderAd(arg);
     else if(v==="post") await renderPost();
     else if(v==="edit") await renderPost(arg);
@@ -1321,7 +1440,7 @@ function wire(){
   $("#regionTop").innerHTML=regionOptions("");
   addEventListener("hashchange",route);
   $("#searchForm").addEventListener("submit",e=>{e.preventDefault();S.q=$("#q").value.trim();S.region=$("#regionTop").value;S.city="";S.user="";goHome()});
-  $("#catRow").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;const c=b.dataset.cat;const keep={q:S.q,region:S.region,city:S.city,sort:S.sort};S={...freshFilters(),...keep,cat:S.cat===c?"":c};goHome()});
+  $("#catRow").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;const c=b.dataset.cat;const keep={q:S.q,region:S.region,city:S.city,sort:S.sort,cond:hasCond(c)?S.cond:""};S={...freshFilters(),...keep,cat:S.cat===c?"":c};goHome()});
   document.addEventListener("click",e=>{
     const t=e.target;
     if(t.closest("#catBtn")){toggleMega();return}
@@ -1339,7 +1458,7 @@ function wire(){
   document.addEventListener("click",async e=>{
     const f=e.target.closest("[data-fav]"); if(f){e.preventDefault();e.stopPropagation();toggleFav(f.dataset.fav);return}
     const t=e.target, id=t.id;
-    const sc=t.closest("[data-sub]"); if(sc&&sc.closest("#subChips")){S.sub=sc.dataset.sub;renderHome();return}
+    const sc=t.closest("[data-sub]"); if(sc&&sc.closest("#subChips")){S.sub=sc.dataset.sub;pruneAttrFilters();renderHome();return}
     const ac=t.closest(".allcat [data-gocat]"); if(ac){e.preventDefault();S=freshFilters();S.cat=ac.dataset.gocat;S.sub=ac.dataset.gosub||"";location.hash="#";return}
     if(id==="loadMore"){t.disabled=true;t.textContent="Загружаем…";try{const r=await search(S,homeItems.length);homeItems=homeItems.concat(r.items);homeTotal=r.total;paintResults()}catch(err){toast(errText(err));t.disabled=false}}
     if(id==="sellerBack"){S.user="";goHome()}
@@ -1375,12 +1494,13 @@ function wire(){
     if(id==="fCond"){S.cond=t.value;renderHome()}
     if(id==="fPhoto"){S.photo=t.checked;renderHome()}
     if(id==="fSort"){S.sort=t.value;renderHome()}
-    if(id==="fSub"){S.sub=t.value;renderHome()}
+    if(id==="fSub"){S.sub=t.value;pruneAttrFilters();renderHome()}
     if(id==="fMin"||id==="fMax"){S[id==="fMin"?"min":"max"]=t.value.replace(/[^\d.]/g,"");renderHome()}
     if(t.dataset.eq){S.eq[t.dataset.eq]=t.value;renderHome()}
     if(t.dataset.nmin){S.nmin[t.dataset.nmin]=t.value.replace(/[^\d.]/g,"");renderHome()}
     if(t.dataset.nmax){S.nmax[t.dataset.nmax]=t.value.replace(/[^\d.]/g,"");renderHome()}
     if(id==="pCat"){readForm();draft.sub="";draft.attrs={};renderPost(draft.id)}
+    if(id==="pSub"){readForm();renderPost(draft.id)}
     if(id==="pRegion"){readForm();draft.city="";renderPost(draft.id)}
     if(t.name==="pt"){readForm();renderPost(draft.id)}
     if(id==="prRegion"){$("#prCity").innerHTML=cityOptions(t.value,"","Не указан")}
@@ -1425,8 +1545,9 @@ function paintMe(){
   $("#meLink").href=user?"#my":"#login";
   $("#adminLink").hidden=!isAdmin;
 }
-async function onAuth(session){
-  const prev=user&&user.id; user=session?session.user:null;
+let meReady=Promise.resolve();
+async function onAuth(session,first){
+  const prev=first?null:(user&&user.id); user=session?session.user:null;
   if(user){
     let {data}=await sb.from("profiles").select("*").eq("id",user.id).maybeSingle();
     if(!data){const r=await sb.from("profiles").insert({id:user.id,name:(user.email||"Пользователь").split("@")[0]}).select().single();data=r.data}
@@ -1434,6 +1555,7 @@ async function onAuth(session){
     const {data:adm}=await sb.from("admins").select("user_id").eq("user_id",user.id).maybeSingle(); isAdmin=!!adm;
   } else {me=null;isAdmin=false}
   paintMe();
+  if(first){if(user){await loadFavs();syncFavButtons();refreshUnread();subscribeMessages()}return}
   if(prev!==(user&&user.id)){await loadFavs();refreshUnread();subscribeMessages();
     if(user&&currentView()==="login"&&!recoveryMode){const to=sessionStorage.getItem("zis-after-login")||"#my";sessionStorage.removeItem("zis-after-login");location.hash=to}
     else route();}
@@ -1454,10 +1576,12 @@ fetch("https://api.nbrb.by/exrates/rates/431").then(r=>r.json()).then(j=>{if(j&&
   sb=window.supabase.createClient(CFG.url,CFG.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"pkce"}});
   {const q=new URLSearchParams(location.search),h=new URLSearchParams(location.hash.replace(/^#/,""));const code=q.get("error_code")||h.get("error_code"),desc=q.get("error_description")||h.get("error_description");
     if(code||desc){authNotice=/expired|invalid/i.test((code||"")+(desc||""))?"Ссылка из письма устарела или уже использована. Каждое новое письмо отменяет ссылку из предыдущего, поэтому открывайте ссылку из последнего письма. Или войдите по паролю.":"Не удалось войти по ссылке: "+(desc||code);history.replaceState(null,"",location.pathname+"#login")}}
+  {const fy=$("#footYear"); if(fy) fy.textContent=new Date().getFullYear();}
   wire(); renderCats(); loadCatCounts();
   const {data:{session}}=await sb.auth.getSession();
-  await onAuth(session);
-  if(!user) route();
+  user=session?session.user:null;
+  meReady=onAuth(session,true);
+  route();
   sb.auth.onAuthStateChange((ev,s)=>{if(ev==="PASSWORD_RECOVERY"){recoveryMode=true;location.hash="#login";setTimeout(renderLogin,60)}if(ev==="SIGNED_IN"||ev==="SIGNED_OUT"||ev==="USER_UPDATED")setTimeout(()=>onAuth(s),0)});
 })();
 </script>
