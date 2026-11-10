@@ -5,8 +5,20 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Абисто — объявления по Беларуси</title>
 <meta name="description" content="Абисто: бесплатные объявления по всей Беларуси. Продайте ненужное и найдите нужное рядом с домом.">
-<meta name="theme-color" content="#10a34a">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2310a34a'/%3E%3Ctext x='32' y='46' font-family='Arial' font-weight='900' font-size='40' text-anchor='middle' fill='%23ffffff'%3EA%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#00B4EE">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Абисто">
+<meta property="og:title" content="Абисто — объявления по Беларуси">
+<meta property="og:description" content="Бесплатные объявления по всей Беларуси: продайте ненужное и найдите нужное рядом с домом.">
+<meta property="og:url" content="https://abisto.by/">
+<meta property="og:image" content="https://abisto.by/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://abisto.by/og.png">
 <link rel="preconnect" href="https://gmksjjksvlkmhicbnbtj.supabase.co" crossorigin>
 <link rel="dns-prefetch" href="https://gmksjjksvlkmhicbnbtj.supabase.co">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,7 +31,7 @@ body{margin:0}img{max-width:100%}[hidden]{display:none!important}
 :root{
   --bg:#f3f5f9; --surface:#ffffff; --ink:#13213b; --muted:#5b6880; --line:#dfe4ec;
   --head:#15295a; --head-ink:#ffffff; --head-soft:rgba(255,255,255,.14);
-  --accent:#10a34a; --accent-ink:#ffffff; --brand:#1f4fb3; --brand-soft:#e7eefc;
+  --accent:#00B4EE; --accent-ink:#ffffff; --brand:#1f4fb3; --brand-soft:#e7eefc;
   --danger:#c23b2f; --ok:#1d8a4e; --shadow:0 1px 2px rgba(19,33,59,.06),0 6px 18px rgba(19,33,59,.07);
   --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
   --f-body:"Manrope","Segoe UI",system-ui,-apple-system,sans-serif;
@@ -27,12 +39,12 @@ body{margin:0}img{max-width:100%}[hidden]{display:none!important}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0d131e; --surface:#151d2b; --ink:#e7ecf5; --muted:#95a2b8; --line:#253145;
   --head:#0a1530; --head-ink:#f1f4fb; --head-soft:rgba(255,255,255,.1);
-  --accent:#10a34a; --accent-ink:#ffffff; --brand:#86a8f0; --brand-soft:#1c2a47;
+  --accent:#00B4EE; --accent-ink:#ffffff; --brand:#86a8f0; --brand-soft:#1c2a47;
   --danger:#ef6b5f; --ok:#4cc184; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0d131e; --surface:#151d2b; --ink:#e7ecf5; --muted:#95a2b8; --line:#253145;
   --head:#0a1530; --head-ink:#f1f4fb; --head-soft:rgba(255,255,255,.1);
-  --accent:#10a34a; --accent-ink:#ffffff; --brand:#86a8f0; --brand-soft:#1c2a47;
+  --accent:#00B4EE; --accent-ink:#ffffff; --brand:#86a8f0; --brand-soft:#1c2a47;
   --danger:#ef6b5f; --ok:#4cc184; --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25); color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45}
@@ -276,18 +288,18 @@ textarea.inp{min-height:130px;resize:vertical}
 :root{
   --bg:#ffffff; --surface:#ffffff; --ink:#1a1a1a; --muted:#7a7a7a; --line:#ebebeb;
   --head:#ffffff; --head-ink:#1a1a1a; --head-soft:#f4f4f4;
-  --accent:#10a34a; --accent-ink:#ffffff; --brand:#0a6cf5; --brand-soft:#eef4ff;
+  --accent:#00B4EE; --accent-ink:#ffffff; --brand:#0a6cf5; --brand-soft:#eef4ff;
   --danger:#e5322d; --ok:#14a44d; --shadow:0 2px 12px rgba(0,0,0,.08);
   --f-display:"Manrope","Segoe UI",system-ui,sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#121212; --surface:#121212; --ink:#f2f2f2; --muted:#9a9a9a; --line:#2a2a2a;
   --head:#121212; --head-ink:#f2f2f2; --head-soft:#222;
-  --accent:#10a34a; --accent-ink:#ffffff; --brand:#5b9bff; --brand-soft:#1b2433; color-scheme:dark}}
+  --accent:#00B4EE; --accent-ink:#ffffff; --brand:#5b9bff; --brand-soft:#1b2433; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#121212; --surface:#121212; --ink:#f2f2f2; --muted:#9a9a9a; --line:#2a2a2a;
   --head:#121212; --head-ink:#f2f2f2; --head-soft:#222;
-  --accent:#10a34a; --accent-ink:#ffffff; --brand:#5b9bff; --brand-soft:#1b2433; color-scheme:dark}
+  --accent:#00B4EE; --accent-ink:#ffffff; --brand:#5b9bff; --brand-soft:#1b2433; color-scheme:dark}
 header{border-bottom:1px solid var(--line)}
 .hrow{padding-block:14px;gap:18px}
 .logo-txt{font-family:"Unbounded","Arial Black",system-ui,sans-serif;font-size:22px;letter-spacing:-.01em}
@@ -299,10 +311,10 @@ header{border-bottom:1px solid var(--line)}
 .hbtn{background:transparent;color:var(--ink);border-radius:10px}
 .hbtn:hover{background:var(--head-soft)}
 .post-btn{background:var(--accent);color:var(--accent-ink)}
-.post-btn:hover,.btn:not(.sec):not(.danger):not(.tg-btn):not(:disabled):hover,.search button:hover{background:var(--accent-hover,#0d8a3e)}
-.inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(16,163,74,.15);outline:0}
+.post-btn:hover,.btn:not(.sec):not(.danger):not(.tg-btn):not(:disabled):hover,.search button:hover{background:var(--accent-hover,#0098cc)}
+.inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,180,238,.18);outline:0}
 .seg input:checked+span,.seg label:has(input:checked){border-color:var(--accent)}
-.chip[aria-pressed="true"]{background:#e8f7ee;border-color:var(--accent);color:#0b7a37}
+.chip[aria-pressed="true"]{background:#e3f6fd;border-color:var(--accent);color:#007aa3}
 input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 /* ---- вход через Telegram ---- */
 .tg-btn{background:#2aabee;color:#fff;justify-content:center;text-decoration:none}
@@ -316,7 +328,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 @media (max-width:1440px){.hnav .hbtn:not(.post-btn) .lbl{display:none}.hnav .hbtn:not(.post-btn){padding:10px}}
 @media (max-width:1280px){.logo-txt small{display:none}}
 .catalog-btn{flex:none;display:inline-flex;align-items:center;gap:10px;border:0;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;font-size:15px;padding:0 18px;height:48px;cursor:pointer}
-.catalog-btn:hover,.catalog-btn.on{background:#0d8a3e}
+.catalog-btn:hover,.catalog-btn.on{background:#0098cc}
 .cb-ic{width:18px;height:14px;display:flex;flex-direction:column;justify-content:space-between}
 .cb-ic i{display:block;height:2px;border-radius:2px;background:currentColor;transition:transform .2s,opacity .2s}
 .catalog-btn.on .cb-ic i:nth-child(1){transform:translateY(6px) rotate(45deg)}
@@ -326,7 +338,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 .mega-in{background:var(--surface);display:grid;grid-template-columns:300px 1fr;gap:0;border-radius:0 0 16px 16px;box-shadow:0 12px 30px rgba(0,0,0,.12);max-height:calc(100vh - 110px);overflow:hidden;padding:0!important}
 .mega-l{list-style:none;margin:0;padding:10px;overflow:auto;border-right:1px solid var(--line)}
 .mega-l a{display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:10px;color:var(--ink);text-decoration:none;font-size:15px;font-weight:600}
-.mega-l a .ic{width:32px;height:32px;border-radius:9px;background:#e8f7ee;color:var(--accent);display:grid;place-items:center;flex:none}
+.mega-l a .ic{width:32px;height:32px;border-radius:9px;background:#e3f6fd;color:var(--accent);display:grid;place-items:center;flex:none}
 .mega-l a .ic svg{width:19px;height:19px}
 .mega-l a .nm{flex:1}
 .mega-l a .arr{color:var(--muted);font-size:20px;line-height:1}
@@ -387,16 +399,29 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 .bell{display:inline-flex;align-items:center;gap:4px;font-size:14px;cursor:pointer;white-space:nowrap}
 .ssrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.ssrow .link:first-child{flex:1;text-align:left}
 .tgnote{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#eaf6fd;border-radius:12px;padding:10px 12px;font-size:14px}
+/* ---- бренд: логотип и значки категорий ---- */
+img.logo-mark,.logo-img{background:none!important;border-radius:0!important;display:block;object-fit:contain}
+.cat .ic svg.art{width:58px;height:58px}
+.cat .ic{padding:6px 8px}
+.cat:hover .ic svg.art{transform:translateY(-2px) scale(1.04);transition:transform .15s}
+.mega-l a .ic{background:var(--head-soft)}
+.mega-l a .ic svg.art{width:26px;height:26px}
+.allcat-h .ic{background:var(--head-soft);width:46px;height:46px}
+.allcat-h .ic svg.art{width:34px;height:34px}
+.allcat ul{padding-left:56px}
+.catph svg.art{width:46%;max-width:84px;opacity:1}
+.catph.big svg.art{max-width:140px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .cat .ic{background:#1e1e1e!important}}
 /* ---- подкатегории ---- */
 .subchips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;scrollbar-width:thin}
 .subchips .chip{white-space:nowrap;padding:8px 14px;font-size:14px}
 .subchips .cnt{color:var(--muted);font-weight:500;margin-left:2px}
 .cat.allcats{text-decoration:none}
-.cat.allcats .ic{background:#e8f7ee!important;color:var(--accent)!important}
+.cat.allcats .ic{background:#e3f6fd!important;color:var(--accent)!important}
 .allcat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:26px 24px}
 .allcat-h{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--ink);text-decoration:none;margin-bottom:8px}
 .allcat-h:hover{color:var(--accent)}
-.allcat-h .ic{width:38px;height:38px;border-radius:10px;background:#e8f7ee;color:var(--accent);display:grid;place-items:center;flex:none}
+.allcat-h .ic{width:38px;height:38px;border-radius:10px;background:#e3f6fd;color:var(--accent);display:grid;place-items:center;flex:none}
 .allcat-h .ic svg{width:22px;height:22px}
 .allcat-h .cnt{color:var(--muted);font-weight:600;font-size:13px}
 .allcat ul{list-style:none;margin:0;padding:0 0 0 48px;display:flex;flex-direction:column;gap:6px}
@@ -411,11 +436,11 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 .kpi svg,.mstat svg{width:15px;height:15px;flex:none}
 .kpi b{font-size:24px;font-weight:800}
 .chart{width:100%;height:auto;max-height:180px;display:block}
-.chart .b1{fill:#bfe8cf}.chart .b2{fill:var(--accent)}
+.chart .b1{fill:#b5e9fa}.chart .b2{fill:var(--accent)}
 .chart text{font-size:11px;fill:var(--muted)}
 .legend{display:flex;gap:16px;font-size:12px;color:var(--muted)}
 .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
-.legend .l1{background:#bfe8cf}.legend .l2{background:var(--accent)}
+.legend .l1{background:#b5e9fa}.legend .l2{background:var(--accent)}
 .cab-stats{margin-bottom:18px}
 .chip .cnt{color:var(--muted);font-weight:600;margin-left:2px}
 .bulk{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 2px 12px}
@@ -497,7 +522,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 <header>
   <div class="wrap hrow">
     <a class="logo" href="#" aria-label="Абисто, на главную">
-      <span class="logo-mark" style="font-size:21px">A</span>
+      <img class="logo-mark logo-img" src="logo.svg" alt="" width="40" height="40">
       <span class="logo-txt">Abisto<small>Объявления по Беларуси</small></span>
     </a>
     <button class="catalog-btn" id="catBtn" type="button" aria-expanded="false" aria-controls="mega"><span class="cb-ic" aria-hidden="true"><i></i><i></i><i></i></span><span class="lbl">Все категории</span></button>
@@ -608,6 +633,46 @@ const CATS = [
   {id:"other",name:"Прочее",ic:I('<circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/>'),subs:[],fields:[]},
   {id:"free",name:"Отдам даром",ic:I('<rect x="3" y="9" width="18" height="12" rx="1"/><path d="M3 13h18M12 9v12M12 9c-2-4-6-4-6-1s6 1 6 1 6 2 6-1-4-3-6 1"/>'),subs:[],fields:[]}
 ];
+const ART_DEFS=`<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<linearGradient id="gR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7a6b"/><stop offset="1" stop-color="#e2312a"/></linearGradient>
+<linearGradient id="gB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5ec8ff"/><stop offset="1" stop-color="#1677e8"/></linearGradient>
+<linearGradient id="gY" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe066"/><stop offset="1" stop-color="#f5a300"/></linearGradient>
+<linearGradient id="gG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7be08a"/><stop offset="1" stop-color="#1f9d4c"/></linearGradient>
+<linearGradient id="gP" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b79bff"/><stop offset="1" stop-color="#6a3fe0"/></linearGradient>
+<linearGradient id="gO" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb36b"/><stop offset="1" stop-color="#f06a12"/></linearGradient>
+<linearGradient id="gK" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9fd0"/><stop offset="1" stop-color="#e2448f"/></linearGradient>
+<linearGradient id="gS" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4f6f9"/><stop offset="1" stop-color="#c3cad4"/></linearGradient>
+<linearGradient id="gD" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b6473"/><stop offset="1" stop-color="#1f2530"/></linearGradient>
+<linearGradient id="gW" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d9a066"/><stop offset="1" stop-color="#8f5a2b"/></linearGradient>
+<linearGradient id="gT" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6ee7d8"/><stop offset="1" stop-color="#0f9d8f"/></linearGradient>
+<linearGradient id="gA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3b0"/><stop offset="1" stop-color="#e0a800"/></linearGradient>
+</defs></svg>`;
+const ART={
+realty:'<path d="M10 30 32 12l22 18v24H10z" fill="#fff2d6"/><path d="M6 31 32 9l26 22-4 4-22-18-22 18z" fill="url(#gR)"/><rect x="27" y="38" width="10" height="16" rx="1.5" fill="url(#gW)"/><rect x="15" y="34" width="8" height="8" rx="1.5" fill="url(#gB)"/><rect x="41" y="34" width="8" height="8" rx="1.5" fill="url(#gB)"/><rect x="42" y="13" width="6" height="10" fill="#b4473f"/>',
+auto:'<path d="M8 40c0-5 3-7 7-8l7-9c2-2 4-3 7-3h10c3 0 5 1 7 3l6 8c5 1 7 4 7 9v5H8z" fill="url(#gR)"/><path d="M24 24h7v8H18zM35 24h5c2 0 3 1 4 2l4 6H35z" fill="#cdeeff"/><circle cx="19" cy="46" r="7" fill="#2a2f3a"/><circle cx="19" cy="46" r="3" fill="#c9ced6"/><circle cx="46" cy="46" r="7" fill="#2a2f3a"/><circle cx="46" cy="46" r="3" fill="#c9ced6"/><rect x="51" y="37" width="5" height="3" rx="1.5" fill="#ffe066"/>',
+phones:'<rect x="18" y="6" width="28" height="52" rx="6" fill="url(#gD)"/><rect x="21" y="11" width="22" height="40" rx="3" fill="url(#gB)"/><rect x="24" y="15" width="6" height="6" rx="1.5" fill="#ffe066"/><rect x="34" y="15" width="6" height="6" rx="1.5" fill="#7be08a"/><rect x="24" y="25" width="6" height="6" rx="1.5" fill="#ff9fd0"/><rect x="34" y="25" width="6" height="6" rx="1.5" fill="#fff"/><rect x="28" y="53" width="8" height="2" rx="1" fill="#8a93a3"/>',
+electronics:'<rect x="6" y="12" width="52" height="34" rx="4" fill="url(#gD)"/><rect x="9" y="15" width="46" height="28" rx="2" fill="url(#gP)"/><path d="M28 22v14l12-7z" fill="#fff"/><path d="M26 46h12l3 8H23z" fill="#8a93a3"/><rect x="18" y="53" width="28" height="3" rx="1.5" fill="#5b6473"/>',
+computers:'<rect x="12" y="10" width="40" height="28" rx="3" fill="url(#gD)"/><rect x="15" y="13" width="34" height="22" rx="1.5" fill="url(#gB)"/><path d="M18 30l7-8 5 5 4-3 7 6z" fill="#cdeeff"/><circle cx="41" cy="19" r="3" fill="#ffe066"/><path d="M6 40h52l-4 8H10z" fill="url(#gS)"/><rect x="26" y="41" width="12" height="2" rx="1" fill="#9aa3b0"/>',
+appliances:'<rect x="12" y="6" width="40" height="52" rx="5" fill="url(#gS)"/><rect x="12" y="6" width="40" height="11" rx="5" fill="#dfe4ea"/><circle cx="20" cy="11.5" r="2.5" fill="#1677e8"/><rect x="34" y="10" width="13" height="3" rx="1.5" fill="#9aa3b0"/><circle cx="32" cy="37" r="14" fill="#9aa3b0"/><circle cx="32" cy="37" r="11" fill="url(#gB)"/><path d="M22 39c4-3 7 2 11-1s6 1 9-1v4c0 6-5 9-10 9s-10-4-10-11z" fill="#cdeeff" opacity=".8"/>',
+furniture:'<rect x="8" y="22" width="12" height="24" rx="5" fill="url(#gO)"/><rect x="44" y="22" width="12" height="24" rx="5" fill="url(#gO)"/><rect x="14" y="14" width="36" height="22" rx="6" fill="url(#gY)"/><rect x="14" y="32" width="36" height="12" rx="4" fill="url(#gO)"/><rect x="12" y="46" width="4" height="7" rx="1" fill="url(#gW)"/><rect x="48" y="46" width="4" height="7" rx="1" fill="url(#gW)"/>',
+home:'<path d="M20 8h24l8 22H12z" fill="url(#gY)"/><path d="M20 8h24l2 5H18z" fill="#fff3b0"/><rect x="30" y="30" width="4" height="18" fill="url(#gS)"/><ellipse cx="32" cy="53" rx="13" ry="4" fill="url(#gD)"/><path d="M14 30h36l-6 6H20z" fill="#fff6c9" opacity=".7"/>',
+repair:'<path d="M10 18h30c3 0 5 2 5 5v6c0 3-2 5-5 5H10z" fill="url(#gY)"/><rect x="45" y="22" width="12" height="7" rx="2" fill="url(#gS)"/><path d="M18 34h14l-4 22h-9c-2 0-3-1-3-3z" fill="url(#gO)"/><rect x="18" y="38" width="10" height="3" rx="1.5" fill="#a7480c"/><rect x="13" y="22" width="20" height="3" rx="1.5" fill="#fff3b0"/>',
+garden:'<path d="M32 36C30 26 22 18 10 18c0 12 9 19 22 18z" fill="url(#gG)"/><path d="M32 36c2-12 11-22 24-22 0 14-10 22-24 22z" fill="#2fb35e"/><path d="M32 38V22" stroke="#1f9d4c" stroke-width="3" stroke-linecap="round"/><path d="M16 38h32l-4 18H20z" fill="url(#gO)"/><rect x="14" y="36" width="36" height="6" rx="2" fill="#d4570e"/>',
+clothes:'<path d="M24 6h16l-2 8 4 8-6 4H28l-6-4 4-8z" fill="url(#gK)"/><path d="M26 26h12l12 30H14z" fill="url(#gK)"/><path d="M26 26h12l2 4H24z" fill="#c2306f"/><path d="M14 56l6-16 4 16zM50 56l-6-16-4 16z" fill="#fff" opacity=".25"/>',
+menswear:'<path d="M22 8l10 5 10-5 16 10-6 10-6-3v31H18V25l-6 3-6-10z" fill="url(#gB)"/><path d="M26 8l6 8 6-8" fill="none" stroke="#0f5bb8" stroke-width="3" stroke-linejoin="round"/><circle cx="32" cy="27" r="1.6" fill="#cdeeff"/><circle cx="32" cy="35" r="1.6" fill="#cdeeff"/><circle cx="32" cy="43" r="1.6" fill="#cdeeff"/>',
+beauty:'<rect x="10" y="30" width="22" height="26" rx="6" fill="url(#gK)"/><rect x="16" y="22" width="10" height="9" rx="2" fill="url(#gA)"/><rect x="18" y="16" width="6" height="7" rx="1" fill="#e0a800"/><rect x="14" y="36" width="6" height="14" rx="3" fill="#fff" opacity=".35"/><rect x="40" y="30" width="12" height="26" rx="2" fill="url(#gD)"/><rect x="41" y="24" width="10" height="7" fill="url(#gA)"/><path d="M42 24V12l8 5v7z" fill="url(#gR)"/>',
+kids:'<rect x="8" y="34" width="22" height="22" rx="3" fill="url(#gR)"/><rect x="34" y="34" width="22" height="22" rx="3" fill="url(#gB)"/><rect x="21" y="10" width="22" height="22" rx="3" fill="url(#gY)"/><text x="19" y="51" font-family="Arial,sans-serif" font-weight="900" font-size="14" fill="#fff" text-anchor="middle">А</text><text x="45" y="51" font-family="Arial,sans-serif" font-weight="900" font-size="14" fill="#fff" text-anchor="middle">Б</text><text x="32" y="27" font-family="Arial,sans-serif" font-weight="900" font-size="14" fill="#fff" text-anchor="middle">В</text>',
+hobby:'<circle cx="32" cy="32" r="24" fill="url(#gO)"/><path d="M8 32h48M32 8v48M15 15c9 9 9 25 0 34M49 15c-9 9-9 25 0 34" fill="none" stroke="#8a3a06" stroke-width="2.5"/><ellipse cx="24" cy="20" rx="7" ry="4" fill="#fff" opacity=".3" transform="rotate(-30 24 20)"/>',
+wedding:'<circle cx="25" cy="38" r="14" fill="none" stroke="url(#gA)" stroke-width="5"/><circle cx="40" cy="38" r="14" fill="none" stroke="#e0a800" stroke-width="5"/><path d="M19 16l6-7h10l6 7-11 10z" fill="url(#gB)"/><path d="M19 16h22L30 26z" fill="#cdeeff"/>',
+animals:'<ellipse cx="32" cy="42" rx="13" ry="11" fill="url(#gO)"/><ellipse cx="16" cy="28" rx="6" ry="7.5" fill="url(#gO)"/><ellipse cx="48" cy="28" rx="6" ry="7.5" fill="url(#gO)"/><ellipse cx="25" cy="16" rx="5.5" ry="7" fill="url(#gO)"/><ellipse cx="39" cy="16" rx="5.5" ry="7" fill="url(#gO)"/><ellipse cx="28" cy="38" rx="4" ry="2.5" fill="#fff" opacity=".35"/>',
+business:'<rect x="10" y="26" width="44" height="30" rx="2" fill="#fff2d6"/><path d="M6 14h52l-2 14H8z" fill="url(#gR)"/><path d="M14 14h6l-1 14h-6zM26 14h6v14h-6zM38 14h6l1 14h-6zM50 14h6l2 14h-6z" fill="#fff"/><rect x="16" y="34" width="12" height="22" rx="1" fill="url(#gW)"/><rect x="34" y="34" width="14" height="12" rx="1" fill="url(#gB)"/>',
+jobs:'<path d="M24 16v-4c0-2 1-3 3-3h10c2 0 3 1 3 3v4" fill="none" stroke="#6b3f1a" stroke-width="4"/><rect x="8" y="16" width="48" height="38" rx="5" fill="url(#gW)"/><rect x="8" y="30" width="48" height="4" fill="#6b3f1a"/><rect x="28" y="27" width="8" height="10" rx="2" fill="url(#gA)"/>',
+services:'<rect x="8" y="24" width="48" height="30" rx="4" fill="url(#gR)"/><path d="M22 24v-6c0-2 1-3 3-3h14c2 0 3 1 3 3v6" fill="none" stroke="#2a2f3a" stroke-width="4"/><rect x="8" y="34" width="48" height="4" fill="#b8241e"/><rect x="27" y="31" width="10" height="10" rx="2" fill="url(#gS)"/><path d="M46 8l2 5 5 .5-4 3.5 1.5 5-4.5-3-4.5 3 1.5-5-4-3.5 5-.5z" fill="url(#gY)"/>',
+other:'<path d="M8 24l24-10 24 10v26L32 60 8 50z" fill="url(#gW)"/><path d="M8 24l24 10 24-10-24-10z" fill="#e8b781"/><path d="M32 34v26" stroke="#8f5a2b" stroke-width="2"/><path d="M18 20l24 10v8l-4-2v-6L14 21z" fill="#f4d9a8"/>',
+free:'<rect x="10" y="26" width="44" height="30" rx="3" fill="url(#gG)"/><rect x="6" y="18" width="52" height="11" rx="3" fill="#2fb35e"/><rect x="28" y="18" width="8" height="38" fill="url(#gR)"/><path d="M32 18c-4-10-16-12-16-4 0 5 9 5 16 4zM32 18c4-10 16-12 16-4 0 5-9 5-16 4z" fill="url(#gR)"/>'
+};
+const catArt=id=>ART[id]?`<svg class="art" viewBox="0 0 64 64" aria-hidden="true">${ART[id]}</svg>`:"";
+
 const CAT = Object.fromEntries(CATS.map(c=>[c.id,c]));
 const NOCOND=new Set(["services","jobs","realty","animals"]);
 const hasCond=cat=>!NOCOND.has(cat);
@@ -732,7 +797,7 @@ const adCache=new Map();
 const CAT_TINT=["#e9f3ff:#2f6fd6","#fff1e6:#d9661c","#eef9ee:#2e9a4a","#f3efff:#6b4fd8","#fff8dc:#b88a00","#ffecec:#d23c3c","#fdeefa:#c03aa5","#e8faf8:#1a9c8f","#eef2ff:#3d5bd9","#f6f2ea:#9a6b2f","#fff0f5:#d4467a","#eaf6ff:#1f86c7","#f1f8e8:#5d9a23","#fff6e0:#c98a00"];
 function catPh(cat,big){
   const i=Math.max(0,CATS.findIndex(c=>c.id===cat)), [bg,fg]=CAT_TINT[i%CAT_TINT.length].split(":"), c=CAT[cat];
-  return `<div class="catph${big?" big":""}" style="--ph-bg:${bg};--ph-fg:${fg}">${c?c.ic:NOPH}<span>${c?esc(c.name):"Без фото"}</span></div>`;
+  return `<div class="catph${big?" big":""}" style="--ph-bg:${bg};--ph-fg:${fg}">${c?(catArt(cat)||c.ic):NOPH}<span>${c?esc(c.name):"Без фото"}</span></div>`;
 }
 function card(a){
   adCache.set(a.id,a);
@@ -749,7 +814,7 @@ let layoutMode=lsGet("zis-layout","grid");
 
 /* ================= КАТЕГОРИИ ================= */
 function renderCats(){
-  $("#catRow").innerHTML=`<a class="cat allcats" href="#cats"><span class="ic">${I('<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>')}</span>Все категории</a>`+CATS.map(c=>`<button class="cat" data-cat="${c.id}" aria-pressed="${S.cat===c.id}"><span class="ic">${c.ic}</span>${esc(c.name)}<span class="n">${catCounts[c.id]||0}</span></button>`).join("");
+  $("#catRow").innerHTML=`<a class="cat allcats" href="#cats"><span class="ic">${I('<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>')}</span>Все категории</a>`+CATS.map(c=>`<button class="cat" data-cat="${c.id}" aria-pressed="${S.cat===c.id}"><span class="ic">${catArt(c.id)||c.ic}</span>${esc(c.name)}<span class="n">${catCounts[c.id]||0}</span></button>`).join("");
 }
 async function loadCatCounts(){const {data}=await sb.rpc("cat_counts");catCounts=data||{};renderCats()}
 
@@ -790,7 +855,7 @@ function megaRight(){
 function renderMega(){
   if(!megaCat) megaCat=S.cat||CATS[0].id;
   $("#mega").innerHTML=`<div class="wrap mega-in${isNarrow()&&$("#mega").classList.contains("sub")?" sub":""}">
-    <ul class="mega-l">${CATS.map(c=>`<li><a href="#" data-mcat="${c.id}" class="${c.id===megaCat?"on":""}"><span class="ic">${c.ic}</span><span class="nm">${esc(c.name)}</span><span class="arr" aria-hidden="true">›</span></a></li>`).join("")}</ul>
+    <ul class="mega-l">${CATS.map(c=>`<li><a href="#" data-mcat="${c.id}" class="${c.id===megaCat?"on":""}"><span class="ic">${catArt(c.id)||c.ic}</span><span class="nm">${esc(c.name)}</span><span class="arr" aria-hidden="true">›</span></a></li>`).join("")}</ul>
     <div class="mega-r" id="megaR">${megaRight()}</div></div>`;
 }
 function toggleMega(open){
@@ -888,7 +953,7 @@ async function tgLink(){
 }
 function renderAllCats(){
   view().innerHTML=`<div class="page"><div class="toolbar"><h1>Все категории</h1></div><div class="allcat-grid">${CATS.map(c=>`<section class="allcat">
-    <a href="#" class="allcat-h" data-gocat="${c.id}"><span class="ic">${c.ic}</span><span>${esc(c.name)}${catCounts[c.id]?` <span class="cnt">${catCounts[c.id]}</span>`:""}</span></a>
+    <a href="#" class="allcat-h" data-gocat="${c.id}"><span class="ic">${catArt(c.id)||c.ic}</span><span>${esc(c.name)}${catCounts[c.id]?` <span class="cnt">${catCounts[c.id]}</span>`:""}</span></a>
     ${c.subs.length?`<ul>${c.subs.map(x=>`<li><a href="#" data-gocat="${c.id}" data-gosub="${esc(x)}">${esc(x)}</a></li>`).join("")}</ul>`:""}</section>`).join("")}</div></div>`;
 }
 async function renderHome(){
@@ -1631,6 +1696,7 @@ fetch("https://api.nbrb.by/exrates/rates/431").then(r=>r.json()).then(j=>{if(j&&
   {const q=new URLSearchParams(location.search),h=new URLSearchParams(location.hash.replace(/^#/,""));const code=q.get("error_code")||h.get("error_code"),desc=q.get("error_description")||h.get("error_description");
     if(code||desc){authNotice=/expired|invalid/i.test((code||"")+(desc||""))?"Ссылка из письма устарела или уже использована. Каждое новое письмо отменяет ссылку из предыдущего, поэтому открывайте ссылку из последнего письма. Или войдите по паролю.":"Не удалось войти по ссылке: "+(desc||code);history.replaceState(null,"",location.pathname+"#login")}}
   {const fy=$("#footYear"); if(fy) fy.textContent=new Date().getFullYear();}
+  document.body.insertAdjacentHTML("afterbegin",ART_DEFS);
   wire(); renderCats(); loadCatCounts();
   const {data:{session}}=await sb.auth.getSession();
   user=session?session.user:null;
