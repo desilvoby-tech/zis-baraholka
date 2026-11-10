@@ -401,8 +401,13 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 .tgnote{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#eaf6fd;border-radius:12px;padding:10px 12px;font-size:14px}
 /* ---- бренд: логотип и значки категорий ---- */
 img.logo-mark,.logo-img{background:none!important;border-radius:0!important;display:block;object-fit:contain}
-.cat .ic svg.art{width:58px;height:58px}
-.cat .ic{padding:6px 8px}
+.cat .ic svg.art{width:58px;height:58px;display:block;margin:auto}
+.cat-row .cat .ic{display:flex!important;align-items:center;justify-content:center;padding:0!important}
+.cat-row .cat .ic svg{margin:0}
+.cat-row .cat{text-align:center;align-items:center}
+.mega-l a .ic,.allcat-h .ic{display:flex!important;align-items:center;justify-content:center}
+.mega-l a .ic svg.art,.allcat-h .ic svg.art{display:block;margin:0}
+@media (max-width:640px){.cat .ic svg.art{width:48px;height:48px}}
 .cat:hover .ic svg.art{transform:translateY(-2px) scale(1.04);transition:transform .15s}
 .mega-l a .ic{background:var(--head-soft)}
 .mega-l a .ic svg.art{width:26px;height:26px}
