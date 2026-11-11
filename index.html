@@ -704,7 +704,7 @@ function fmtPrice(a){
   const usdFixed=a.currency==="USD"&&a.price_usd!=null;
   const byn=usdFixed&&USD_RATE?Math.round(a.price_usd*USD_RATE):Number(a.price);
   const usd=usdFixed?Number(a.price_usd):(USD_RATE?Math.round(Number(a.price)/USD_RATE):null);
-  return `<span class="price">${byn.toLocaleString("ru-RU")}${BYN}${usd!=null?` <span class="usd">≈ ${usd.toLocaleString("ru-RU")} $</span>`:""}</span>`;
+  return `<span class="price">${byn.toLocaleString("ru-RU")}${BYN}</span>`;
 }
 function fmtDate(t){
   if(!t) return ""; const d=new Date(t), n=new Date();
@@ -891,7 +891,7 @@ const LEGAL_RULES=`<h1>Правила размещения объявлений<
 <li>Вы отвечаете за действия в своём аккаунте и за сохранность доступа к нему.</li></ul>
 <h2>2. Каким должно быть объявление</h2>
 <ul><li>Одно объявление — один товар или одна услуга. Не дублируйте одно и то же объявление.</li>
-<li>Выбирайте подходящую категорию и подкатегорию, указывайте реальную цену в белорусских рублях (или в долларах — сайт покажет пересчёт по курсу НБРБ) либо «Договорная».</li>
+<li>Выбирайте подходящую категорию и подкатегорию, указывайте реальную цену в белорусских рублях либо «Договорная».</li>
 <li>Заголовок и описание — о самом товаре или услуге, без капслока, ссылок на другие сайты и посторонних ключевых слов.</li>
 <li>Фото — ваши, реального товара. Нельзя использовать чужие фото с водяными знаками и изображения, нарушающие чьи-то права.</li>
 <li>Проданный товар отмечайте кнопкой «Продано» или снимайте объявление с публикации.</li></ul>
@@ -1160,7 +1160,7 @@ async function renderPost(editId){
     if(!draft||draft.id!==+editId){
       const {data:a}=await sb.from("ads").select("*").eq("id",editId).maybeSingle();
       if(!a||a.user_id!==user.id){view().innerHTML=emptyBlock("Нельзя редактировать","Это объявление не ваше или его удалили.");return}
-      draft={...a,price:a.currency==="USD"&&a.price_usd!=null?String(a.price_usd):(a.price==null?"":String(a.price)),attrs:{...a.attrs},photos:[...a.photos],newFiles:[],removed:[]};
+      draft={...a,currency:"BYN",price:(a.currency==="USD"&&a.price_usd!=null&&USD_RATE&&a.price==null)?String(Math.round(a.price_usd*USD_RATE)):(a.price==null?"":String(a.price)),attrs:{...a.attrs},photos:[...a.photos],newFiles:[],removed:[]};
     }
   } else if(!draft||draft.id){
     draft={id:null,cat:"",sub:"",title:"",descr:"",price_type:"fixed",price:"",currency:"BYN",haggle:false,cond:"used",region:"",city:me&&me.city?"":"",phone:(me&&me.phone)||"",show_phone:true,attrs:{},photos:[],newFiles:[],removed:[]};
@@ -1181,7 +1181,7 @@ async function renderPost(editId){
     <div class="panel">
       <div class="field"><span class="flabel">${d.cat==="jobs"?"Зарплата":"Цена"}</span>
         <div class="seg" role="radiogroup">${[["fixed",d.cat==="jobs"?"Указать":"Указать цену"],["deal","Договорная"],["free","Бесплатно"]].filter(x=>d.cat!=="jobs"||x[0]!=="free").map(([v,l])=>`<label><input type="radio" name="pt" value="${v}" ${d.price_type===v?"checked":""}>${l}</label>`).join("")}</div>
-        <div class="row2" ${d.price_type==="fixed"?"":"hidden"}><div style="display:flex;gap:6px"><input class="inp" id="pPrice" inputmode="decimal" placeholder="Сумма" value="${esc(d.price)}" aria-label="Цена"><select class="inp" id="pCur" aria-label="Валюта" style="width:auto"><option value="BYN" ${d.currency!=="USD"?"selected":""}>BYN</option><option value="USD" ${d.currency==="USD"?"selected":""}>USD</option></select></div><label class="chk"><input type="checkbox" id="pHaggle" ${d.haggle?"checked":""}> Возможен торг</label></div></div>
+        <div class="row2" ${d.price_type==="fixed"?"":"hidden"}><div style="display:flex;gap:6px"><input class="inp" id="pPrice" inputmode="decimal" placeholder="Сумма" value="${esc(d.price)}" aria-label="Цена"><span class="inp" id="pCur" aria-label="Валюта" style="width:auto;display:inline-flex;align-items:center">BYN</span></div><label class="chk"><input type="checkbox" id="pHaggle" ${d.haggle?"checked":""}> Возможен торг</label></div></div>
       ${!hasCond(d.cat)?"":`<div class="field"><span class="flabel">Состояние</span><div class="seg">${[["used","Б/у"],["new","Новое"]].map(([v,l])=>`<label><input type="radio" name="cond" value="${v}" ${d.cond===v?"checked":""}>${l}</label>`).join("")}</div></div>`}
     </div>
     <div class="panel">
@@ -1228,7 +1228,7 @@ async function submitPost(e){
     const attrs={};for(const f of c.fields.filter(f=>fieldFor(f,d.sub))){const v=d.attrs[f.k];if(v)attrs[f.k]=f.t==="num"?Number(String(v).replace(",",".")):v}
     const row={cat:d.cat,sub:d.sub||null,title:d.title,descr:d.descr,price_type:d.cat==="free"?"free":d.price_type,
       price:d.price_type==="fixed"&&d.cat!=="free"&&price>0?Math.round(price*100)/100:null,haggle:!!d.haggle&&d.price_type==="fixed",
-      cond:!hasCond(d.cat)?"used":d.cond,region:d.region,city:d.city,phone:d.phone||null,show_phone:!!d.show_phone&&(asDraft||!!d.phone),attrs,photos:[...d.photos,...newBases]};{const fx=d.price_type==="fixed"&&d.cat!=="free";const isUsd=fx&&d.currency==="USD";row.currency=isUsd?"USD":"BYN";row.price_usd=isUsd?Math.round(price*100)/100:null;if(isUsd){if(!USD_RATE)throw new Error("Не удалось получить курс доллара. Попробуйте позже или укажите цену в рублях.");row.price=Math.round(price*USD_RATE)}}
+      cond:!hasCond(d.cat)?"used":d.cond,region:d.region,city:d.city,phone:d.phone||null,show_phone:!!d.show_phone&&(asDraft||!!d.phone),attrs,photos:[...d.photos,...newBases]};{const fx=d.price_type==="fixed"&&d.cat!=="free";const isUsd=false;row.currency=isUsd?"USD":"BYN";row.price_usd=isUsd?Math.round(price*100)/100:null;if(isUsd){if(!USD_RATE)throw new Error("Не удалось получить курс доллара. Попробуйте позже или укажите цену в рублях.");row.price=Math.round(price*USD_RATE)}}
     row.region=row.region||"";row.city=row.city||"";
     if(asDraft) row.status="draft"; else if(d.status==="draft") row.status="active";
     let id=d.id;
@@ -1506,6 +1506,8 @@ function authErr(e){const m=(e&&(e.message||e.code))||"";
   if(/valid email|invalid format|Unable to validate email/i.test(m))return "Проверьте адрес почты.";
   return errText(e)}
 let tgTimer=null;
+function oauthGo(p){location.href=CFG.url+"/functions/v1/oauth?p="+p+"&to="+encodeURIComponent(location.origin+"/")}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-oauth]");if(b)oauthGo(b.dataset.oauth)});
 async function tgLogin(){
   const m=$("#tgMsg"), b=$("#tgLogin"); if(!m) return; clearTimeout(tgTimer);
   m.hidden=false; m.className="note"; m.textContent="Готовим вход…"; b.disabled=true;
@@ -1537,6 +1539,7 @@ function renderLogin(){
     <div class="tabs" style="margin:0"><button class="chip" data-lmode="login" aria-pressed="${!reg}">Вход</button><button class="chip" data-lmode="register" aria-pressed="${reg}">Регистрация</button></div>
     ${authNotice?`<p class="err">${esc(authNotice)}</p>`:""}
     ${CFG.google?`<button class="btn sec" id="gLogin" style="justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.3c0-.8-.1-1.5-.2-2.3H12v4.3h5.9a5 5 0 0 1-2.2 3.3v2.7h3.5c2-1.9 3.3-4.7 3.3-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.5-2.7c-1 .7-2.3 1.1-3.8 1.1-2.9 0-5.4-2-6.3-4.6H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.7 14.1a6.6 6.6 0 0 1 0-4.2V7.1H2.1a11 11 0 0 0 0 9.8z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.1-3.1A11 11 0 0 0 2.1 7.1l3.6 2.8C6.6 7.3 9.1 5.4 12 5.4z"/></svg> Войти через Google</button><div class="note" style="text-align:center">или по почте</div>`:""}
+    ${CFG.yandex?`<button class="btn" type="button" data-oauth="yandex" style="width:100%;background:#FC3F1D;color:#fff;display:flex;gap:8px;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#fff"/><path fill="#FC3F1D" d="M13.3 6.2h-1c-1.8 0-2.8.9-2.8 2.3 0 1.6.7 2.3 2.1 3.3l1.1.8-3.3 5.2H7l3-4.6c-1.7-1.3-2.7-2.4-2.7-4.5 0-2.6 1.8-4.4 5-4.4h3.3v13.5h-2.3z"/></svg> Войти через Яндекс</button>`:""}${CFG.mailru?`<button class="btn" type="button" data-oauth="mailru" style="width:100%;background:#005FF9;color:#fff;margin-top:8px">@ Войти через Mail.ru</button>`:""}
     ${CFG.telegram===false?"":`<button class="btn tg-btn" id="tgLogin" type="button"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.7 19.4c-.2 1-.9 1.3-1.7.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.6 13.1l-4.7-1.5c-1-.3-1-1 .2-1.5L20.5 3c.9-.3 1.6.2 1.4 1.3z"/></svg>Войти через Telegram</button><p class="note" id="tgMsg" hidden></p><p class="note" style="margin:0;text-align:center">Входя через Telegram, вы принимаете <a href="#rules">Правила</a> и <a href="#privacy">Политику персональных данных</a>.</p><div class="or"><span>или по почте</span></div>`}
     <form id="pwForm" class="form" style="gap:10px">
       ${reg?`<div class="field"><label for="lName">Ваше имя</label><input class="inp" id="lName" maxlength="40" autocomplete="given-name" placeholder="Как к вам обращаться"></div>`:""}
@@ -1740,6 +1743,9 @@ fetch("https://api.nbrb.by/exrates/rates/431").then(r=>r.json()).then(j=>{if(j&&
     return;
   }
   sb=window.supabase.createClient(CFG.url,CFG.anonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"pkce"}});
+  {const h=location.hash,th=h.match(/oauth_th=([^&]+)/),oe=h.match(/oauth_err=([^&]+)/);
+    if(th){history.replaceState(null,"",location.pathname+"#");sb.auth.verifyOtp({token_hash:decodeURIComponent(th[1]),type:"magiclink"}).then(({error})=>{if(error){authNotice="Ошибка входа: "+authErr(error);location.hash="#login"}else toast("Вы вошли")})}
+    else if(oe){authNotice=decodeURIComponent(oe[1]);history.replaceState(null,"",location.pathname+"#login")}}
   {const q=new URLSearchParams(location.search),h=new URLSearchParams(location.hash.replace(/^#/,""));const code=q.get("error_code")||h.get("error_code"),desc=q.get("error_description")||h.get("error_description");
     if(code||desc){authNotice=/expired|invalid/i.test((code||"")+(desc||""))?"Ссылка из письма устарела или уже использована. Каждое новое письмо отменяет ссылку из предыдущего, поэтому открывайте ссылку из последнего письма. Или войдите по паролю.":"Не удалось войти по ссылке: "+(desc||code);history.replaceState(null,"",location.pathname+"#login")}}
   {const fy=$("#footYear"); if(fy) fy.textContent=new Date().getFullYear();}
