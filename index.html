@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://gmksjjksvlkmhicbnbtj.supabase.co wss://gmksjjksvlkmhicbnbtj.supabase.co https://nominatim.openstreetmap.org https://api.nbrb.by; media-src 'self' blob: https:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://gmksjjksvlkmhicbnbtj.supabase.co; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://gmksjjksvlkmhicbnbtj.supabase.co wss://gmksjjksvlkmhicbnbtj.supabase.co https://nominatim.openstreetmap.org https://api.nbrb.by https://get.geojs.io; media-src 'self' blob: https:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://gmksjjksvlkmhicbnbtj.supabase.co; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Абисто — бесплатные объявления в Беларуси: купить и продать</title>
@@ -674,6 +674,7 @@ header .search{overflow:visible}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script>
 <script src="config.js"></script>
+<script src="/geo.js"></script>
 <script>
 "use strict";
 /* ================= ДАННЫЕ ================= */
@@ -1187,7 +1188,7 @@ const LEGAL_PRIVACY=`<h1>Политика обработки персональ�
 <h2>8. Защита</h2>
 <p>Доступ к данным ограничен правилами базы данных: каждый пользователь может менять только свои объявления и профиль. Соединение с сайтом защищено (HTTPS), пароли хранятся только в виде хеша, их не видит никто, включая администрацию.</p>
 <h2>Cookie и локальное хранилище</h2>
-<p>Сайт использует только необходимые cookie и локальное хранилище браузера: для входа в аккаунт (сессия Supabase), запоминания настроек, избранного, черновиков и согласия с этим уведомлением. Аналитические и рекламные cookie не используются, данные третьим лицам для рекламы не передаются. Вы можете удалить cookie в настройках браузера — тогда потребуется войти заново.</p>
+<p>Сайт использует только необходимые cookie и локальное хранилище браузера: для входа в аккаунт (сессия Supabase), запоминания настроек, избранного, черновиков и согласия с этим уведомлением. Аналитические и рекламные cookie не используются, данные третьим лицам для рекламы не передаются. Вы можете удалить cookie в настройках браузера — тогда потребуется войти заново. Чтобы предложить ваш город, сайт один раз передаёт ваш IP-адрес сервису GeoJS (get.geojs.io); если вы нажмёте «Точнее», браузер спросит разрешение на геолокацию. Выбранный город хранится только в вашем браузере.</p>
 <h2>9. Изменения</h2>
 <p>Мы можем обновлять эту политику. Новая редакция действует с момента публикации на этой странице.</p>`;
 const tgLinked=()=>!!(me&&(me.notify_chat_id||me.tg_chat_id));
@@ -1342,7 +1343,7 @@ async function renderAd(id,fresh){
   }
   adCache.set(id,a); try{localStorage.setItem("zis-ad-"+id,JSON.stringify(a));const ks=Object.keys(localStorage).filter(k=>k.startsWith("zis-ad-"));if(ks.length>60)ks.slice(0,ks.length-60).forEach(k=>localStorage.removeItem(k))}catch(_){}
   a={...a};
-  const viewed=lsGet("zis-viewed",[]); if(!viewed.includes(a.id)){sb.rpc("increment_views",{ad:a.id});lsSet("zis-viewed",[...viewed,a.id].slice(-500));a.views++}
+  const viewed=lsGet("zis-viewed2",[]); if(!viewed.includes(a.id)){sb.rpc("increment_views",{ad:a.id}).then(()=>{},()=>{});lsSet("zis-viewed2",[...viewed,a.id].slice(-500));a.views++}
   lsSet("zis-recent",[a.id,...lsGet("zis-recent",[]).filter(x=>x!==a.id)].slice(0,12));
   const seller=profCache.get(a.user_id)||{name:"Продавец"}; const revs=null, avg=0, sellerCount=null;
   const sellerP=Promise.all([profiles([a.user_id]),sb.from("reviews").select("rating,body,author_id,created_at").eq("seller_id",a.user_id).order("created_at",{ascending:false}),sb.from("ads").select("id",{count:"exact",head:true}).eq("user_id",a.user_id).eq("status","active")]);
@@ -1986,7 +1987,13 @@ function abistoPick(it){
 function wire(){
   $("#regionTop").innerHTML=regionOptions("");
   addEventListener("hashchange",route);
-  $("#regionTop").addEventListener("change",e=>{S.region=e.target.value;S.city="";goHome()});
+  $("#regionTop").addEventListener("change",e=>{S.region=e.target.value;S.city="";if(window.GEO)GEO.set(S.region,"");goHome()});
+  if(window.GEO){window.GEO_COLOR="#00B4EE";
+    const geoSet=g=>{S.region=g.region||"";S.city=g.region&&g.region!=="Минск"&&g.city?g.city:"";if($("#regionTop"))$("#regionTop").value=S.region};
+    window.GEO_SILENT=g=>{if(!S.region&&!S.q&&!S.user&&!location.hash.startsWith("#c/"))geoSet(g)};
+    window.GEO_APPLY=g=>{geoSet(g);if(currentView()==="home")goHome()};
+    window.GEO_OTHER=()=>{const r=$("#regionTop");if(r){r.focus();try{r.showPicker()}catch(_){}}};
+    GEO.start()}
   document.querySelector(".tb-links").addEventListener("click",e=>{const a=e.target.closest("[data-topcat]");if(!a)return;e.preventDefault();S={...freshFilters(),cat:a.dataset.topcat};goHome()});
   attachSuggest($("#q"),abistoSuggest,abistoPick);
   {const u=new URLSearchParams(location.search).get("q");if(u){S.q=u.slice(0,100);$("#q").value=S.q}}
