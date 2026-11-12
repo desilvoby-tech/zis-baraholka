@@ -1354,7 +1354,6 @@ async function renderAd(id,fresh){
   const attrs=(c.fields||[]).filter(f=>fieldFor(f,a.sub)&&a.attrs&&a.attrs[f.k]!=null&&a.attrs[f.k]!=="").map(f=>`<div><dt>${esc(f.l)}</dt><dd>${esc(a.attrs[f.k])}${f.u?" "+f.u:""}</dd></div>`).join("");
   const canBump=mine&&a.status==="active"&&Date.now()-new Date(a.bumped_at)>=864e5-6e5;
   const hoursLeft=Math.max(1,Math.ceil((864e5-(Date.now()-new Date(a.bumped_at)))/36e5));
-  document.title=a.title+" — Абисто";
   view().innerHTML=`<div class="crumbs"><a href="#">Главная</a>›<a href="#" data-gocat="${esc(a.cat)}">${esc(c.name)}</a>${a.sub?`›<a href="#" data-gocat="${esc(a.cat)}" data-gosub="${esc(a.sub)}">${esc(a.sub)}</a>`:""}</div>
   <div class="adpage">
     <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
@@ -1907,7 +1906,7 @@ function seoHome(){
   if(c){const name=k||S.sub||c.name;setMeta(`${name}${inB} — купить, продать | Абисто`,`${name}${S.sub&&!k?"":S.sub?" ("+S.sub+")":""}: свежие объявления${where?" — "+where:" по всей Беларуси"}. Новые и б/у, цены от частных лиц и магазинов. Разместите объявление бесплатно на Абисто.`);return}
   setMeta(SEO_BASE.t,SEO_BASE.d);
 }
-function seoAd(a,c){const pr=a.price!=null?` — ${a.price} руб.`:"";setMeta(`${a.title}${pr}, ${a.city||"Беларусь"} | Абисто`,`${a.title}${pr}. ${c&&c.name?c.name+". ":""}${a.city?a.city+". ":""}${String(a.descr||"").replace(/\s+/g," ").slice(0,110)}`);setCanon("https://abisto.by/ob/"+a.id+"-"+obSlug(a.title))}
+function seoAd(a,c){const pr=a.price!=null?` — ${a.price} руб.`:"";const ct=a.city||"Беларусь",hasCt=String(a.title).toLowerCase().includes(ct.toLowerCase().slice(0,Math.max(4,ct.length-1)));setMeta(`${a.title}${pr}${hasCt?"":", "+ct} | Абисто`,`${a.title}${pr}. ${c&&c.name?c.name+". ":""}${a.city?a.city+". ":""}${String(a.descr||"").replace(/\s+/g," ").slice(0,110)}`);setCanon("https://abisto.by/ob/"+a.id+"-"+obSlug(a.title))}
 const SEO_PAGES={cats:["Все категории объявлений в Беларуси | Абисто","Каталог Абисто: 22 категории и сотни подкатегорий объявлений по всей Беларуси."],rules:["Правила размещения объявлений | Абисто","Правила размещения объявлений на Абисто."],privacy:["Политика обработки персональных данных | Абисто","Политика обработки персональных данных Абисто по Закону РБ № 99-З."],post:["Подать объявление бесплатно | Абисто","Разместите бесплатное объявление на Абисто за минуту: фото, цена, контакты. Покупатели по всей Беларуси."]};
 async function route(){
   if(currentView()==="c"){const p=location.hash.slice(1).split("/").map(x=>{try{return decodeURIComponent(x)}catch(_){return x}});S={...freshFilters(),cat:CAT[p[1]]?p[1]:"",sub:p[2]||""};if(p[3])S.eq={kind:p[3]};history.replaceState(null,"",location.pathname+location.search+"#")}
