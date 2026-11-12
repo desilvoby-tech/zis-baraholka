@@ -1896,7 +1896,10 @@ const currentArg=()=>location.hash.slice(1).split("/")[1];
 
 /* SEO: заголовок и описание страницы (12.11.2026) */
 const SEO_BASE={t:"Абисто — бесплатные объявления в Беларуси: купить и продать",d:"Бесплатные объявления по всей Беларуси: недвижимость, авто, телефоны, техника, одежда, работа и услуги. Подайте объявление за минуту — без комиссии."};
-function setMeta(t,d){document.title=(unread?`(${unread}) `:"")+t;const m=document.querySelector('meta[name="description"]');if(m&&d)m.setAttribute("content",d.slice(0,160));const ot=document.querySelector('meta[property="og:title"]');if(ot)ot.setAttribute("content",t);const od=document.querySelector('meta[property="og:description"]');if(od&&d)od.setAttribute("content",d.slice(0,200))}
+const TRM={"а":"a","б":"b","в":"v","г":"g","д":"d","е":"e","ё":"e","ж":"zh","з":"z","и":"i","й":"y","к":"k","л":"l","м":"m","н":"n","о":"o","п":"p","р":"r","с":"s","т":"t","у":"u","ф":"f","х":"h","ц":"c","ч":"ch","ш":"sh","щ":"sch","ъ":"","ы":"y","ь":"","э":"e","ю":"yu","я":"ya","і":"i","ў":"u"};
+const obSlug=t=>{let s=[...String(t??"").toLowerCase()].map(c=>TRM[c]??c).join("").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");if(s.length>60){const x=s.slice(0,60);s=x.includes("-")?x.slice(0,x.lastIndexOf("-")):x}return s||"obyavlenie"};
+const setCanon=u=>{const l=document.querySelector('link[rel="canonical"]');if(l)l.setAttribute("href",u);const ou=document.querySelector('meta[property="og:url"]');if(ou)ou.setAttribute("content",u)};
+function setMeta(t,d){setCanon("https://abisto.by/");document.title=(unread?`(${unread}) `:"")+t;const m=document.querySelector('meta[name="description"]');if(m&&d)m.setAttribute("content",d.slice(0,160));const ot=document.querySelector('meta[property="og:title"]');if(ot)ot.setAttribute("content",t);const od=document.querySelector('meta[property="og:description"]');if(od&&d)od.setAttribute("content",d.slice(0,200))}
 function regionName(){const o=$("#regionTop")&&$("#regionTop").selectedOptions[0];return S.city||(S.region&&o?o.textContent.trim():"")}
 function seoHome(){
   const c=CAT[S.cat],k=S.eq&&S.eq.kind,where=regionName(),inB=where?` — ${where}`:" в Беларуси";
@@ -1904,7 +1907,7 @@ function seoHome(){
   if(c){const name=k||S.sub||c.name;setMeta(`${name}${inB} — купить, продать | Абисто`,`${name}${S.sub&&!k?"":S.sub?" ("+S.sub+")":""}: свежие объявления${where?" — "+where:" по всей Беларуси"}. Новые и б/у, цены от частных лиц и магазинов. Разместите объявление бесплатно на Абисто.`);return}
   setMeta(SEO_BASE.t,SEO_BASE.d);
 }
-function seoAd(a,c){const pr=a.price!=null?` — ${a.price} руб.`:"";setMeta(`${a.title}${pr}, ${a.city||"Беларусь"} | Абисто`,`${a.title}${pr}. ${c&&c.name?c.name+". ":""}${a.city?a.city+". ":""}${String(a.descr||"").replace(/\s+/g," ").slice(0,110)}`)}
+function seoAd(a,c){const pr=a.price!=null?` — ${a.price} руб.`:"";setMeta(`${a.title}${pr}, ${a.city||"Беларусь"} | Абисто`,`${a.title}${pr}. ${c&&c.name?c.name+". ":""}${a.city?a.city+". ":""}${String(a.descr||"").replace(/\s+/g," ").slice(0,110)}`);setCanon("https://abisto.by/ob/"+a.id+"-"+obSlug(a.title))}
 const SEO_PAGES={cats:["Все категории объявлений в Беларуси | Абисто","Каталог Абисто: 22 категории и сотни подкатегорий объявлений по всей Беларуси."],rules:["Правила размещения объявлений | Абисто","Правила размещения объявлений на Абисто."],privacy:["Политика обработки персональных данных | Абисто","Политика обработки персональных данных Абисто по Закону РБ № 99-З."],post:["Подать объявление бесплатно | Абисто","Разместите бесплатное объявление на Абисто за минуту: фото, цена, контакты. Покупатели по всей Беларуси."]};
 async function route(){
   if(currentView()==="c"){const p=location.hash.slice(1).split("/").map(x=>{try{return decodeURIComponent(x)}catch(_){return x}});S={...freshFilters(),cat:CAT[p[1]]?p[1]:"",sub:p[2]||""};if(p[3])S.eq={kind:p[3]};history.replaceState(null,"",location.pathname+location.search+"#")}

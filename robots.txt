@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://abisto.by/sitemap.xml
+Sitemap: https://abisto.by/sitemap-ob.xml
