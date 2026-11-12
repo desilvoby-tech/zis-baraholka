@@ -2,6 +2,8 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; connect-src 'self' https://gmksjjksvlkmhicbnbtj.supabase.co wss://gmksjjksvlkmhicbnbtj.supabase.co https://nominatim.openstreetmap.org https://api.nbrb.by; media-src 'self' blob: https:; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://gmksjjksvlkmhicbnbtj.supabase.co; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Абисто — бесплатные объявления в Беларуси: купить и продать</title>
 <meta name="description" content="Бесплатные объявления по всей Беларуси: недвижимость, авто, телефоны, техника, одежда, работа и услуги. Подайте объявление за минуту — без комиссии.">
@@ -591,6 +593,11 @@ header .search{overflow:visible}
 .subchips:has(.kinds){flex-wrap:wrap}
 .kinds{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px;padding-top:8px;border-top:1px dashed var(--line)}
 .kinds-l{font-size:13px;color:var(--muted);font-weight:600;margin-right:2px}
+
+.hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0}
+.chk.agree{align-items:flex-start;gap:8px;font-size:14px;line-height:1.4}
+.chk.agree input{margin-top:3px;flex:none}
+.foot-req{display:block;font-size:12px;opacity:.75;flex-basis:100%}
 </style>
 </head>
 <body>
@@ -627,6 +634,7 @@ header .search{overflow:visible}
 <main class="wrap" id="view"></main>
 <footer class="sitefoot"><div class="wrap foot-in">
   <span>© <span id="footYear"></span> Абисто — объявления по Беларуси</span>
+  <span class="foot-req">ИП Купцов Д. И., УНП 491544930. Адрес: 246003, г. Гомель, ул. Рогачёвская, 13, офис 2.</span>
   <nav class="foot-links"><a href="#rules">Правила</a><a href="#privacy">Политика персональных данных</a><a href="/kategorii/">Каталог объявлений</a><a href="#cats">Все категории</a><a href="#post">Подать объявление</a></nav>
 </div></footer>
 
@@ -877,6 +885,9 @@ const EXTRA_SUBS={other:["Разное","Обмен","Куплю"],free:["Оде
 const CAT = Object.fromEntries(CATS.map(c=>[c.id,c]));
 const NOCOND=new Set(["services","jobs","realty","animals"]);
 const hasCond=cat=>!NOCOND.has(cat);
+function botGate(k,max,sec){try{const now=Date.now(),key="bg_"+k,a=JSON.parse(localStorage.getItem(key)||"[]").filter(t=>now-t<sec*1000);if(a.length>=max)return false;a.push(now);localStorage.setItem(key,JSON.stringify(a))}catch(_){}return true}
+new MutationObserver(()=>{if(document.getElementById("pwForm")&&!window.__lgSeen){window.__lgSeen=1;window.__lgT=Date.now()}else if(!document.getElementById("pwForm"))window.__lgSeen=0}).observe(document.documentElement,{childList:true,subtree:true});
+const PROF_COLS="id,name,avatar,city,created_at,shop_name,about,address,work_hours,website,is_business";
 const fieldFor=(f,sub)=>f.sub3?!!sub&&f.s.includes(sub):(!f.s||!sub||f.s.includes(sub));
 const REASONS=["Мошенничество","Товар уже продан","Неверная цена или категория","Запрещённый товар","Оскорбления или спам","Другое"];
 const NOPH = I('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 17l-5-5-9 7"/>');
@@ -959,7 +970,7 @@ function startPromoPayment(order){
 }
 async function profiles(ids){
   const need=[...new Set(ids)].filter(id=>id&&!profCache.has(id));
-  if(need.length){const {data}=await sb.from("profiles").select("*").in("id",need);(data||[]).forEach(p=>profCache.set(p.id,p))}
+  if(need.length){const {data}=await sb.from("profiles").select(PROF_COLS).in("id",need);(data||[]).forEach(p=>profCache.set(p.id,p))}
   return Object.fromEntries([...new Set(ids)].map(id=>[id,profCache.get(id)]));
 }
 function compressToBlob(file,max,quality){
@@ -1121,10 +1132,10 @@ const LEGAL_RULES=`<h1>Правила размещения объявлений<
 <h2>7. Связь</h2>
 <p>Вопросы по работе сайта и жалобы присылайте через кнопку «Пожаловаться» в объявлении или в Telegram-бот сайта @abisto_bot.</p>`;
 const LEGAL_PRIVACY=`<h1>Политика обработки персональных данных</h1>
-<p class="note">Редакция от 10 ноября 2026 г.</p>
+<p class="note">Редакция от 12 ноября 2026 г.</p>
 <p>Эта политика объясняет, какие данные собирает сайт объявлений Абисто (abisto.by), зачем и как мы их используем. Обработка ведётся в соответствии с Законом Республики Беларусь от 7 мая 2021 г. № 99-З «О защите персональных данных».</p>
 <h2>1. Оператор</h2>
-<p>Оператор персональных данных — владелец сайта abisto.by. Связаться по вопросам персональных данных можно через Telegram-бот сайта @abisto_bot.</p>
+<p>Оператор персональных данных — индивидуальный предприниматель Купцов Д. И., УНП 491544930. Адрес: 246003, г. Гомель, ул. Рогачёвская, 13, офис 2. По вопросам персональных данных можно написать в Telegram-бот сайта @abisto_bot или направить письменное заявление по адресу оператора.</p><p class="note">Р/с BY62 POIS 3013 0139 1917 0193 3001 (BYN) в ОАО «Паритетбанк», 220002, г. Минск, ул. Киселёва, 61а, BIC POISBY2X, УНП банка 100233809.</p>
 <h2>2. Какие данные мы обрабатываем</h2>
 <ul><li><b>Данные аккаунта:</b> адрес электронной почты или идентификатор Telegram, имя, которое вы указали, фото профиля.</li>
 <li><b>Данные профиля и объявлений:</b> телефон для объявлений, город, название магазина, адрес, часы работы, сайт, тексты и фото объявлений.</li>
@@ -1150,6 +1161,8 @@ const LEGAL_PRIVACY=`<h1>Политика обработки персональ�
 <p>Вы можете в любое время: узнать, какие данные о вас хранятся; изменить их в «Профиле»; отозвать согласие и потребовать удалить аккаунт и данные; получить сведения о передаче данных третьим лицам. Для этого напишите в Telegram-бот @abisto_bot. Мы ответим в течение 15 дней.</p>
 <h2>8. Защита</h2>
 <p>Доступ к данным ограничен правилами базы данных: каждый пользователь может менять только свои объявления и профиль. Соединение с сайтом защищено (HTTPS), пароли хранятся только в виде хеша, их не видит никто, включая администрацию.</p>
+<h2>Cookie и локальное хранилище</h2>
+<p>Сайт использует только необходимые cookie и локальное хранилище браузера: для входа в аккаунт (сессия Supabase), запоминания настроек, избранного, черновиков и согласия с этим уведомлением. Аналитические и рекламные cookie не используются, данные третьим лицам для рекламы не передаются. Вы можете удалить cookie в настройках браузера — тогда потребуется войти заново.</p>
 <h2>9. Изменения</h2>
 <p>Мы можем обновлять эту политику. Новая редакция действует с момента публикации на этой странице.</p>`;
 const tgLinked=()=>!!(me&&(me.notify_chat_id||me.tg_chat_id));
@@ -1756,14 +1769,15 @@ function renderLogin(){
   view().innerHTML=`<div class="narrow" style="margin-top:20px"><div class="box">
     <div class="tabs" style="margin:0"><button class="chip" data-lmode="login" aria-pressed="${!reg}">Вход</button><button class="chip" data-lmode="register" aria-pressed="${reg}">Регистрация</button></div>
     ${authNotice?`<p class="err">${esc(authNotice)}</p>`:""}
+    <p class="note" style="margin:0 0 6px">Входя через Google, Яндекс, Mail.ru или Telegram, вы принимаете <a href="#rules" target="_blank">Правила</a> и даёте согласие на обработку персональных данных согласно <a href="#privacy" target="_blank">Политике</a>.</p>
     ${CFG.google?`<button class="btn sec" id="gLogin" style="justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.3c0-.8-.1-1.5-.2-2.3H12v4.3h5.9a5 5 0 0 1-2.2 3.3v2.7h3.5c2-1.9 3.3-4.7 3.3-8z"/><path fill="#34A853" d="M12 23c3 0 5.5-1 7.3-2.7l-3.5-2.7c-1 .7-2.3 1.1-3.8 1.1-2.9 0-5.4-2-6.3-4.6H2.1v2.8A11 11 0 0 0 12 23z"/><path fill="#FBBC05" d="M5.7 14.1a6.6 6.6 0 0 1 0-4.2V7.1H2.1a11 11 0 0 0 0 9.8z"/><path fill="#EA4335" d="M12 5.4c1.6 0 3.1.6 4.2 1.7l3.1-3.1A11 11 0 0 0 2.1 7.1l3.6 2.8C6.6 7.3 9.1 5.4 12 5.4z"/></svg> Войти через Google</button><div class="note" style="text-align:center">или по почте</div>`:""}
     ${CFG.yandex?`<button class="btn" type="button" data-oauth="yandex" style="width:100%;background:#FC3F1D;color:#fff;display:flex;gap:8px;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#fff"/><path fill="#FC3F1D" d="M13.3 6.2h-1c-1.8 0-2.8.9-2.8 2.3 0 1.6.7 2.3 2.1 3.3l1.1.8-3.3 5.2H7l3-4.6c-1.7-1.3-2.7-2.4-2.7-4.5 0-2.6 1.8-4.4 5-4.4h3.3v13.5h-2.3z"/></svg> Войти через Яндекс</button>`:""}${CFG.mailru?`<button class="btn" type="button" data-oauth="mailru" style="width:100%;background:#005FF9;color:#fff;margin-top:8px">@ Войти через Mail.ru</button>`:""}
     ${CFG.telegram===false?"":`<button class="btn tg-btn" id="tgLogin" type="button"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.7 19.4c-.2 1-.9 1.3-1.7.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.6 13.1l-4.7-1.5c-1-.3-1-1 .2-1.5L20.5 3c.9-.3 1.6.2 1.4 1.3z"/></svg>Войти через Telegram</button><p class="note" id="tgMsg" hidden></p><p class="note" style="margin:0;text-align:center">Входя через Telegram, вы принимаете <a href="#rules">Правила</a> и <a href="#privacy">Политику персональных данных</a>.</p><div class="or"><span>или по почте</span></div>`}
-    <form id="pwForm" class="form" style="gap:10px">
+    <form id="pwForm" class="form" style="gap:10px"><input type="text" name="website" id="hpWeb" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp">
       ${reg?`<div class="field"><label for="lName">Ваше имя</label><input class="inp" id="lName" maxlength="40" autocomplete="given-name" placeholder="Как к вам обращаться"></div>`:""}
       <div class="field"><label for="lEmail">Электронная почта</label><input class="inp" id="lEmail" type="email" autocomplete="email" required value="${esc(loginEmail)}" placeholder="you@example.com"></div>
       <div class="field"><label for="lPass">Пароль</label><input class="inp" id="lPass" type="password" minlength="6" required autocomplete="${reg?"new-password":"current-password"}"></div>
-      ${reg?'<p class="note" style="margin:0">Не меньше 6 символов.</p><p class="note" style="margin:0">Регистрируясь, вы принимаете <a href="#rules" target="_blank">Правила</a> и даёте согласие на обработку персональных данных согласно <a href="#privacy" target="_blank">Политике</a>.</p>':""}
+      ${reg?'<p class="note" style="margin:0">Не меньше 6 символов.</p><label class="chk agree"><input type="checkbox" id="lAgree" required> <span>Я принимаю <a href="#rules" target="_blank">Правила</a> и даю согласие на обработку персональных данных согласно <a href="#privacy" target="_blank">Политике</a></span></label>':""}
       <button class="btn" type="submit" style="justify-content:center">${reg?"Зарегистрироваться":"Войти"}</button>
     </form>
     <form id="emailForm" class="form" style="gap:10px" hidden><div class="field"><label for="lEmail2">Электронная почта</label><input class="inp" id="lEmail2" type="email" autocomplete="email" required value="${esc(loginEmail)}" placeholder="you@example.com"></div>
@@ -1970,6 +1984,9 @@ function wire(){
     if(id==="postForm") return submitPost(e);
     if(id==="chatForm") return sendMsg(e);
     if(id==="pwForm"){e.preventDefault();const er=$("#lErr");er.hidden=true;$("#lOk").hidden=true;loginEmail=$("#lEmail").value.trim();const pass=$("#lPass").value;
+      if(($("#hpWeb")&&$("#hpWeb").value)||Date.now()-(window.__lgT||0)<1500){er.textContent="Проверка не пройдена. Попробуйте ещё раз.";er.hidden=false;return}
+      if(loginMode==="register"&&$("#lAgree")&&!$("#lAgree").checked){er.textContent="Отметьте согласие с Правилами и Политикой обработки персональных данных.";er.hidden=false;return}
+      if(!botGate("login",8,600)){er.textContent="Слишком много попыток. Подождите 10 минут.";er.hidden=false;return}
       const btn=e.target.querySelector("button[type=submit]");btn.disabled=true;let res;
       if(loginMode==="register"){const nm=(($("#lName")||{}).value||"").trim();res=await sb.auth.signUp({email:loginEmail,password:pass,options:{data:nm?{full_name:nm}:{},emailRedirectTo:location.origin+location.pathname}})}
       else res=await sb.auth.signInWithPassword({email:loginEmail,password:pass});
@@ -2007,8 +2024,8 @@ let meReady=Promise.resolve();
 async function onAuth(session,first){
   const prev=first?null:(user&&user.id); user=session?session.user:null;
   if(user){
-    let {data}=await sb.from("profiles").select("*").eq("id",user.id).maybeSingle();
-    if(!data){const r=await sb.from("profiles").insert({id:user.id,name:(user.email||"Пользователь").split("@")[0]}).select().single();data=r.data}
+    let {data}=await sb.rpc("my_profile");if(data&&!data.id)data=null;
+    if(!data){await sb.from("profiles").insert({id:user.id,name:(user.email||"Пользователь").split("@")[0]});data=(await sb.rpc("my_profile")).data}
     me=data; if(me) profCache.set(me.id,me);
     const {data:adm}=await sb.from("admins").select("user_id").eq("user_id",user.id).maybeSingle(); isAdmin=!!adm;
   } else {me=null;isAdmin=false}
@@ -2046,6 +2063,16 @@ fetch("https://api.nbrb.by/exrates/rates/431").then(r=>r.json()).then(j=>{if(j&&
   route();
   sb.auth.onAuthStateChange((ev,s)=>{if(ev==="PASSWORD_RECOVERY"){recoveryMode=true;location.hash="#login";setTimeout(renderLogin,60)}if(ev==="SIGNED_IN"||ev==="SIGNED_OUT"||ev==="USER_UPDATED")setTimeout(()=>onAuth(s),0)});
 })();
+</script>
+<script>
+/* Cookie-баннер (12.11.2026) */
+(function(){try{if(localStorage.getItem("ck_ok"))return}catch(_){}
+var P=window.CK_POLICY||"/#privacy";
+var d=document.createElement("div");d.className="ckb";d.setAttribute("role","region");d.setAttribute("aria-label","Уведомление о cookie");
+d.innerHTML='<p>Мы используем cookie и локальное хранилище браузера только для работы сайта: вход в аккаунт, настройки и избранное. Аналитику и рекламные cookie не используем. Подробнее — в <a href="'+P+'">Политике обработки персональных данных</a>.</p><button type="button">Понятно</button>';
+d.querySelector("button").onclick=function(){try{localStorage.setItem("ck_ok",String(Date.now()))}catch(_){}d.remove()};
+var st=document.createElement("style");st.textContent=".ckb{position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;max-width:760px;margin:0 auto;background:#1d2633;color:#eef2f7;border-radius:14px;padding:14px 16px;display:flex;gap:14px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.25);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.ckb p{margin:0;flex:1}.ckb a{color:#7fd6ff}.ckb button{flex:none;border:0;border-radius:10px;padding:10px 18px;font-weight:700;cursor:pointer;background:var(--ck,#00B4EE);color:#fff}@media(max-width:560px){.ckb{flex-direction:column;align-items:stretch;bottom:76px}}";
+document.head.appendChild(st);(document.body?Promise.resolve():new Promise(function(r){document.addEventListener("DOMContentLoaded",r)})).then(function(){document.body.appendChild(d)})})();
 </script>
 </body>
 </html>
