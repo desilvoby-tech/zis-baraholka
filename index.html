@@ -29,7 +29,7 @@
 <link rel="dns-prefetch" href="https://gmksjjksvlkmhicbnbtj.supabase.co">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Manrope:wght@400;500;600;700&display=swap">
-<style>
+<style>@font-face{font-family:"BYN";src:url(/byn.woff) format("woff");unicode-range:U+0183;font-display:swap}
 :root{color-scheme:light;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
 body{margin:0}img{max-width:100%}[hidden]{display:none!important}
 
@@ -39,8 +39,8 @@ body{margin:0}img{max-width:100%}[hidden]{display:none!important}
   --head:#15295a; --head-ink:#ffffff; --head-soft:rgba(255,255,255,.14);
   --accent:#00B4EE; --accent-ink:#ffffff; --brand:#1f4fb3; --brand-soft:#e7eefc;
   --danger:#c23b2f; --ok:#1d8a4e; --shadow:0 1px 2px rgba(19,33,59,.06),0 6px 18px rgba(19,33,59,.07);
-  --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
-  --f-body:"Manrope","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-display:"BYN","Unbounded","Arial Black",system-ui,sans-serif;
+  --f-body:"BYN","Manrope","Segoe UI",system-ui,-apple-system,sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0d131e; --surface:#151d2b; --ink:#e7ecf5; --muted:#95a2b8; --line:#253145;
@@ -296,7 +296,7 @@ textarea.inp{min-height:130px;resize:vertical}
   --head:#ffffff; --head-ink:#1a1a1a; --head-soft:#f4f4f4;
   --accent:#00B4EE; --accent-ink:#ffffff; --brand:#0a6cf5; --brand-soft:#eef4ff;
   --danger:#e5322d; --ok:#14a44d; --shadow:0 2px 12px rgba(0,0,0,.08);
-  --f-display:"Manrope","Segoe UI",system-ui,sans-serif;
+  --f-display:"BYN","Manrope","Segoe UI",system-ui,sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#121212; --surface:#121212; --ink:#f2f2f2; --muted:#9a9a9a; --line:#2a2a2a;
@@ -2168,7 +2168,7 @@ var P=window.CK_POLICY||"/#privacy";
 var d=document.createElement("div");d.className="ckb";d.setAttribute("role","region");d.setAttribute("aria-label","Уведомление о cookie");
 d.innerHTML='<p>Мы используем cookie и локальное хранилище браузера для работы сайта (вход в аккаунт, настройки, избранное) и для обезличенной статистики посещений (Яндекс.Метрика). Рекламные cookie не используем. Подробнее — в <a href="'+P+'">Политике обработки персональных данных</a>.</p><button type="button">Понятно</button>';
 d.querySelector("button").onclick=function(){try{localStorage.setItem("ck_ok",String(Date.now()))}catch(_){}d.remove()};
-var st=document.createElement("style");st.textContent=".ckb{position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;max-width:760px;margin:0 auto;background:#1d2633;color:#eef2f7;border-radius:14px;padding:14px 16px;display:flex;gap:14px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.25);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.ckb p{margin:0;flex:1}.ckb a{color:#7fd6ff}.ckb button{flex:none;border:0;border-radius:10px;padding:10px 18px;font-weight:700;cursor:pointer;background:var(--ck,#00B4EE);color:#fff}@media(max-width:560px){.ckb{flex-direction:column;align-items:stretch;bottom:76px}}";
+var st=document.createElement("style");st.textContent=".ckb{position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;max-width:760px;margin:0 auto;background:#1d2633;color:#eef2f7;border-radius:14px;padding:14px 16px;display:flex;gap:14px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.25);font:14px/1.45 "BYN",system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.ckb p{margin:0;flex:1}.ckb a{color:#7fd6ff}.ckb button{flex:none;border:0;border-radius:10px;padding:10px 18px;font-weight:700;cursor:pointer;background:var(--ck,#00B4EE);color:#fff}@media(max-width:560px){.ckb{flex-direction:column;align-items:stretch;bottom:76px}}";
 document.head.appendChild(st);(document.body?Promise.resolve():new Promise(function(r){document.addEventListener("DOMContentLoaded",r)})).then(function(){document.body.appendChild(d)})})();
 </script>
 </body>
