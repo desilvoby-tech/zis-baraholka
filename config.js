@@ -4,6 +4,6 @@ window.ZIS_CONFIG = {
   url: "https://gmksjjksvlkmhicbnbtj.supabase.co",
   anonKey: "sb_publishable_vTYTbCs2qrGTgMRYPRdVkA_FeOnmDHW",
   google: false,
-  yandex: false,  // включить после настройки функции oauth
+  yandex: true,   // включить после настройки функции oauth
   mailru: false
 };
