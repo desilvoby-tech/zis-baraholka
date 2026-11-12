@@ -927,14 +927,14 @@ const esc = s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":
 const rid = ()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
 function plural(n,f){const m=n%10,h=n%100;return f[(m===1&&h!==11)?0:(m>=2&&m<=4&&(h<12||h>14))?1:2]}
 const nAds=n=>n+" "+plural(n,["объявление","объявления","объявлений"]);
-const BYN='<svg class="byn" viewBox="3 2 16 20" role="img" aria-label="руб."><path d="M8.5 3.5h9.5M8.5 3.5v17M8.5 10.5h4a5 5 0 0 1 0 10h-4M4 15.5h10.5" fill="none" stroke="currentColor" stroke-width="2.8"/></svg>';
+const BYN='р.';
 function fmtPrice(a){
   if(a.price_type==="free"||a.cat==="free") return '<span class="price free">Бесплатно</span>';
   if(a.price_type==="deal"||a.price==null) return '<span class="price">Договорная</span>';
   const usdFixed=a.currency==="USD"&&a.price_usd!=null;
   const byn=usdFixed&&USD_RATE?Math.round(a.price_usd*USD_RATE):Number(a.price);
   const usd=usdFixed?Number(a.price_usd):(USD_RATE?Math.round(Number(a.price)/USD_RATE):null);
-  return `<span class="price">${byn.toLocaleString("ru-RU")}${BYN}</span>`;
+  return `<span class="price">${byn.toLocaleString("ru-RU")}&nbsp;р.</span>`;
 }
 function fmtDate(t){
   if(!t) return ""; const d=new Date(t), n=new Date();
@@ -992,7 +992,7 @@ async function loadPromos(force){
 }
 // Сюда владелец подключит форму оплаты. Сейчас заявка ждёт ручной активации в админке.
 function startPromoPayment(order){
-  return `<p class="note">Заявка №${order.id} создана: ${esc(order.title)} — ${order.price} руб. Онлайн-оплата скоро появится. После оплаты администратор включит продвижение.</p>`;
+  return `<p class="note">Заявка №${order.id} создана: ${esc(order.title)} — ${order.price} р. Онлайн-оплата скоро появится. После оплаты администратор включит продвижение.</p>`;
 }
 async function profiles(ids){
   const need=[...new Set(ids)].filter(id=>id&&!profCache.has(id));
@@ -1037,7 +1037,7 @@ async function search(s,offset=0,limit=PAGE){
 const anyFilter=s=>!!(s.q||s.cat||s.region||s.min||s.max||s.cond||s.photo||Object.values(s.eq).some(Boolean)||Object.values(s.nmin).some(Boolean)||Object.values(s.nmax).some(Boolean));
 function searchLabel(s){
   const parts=[]; if(s.q)parts.push("«"+s.q+"»"); if(s.cat&&CAT[s.cat])parts.push(s.sub||CAT[s.cat].name);
-  parts.push(s.city||s.region||"Вся Беларусь"); if(s.min||s.max)parts.push((s.min?"от "+s.min:"")+(s.max?" до "+s.max:"")+" руб.");
+  parts.push(s.city||s.region||"Вся Беларусь"); if(s.min||s.max)parts.push((s.min?"от "+s.min:"")+(s.max?" до "+s.max:"")+" р.");
   if(s.cond)parts.push(s.cond==="new"?"новое":"б/у"); if(s.photo)parts.push("с фото");
   for(const [k,v] of Object.entries(s.eq||{}))if(v)parts.push(v);
   return parts.join(" · ");
@@ -1212,7 +1212,7 @@ function renderAllCats(){
 
 /* Активные фильтры (12.11.2026) */
 function afList(){const L=[];if(S.q)L.push(["q","«"+S.q+"»"]);if(S.region)L.push(["region",S.city||(($("#regionTop")&&$("#regionTop").selectedOptions[0])||{}).textContent||"Регион"]);
-  if(S.min||S.max)L.push(["price",(S.min?"от "+S.min:"")+(S.max?" до "+S.max:"")+" руб."]);if(S.cond)L.push(["cond",S.cond==="new"?"Новое":"Б/у"]);if(S.photo)L.push(["photo","С фото"]);
+  if(S.min||S.max)L.push(["price",(S.min?"от "+S.min:"")+(S.max?" до "+S.max:"")+" р."]);if(S.cond)L.push(["cond",S.cond==="new"?"Новое":"Б/у"]);if(S.photo)L.push(["photo","С фото"]);
   for(const [k,v] of Object.entries(S.eq||{}))if(v)L.push(["eq:"+k,v]);
   const c=CAT[S.cat];for(const k of new Set([...Object.keys(S.nmin||{}),...Object.keys(S.nmax||{})])){const a=S.nmin[k],b=S.nmax[k];if(a||b){const f=c&&c.fields.find(x=>x.k===k);L.push(["num:"+k,(f?f.l+" ":"")+(a?"от "+a:"")+(b?" до "+b:"")])}}
   return L}
@@ -1412,7 +1412,7 @@ async function renderAd(id,fresh){
     if(id==="mSold"){const {error}=await sb.from("ads").update({status:a.status==="sold"?"active":"sold"}).eq("id",a.id);if(error)toast(errText(error));else{toast(a.status==="sold"?"Объявление снова в продаже":"Отмечено как проданное");loadCatCounts();renderAd(a.id)}}
     if(id==="mDel"||id==="mMod"){$("#mConfirm").innerHTML=`<p class="note">Объявление исчезнет для всех. Удалить?</p><div class="actions"><button class="btn danger" id="delYes">Да, удалить</button><button class="btn sec" id="mNo">Отмена</button></div>`}
     if(id==="mNo") $("#mConfirm").innerHTML="";
-    if(id==="mPromo"){await loadPromos(true);$("#mConfirm").innerHTML=`<div class="box" style="margin-top:10px"><strong>Продвижение объявления</strong>${PROMO.top.has(a.id)||PROMO.hl.has(a.id)?'<p class="note">Сейчас уже действует продвижение — новый тариф продлит его.</p>':""}<div class="promo-t">${PROMO_TARIFFS.map(([k,n,p])=>`<button class="btn sec" id="prBuy-${k}"><span>${n}</span><b>${p} руб.</b></button>`).join("")}</div><p class="note">«Топ» — объявление показывается в блоке «Топ-объявления» над выдачей. «Выделение» — карточка подсвечивается в списке.</p><button class="btn sec" id="mNo">Закрыть</button></div>`}
+    if(id==="mPromo"){await loadPromos(true);$("#mConfirm").innerHTML=`<div class="box" style="margin-top:10px"><strong>Продвижение объявления</strong>${PROMO.top.has(a.id)||PROMO.hl.has(a.id)?'<p class="note">Сейчас уже действует продвижение — новый тариф продлит его.</p>':""}<div class="promo-t">${PROMO_TARIFFS.map(([k,n,p])=>`<button class="btn sec" id="prBuy-${k}"><span>${n}</span><b>${p} р.</b></button>`).join("")}</div><p class="note">«Топ» — объявление показывается в блоке «Топ-объявления» над выдачей. «Выделение» — карточка подсвечивается в списке.</p><button class="btn sec" id="mNo">Закрыть</button></div>`}
     const pb=t.closest&&t.closest('[id^="prBuy-"]'); if(pb){const k=pb.id.slice(6);const {data:o,error}=await sb.from("promo_orders").insert({ad_id:a.id,kind:k}).select().single();if(error){toast(errText(error));return}o.title=(PROMO_TARIFFS.find(x=>x[0]===k)||[,k])[1];$("#mConfirm").innerHTML=startPromoPayment(o)}
     if(id==="delYes"){const {error}=await sb.from("ads").delete().eq("id",a.id);if(error){toast(errText(error));return}removePhotos(photos);toast("Объявление удалено");loadCatCounts();location.hash=mine?"#my":"#"}
     if(id==="mReport"){$("#mConfirm").innerHTML=`<form id="repForm" class="panel" style="padding:12px"><div class="field"><label for="repReason">Причина жалобы</label><select class="inp" id="repReason">${REASONS.map(r=>`<option>${r}</option>`).join("")}</select></div><input class="inp" id="repText" maxlength="300" placeholder="Комментарий (необязательно)" aria-label="Комментарий"><div class="actions"><button class="btn danger" type="submit">Отправить жалобу</button><button class="btn sec" type="button" id="mNo">Отмена</button></div></form>`;$("#mConfirm").scrollIntoView({block:"nearest"})}
@@ -1455,7 +1455,7 @@ async function renderPost(editId){
     <div class="panel">
       <div class="field"><span class="flabel">${d.cat==="jobs"?"Зарплата":"Цена"}</span>
         <div class="seg" role="radiogroup">${[["fixed",d.cat==="jobs"?"Указать":"Указать цену"],["deal","Договорная"],["free","Бесплатно"]].filter(x=>d.cat!=="jobs"||x[0]!=="free").map(([v,l])=>`<label><input type="radio" name="pt" value="${v}" ${d.price_type===v?"checked":""}>${l}</label>`).join("")}</div>
-        <div class="row2" ${d.price_type==="fixed"?"":"hidden"}><div style="display:flex;gap:6px"><input class="inp" id="pPrice" inputmode="decimal" placeholder="Сумма" value="${esc(d.price)}" aria-label="Цена"><span class="inp" id="pCur" aria-label="Валюта" style="width:auto;display:inline-flex;align-items:center">BYN</span></div><label class="chk"><input type="checkbox" id="pHaggle" ${d.haggle?"checked":""}> Возможен торг</label></div></div>
+        <div class="row2" ${d.price_type==="fixed"?"":"hidden"}><div style="display:flex;gap:6px"><input class="inp" id="pPrice" inputmode="decimal" placeholder="Сумма" value="${esc(d.price)}" aria-label="Цена"><span class="inp" id="pCur" aria-label="Валюта" style="width:auto;display:inline-flex;align-items:center">р.</span></div><label class="chk"><input type="checkbox" id="pHaggle" ${d.haggle?"checked":""}> Возможен торг</label></div></div>
       ${!hasCond(d.cat)?"":`<div class="field"><span class="flabel">Состояние</span><div class="seg">${[["used","Б/у"],["new","Новое"]].map(([v,l])=>`<label><input type="radio" name="cond" value="${v}" ${d.cond===v?"checked":""}>${l}</label>`).join("")}</div></div>`}
     </div>
     <div class="panel">
@@ -1876,7 +1876,7 @@ function bindAdmBar(){
 async function renderAdminPR(){
   view().innerHTML=`<div class="page"><div class="toolbar"><h1>Заявки на продвижение</h1></div><div id="promoList">${loadingBlock()}</div><div class="toolbar"><h1>Жалобы</h1></div><div id="repList">${loadingBlock()}</div></div>`;
   sb.from("promo_orders").select("*, ads(id,title)").eq("status","pending").order("created_at",{ascending:false}).then(({data:po,error:pe})=>{const b=$("#promoList");if(!b)return;if(pe){b.innerHTML=emptyBlock("Ошибка",esc(errText(pe)));return}
-    b.innerHTML=po.length?`<div class="panel">${po.map(o=>`<div class="ssrow"><div style="min-width:0"><strong>${esc((PROMO_TARIFFS.find(x=>x[0]===o.kind)||[,o.kind])[1])} — ${o.price} руб.</strong><div class="note">№${o.id} · ${o.ads?`<a class="link" href="#ad/${o.ads.id}">${esc(o.ads.title)}</a>`:"объявление удалено"} · ${esc(fmtDate(o.created_at))}</div></div><div class="actions"><button class="btn" data-poact="${o.id}">Оплачено — включить</button><button class="btn sec" data-pocancel="${o.id}">Отменить</button></div></div>`).join("")}</div>`:emptyBlock("Новых заявок нет","Когда продавец выберет тариф продвижения, заявка появится здесь.")});
+    b.innerHTML=po.length?`<div class="panel">${po.map(o=>`<div class="ssrow"><div style="min-width:0"><strong>${esc((PROMO_TARIFFS.find(x=>x[0]===o.kind)||[,o.kind])[1])} — ${o.price} р.</strong><div class="note">№${o.id} · ${o.ads?`<a class="link" href="#ad/${o.ads.id}">${esc(o.ads.title)}</a>`:"объявление удалено"} · ${esc(fmtDate(o.created_at))}</div></div><div class="actions"><button class="btn" data-poact="${o.id}">Оплачено — включить</button><button class="btn sec" data-pocancel="${o.id}">Отменить</button></div></div>`).join("")}</div>`:emptyBlock("Новых заявок нет","Когда продавец выберет тариф продвижения, заявка появится здесь.")});
   const {data,error}=await sb.from("reports").select("*, ads(id,title,user_id,photos)").order("created_at",{ascending:false});
   if(error){$("#repList").innerHTML=emptyBlock("Ошибка",esc(errText(error)));return}
   $("#repList").innerHTML=data.length?`<div class="panel">${data.map(r=>`<div class="ssrow"><div style="min-width:0"><strong>${esc(r.reason)}</strong>${r.body?" — "+esc(r.body):""}<div class="note">${r.ads?`<a class="link" href="#ad/${r.ads.id}">${esc(r.ads.title)}</a>`:"Объявление уже удалено"} · ${esc(fmtDate(r.created_at))}</div></div><div class="actions">${r.ads?`<button class="btn danger" data-addel="${r.ads.id}">Удалить объявление</button>`:""}<button class="btn sec" data-repdel="${r.id}">Отклонить жалобу</button></div></div>`).join("")}</div>`:emptyBlock("Жалоб нет","Когда посетители пожалуются на объявление, жалоба появится здесь.");
@@ -1903,7 +1903,7 @@ function seoHome(){
   if(c){const name=k||S.sub||c.name;setMeta(`${name}${inB} — купить, продать | Абисто`,`${name}${S.sub&&!k?"":S.sub?" ("+S.sub+")":""}: свежие объявления${where?" — "+where:" по всей Беларуси"}. Новые и б/у, цены от частных лиц и магазинов. Разместите объявление бесплатно на Абисто.`);return}
   setMeta(SEO_BASE.t,SEO_BASE.d);
 }
-function seoAd(a,c){const pr=a.price!=null?` — ${a.price} руб.`:"";setMeta(`${a.title}${pr}, ${a.city||"Беларусь"} | Абисто`,`${a.title}${pr}. ${c&&c.name?c.name+". ":""}${a.city?a.city+". ":""}${String(a.descr||"").replace(/\s+/g," ").slice(0,110)}`)}
+function seoAd(a,c){const pr=a.price!=null?` — ${a.price} р.`:"";setMeta(`${a.title}${pr}, ${a.city||"Беларусь"} | Абисто`,`${a.title}${pr}. ${c&&c.name?c.name+". ":""}${a.city?a.city+". ":""}${String(a.descr||"").replace(/\s+/g," ").slice(0,110)}`)}
 const SEO_PAGES={cats:["Все категории объявлений в Беларуси | Абисто","Каталог Абисто: 22 категории и сотни подкатегорий объявлений по всей Беларуси."],rules:["Правила размещения объявлений | Абисто","Правила размещения объявлений на Абисто."],privacy:["Политика обработки персональных данных | Абисто","Политика обработки персональных данных Абисто по Закону РБ № 99-З."],post:["Подать объявление бесплатно | Абисто","Разместите бесплатное объявление на Абисто за минуту: фото, цена, контакты. Покупатели по всей Беларуси."]};
 async function route(){
   if(currentView()==="c"){const p=location.hash.slice(1).split("/").map(x=>{try{return decodeURIComponent(x)}catch(_){return x}});S={...freshFilters(),cat:CAT[p[1]]?p[1]:"",sub:p[2]||""};if(p[3])S.eq={kind:p[3]};history.replaceState(null,"",location.pathname+location.search+"#")}
