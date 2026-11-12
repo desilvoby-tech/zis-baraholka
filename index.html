@@ -3,15 +3,19 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Абисто — объявления по Беларуси</title>
-<meta name="description" content="Абисто: бесплатные объявления по всей Беларуси. Продайте ненужное и найдите нужное рядом с домом.">
+<title>Абисто — бесплатные объявления в Беларуси: купить и продать</title>
+<meta name="description" content="Бесплатные объявления по всей Беларуси: недвижимость, авто, телефоны, техника, одежда, работа и услуги. Подайте объявление за минуту — без комиссии.">
+<link rel="canonical" href="https://abisto.by/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:locale" content="ru_BY">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://abisto.by/#site","url":"https://abisto.by/","name":"Абисто","alternateName":"Abisto","inLanguage":"ru-BY","potentialAction":{"@type":"SearchAction","target":"https://abisto.by/?q={search_term_string}","query-input":"required name=search_term_string"}},{"@type":"Organization","@id":"https://abisto.by/#org","name":"Абисто","url":"https://abisto.by/","logo":"https://abisto.by/apple-touch-icon.png","areaServed":"BY"}]}</script>
 <meta name="theme-color" content="#00B4EE">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Абисто">
-<meta property="og:title" content="Абисто — объявления по Беларуси">
+<meta property="og:title" content="Абисто — бесплатные объявления в Беларуси: купить и продать">
 <meta property="og:description" content="Бесплатные объявления по всей Беларуси: продайте ненужное и найдите нужное рядом с домом.">
 <meta property="og:url" content="https://abisto.by/">
 <meta property="og:image" content="https://abisto.by/og.png">
@@ -582,6 +586,11 @@ header .login-btn svg{display:none}
 .sg .sg-c{margin-left:auto;padding-left:10px;color:var(--muted,#6b7280);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:45%}
 .sg svg{width:16px;height:16px;flex:none;opacity:.55}
 header .search{overflow:visible}
+
+/* 3-й уровень */
+.subchips:has(.kinds){flex-wrap:wrap}
+.kinds{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:6px;padding-top:8px;border-top:1px dashed var(--line)}
+.kinds-l{font-size:13px;color:var(--muted);font-weight:600;margin-right:2px}
 </style>
 </head>
 <body>
@@ -618,7 +627,7 @@ header .search{overflow:visible}
 <main class="wrap" id="view"></main>
 <footer class="sitefoot"><div class="wrap foot-in">
   <span>© <span id="footYear"></span> Абисто — объявления по Беларуси</span>
-  <nav class="foot-links"><a href="#rules">Правила</a><a href="#privacy">Политика персональных данных</a><a href="#cats">Все категории</a><a href="#post">Подать объявление</a></nav>
+  <nav class="foot-links"><a href="#rules">Правила</a><a href="#privacy">Политика персональных данных</a><a href="/kategorii/">Каталог объявлений</a><a href="#cats">Все категории</a><a href="#post">Подать объявление</a></nav>
 </div></footer>
 
 <nav class="bottomnav" aria-label="Навигация">
@@ -744,10 +753,131 @@ free:'<rect x="10" y="26" width="44" height="30" rx="3" fill="url(#gG)"/><rect x
 };
 const catArt=id=>ART[id]?`<svg class="art" viewBox="0 0 64 64" aria-hidden="true">${ART[id]}</svg>`:"";
 
+/* 3-й уровень каталога (12.11.2026): подкатегория → вид (хранится в attrs.kind) */
+const SUB3={
+"Дома, дачи, коттеджи":["Дом","Дача","Коттедж","Таунхаус","Часть дома","Усадьба"],
+"Участки":["Под строительство","Сельхозназначения","Садовый","Коммерческий"],
+"Гаражи и машиноместа":["Гараж","Машиноместо","Бокс"],
+"Коммерческая":["Офис","Торговое помещение","Склад","Производство","Общепит","Здание","Свободного назначения"],
+"Спецтехника":["Экскаваторы","Погрузчики","Краны","Бульдозеры","Самосвалы","Автовышки","Коммунальная техника"],
+"Сельхозтехника":["Тракторы","Мотоблоки и культиваторы","Комбайны","Навесное оборудование"],
+"Прицепы":["Легковые прицепы","Полуприцепы","Прицепы-дачи","Для лодок"],
+"Водный транспорт":["Лодки","Катера","Моторы","Гидроциклы","Яхты"],
+"Мотоциклы и мототехника":["Мотоциклы","Скутеры и мопеды","Квадроциклы","Снегоходы","Мотоэкипировка"],
+"Запчасти":["Двигатель","Кузов","Подвеска","Тормозная система","Трансмиссия","Электрика","Оптика","Салон","Для грузовиков","Для мотоциклов"],
+"Шины и диски":["Летние шины","Зимние шины","Всесезонные шины","Диски","Колёса в сборе"],
+"Аксессуары и автозвук":["Магнитолы","Акустика и усилители","Видеорегистраторы","Навигаторы","Чехлы и коврики","Багажники и боксы","Сигнализации"],
+"Инструменты и оборудование":["Домкраты","Компрессоры","Пуско-зарядные устройства","Наборы инструментов","Диагностика"],
+"Мобильные телефоны":["Смартфоны","Кнопочные телефоны","Для детей и пожилых"],
+"Планшеты":["Планшеты","Графические планшеты"],
+"Умные часы и браслеты":["Умные часы","Фитнес-браслеты","Детские часы"],
+"Чехлы и аксессуары":["Чехлы","Защитные стёкла","Держатели","Стилусы","Кабели"],
+"Зарядки и аккумуляторы":["Зарядные устройства","Повербанки","Беспроводные зарядки","Аккумуляторы для телефонов"],
+"Телевизоры":["LED и LCD","OLED и QLED","Smart TV-приставки","Кронштейны","Пульты"],
+"Аудиотехника":["Музыкальные центры","Усилители и ресиверы","Акустические системы","Саундбары","Виниловые проигрыватели","Микрофоны"],
+"Наушники":["Беспроводные","Проводные","Полноразмерные","Игровые гарнитуры"],
+"Фото и видеокамеры":["Зеркальные","Беззеркальные","Компактные","Экшн-камеры","Видеокамеры","Плёночные"],
+"Объективы и вспышки":["Объективы","Вспышки","Штативы","Сумки и чехлы"],
+"Игровые приставки и игры":["PlayStation","Xbox","Nintendo","Игры","Геймпады и аксессуары","VR-шлемы"],
+"Видеонаблюдение":["Камеры","Видеорегистраторы","Домофоны","Комплекты"],
+"Проекторы":["Проекторы","Экраны","Крепления"],
+"Ноутбуки":["Для работы и учёбы","Игровые","Ультрабуки","MacBook","Трансформеры"],
+"Системные блоки":["Игровые","Офисные","Моноблоки","Мини-ПК","Серверы"],
+"Мониторы":["До 24\"","24–27\"","Больше 27\"","Игровые"],
+"Комплектующие":["Видеокарты","Процессоры","Материнские платы","Оперативная память","SSD и жёсткие диски","Блоки питания","Корпуса","Охлаждение"],
+"Оргтехника и расходники":["Принтеры","МФУ","Сканеры","Картриджи и тонер","Бумага","ИБП"],
+"Сетевое оборудование":["Роутеры","Модемы","Коммутаторы","Wi-Fi усилители","Кабели и антенны"],
+"Клавиатуры, мыши, периферия":["Клавиатуры","Мыши","Веб-камеры","Колонки для ПК","Флешки и карты памяти","Внешние диски"],
+"Холодильники и морозильники":["Холодильники","Морозильники","Винные шкафы","Мини-холодильники"],
+"Стиральные и сушильные машины":["Стиральные машины","Сушильные машины","Стирально-сушильные"],
+"Плиты и духовки":["Газовые плиты","Электроплиты","Духовые шкафы","Мини-печи"],
+"Пылесосы":["Обычные","Вертикальные","Роботы-пылесосы","Моющие","Для авто"],
+"Кофемашины":["Автоматические","Капсульные","Рожковые","Кофеварки","Кофемолки"],
+"Мелкая техника для кухни":["Мультиварки","Блендеры","Чайники","Тостеры","Мясорубки","Миксеры","Кухонные комбайны","Аэрогрили"],
+"Утюги и уход за одеждой":["Утюги","Отпариватели","Парогенераторы"],
+"Климатическая техника":["Кондиционеры","Обогреватели","Вентиляторы","Увлажнители","Очистители воздуха"],
+"Водонагреватели":["Накопительные","Проточные","Газовые колонки"],
+"Швейная техника":["Швейные машины","Оверлоки","Вязальные машины"],
+"Техника для красоты":["Фены","Плойки и выпрямители","Машинки для стрижки","Эпиляторы","Электробритвы","Электрощётки"],
+"Диваны и кресла":["Прямые диваны","Угловые диваны","Диван-кровати","Кресла","Пуфы"],
+"Шкафы и стенки":["Шкафы-купе","Распашные шкафы","Стенки","Стеллажи","Гардеробные"],
+"Кровати и матрасы":["Двуспальные кровати","Односпальные кровати","Двухъярусные","Матрасы","Подушки и одеяла"],
+"Столы и стулья":["Обеденные столы","Журнальные столы","Письменные столы","Стулья","Барные стулья"],
+"Кухонные гарнитуры":["Гарнитуры","Кухонные уголки","Мойки и столешницы"],
+"Офисная мебель":["Офисные кресла","Офисные столы","Шкафы и стеллажи","Сейфы"],
+"Посуда и кухня":["Кастрюли и сковороды","Сервизы","Столовые приборы","Ножи","Хранение продуктов"],
+"Текстиль":["Постельное бельё","Полотенца","Пледы и покрывала","Скатерти"],
+"Освещение":["Люстры","Светильники","Настольные лампы","Торшеры","Лампочки"],
+"Инструменты":["Электроинструмент","Ручной инструмент","Измерительный","Пневмоинструмент","Расходники"],
+"Стройматериалы":["Кирпич и блоки","Цемент и смеси","Пиломатериалы","Кровля","Утеплитель","Металлопрокат"],
+"Отделочные материалы":["Плитка","Ламинат и паркет","Обои","Краски","Гипсокартон","Потолки"],
+"Сантехника":["Унитазы","Ванны и душевые","Смесители","Раковины","Трубы и фитинги","Насосы"],
+"Отопление":["Котлы","Радиаторы","Тёплый пол","Печи и камины"],
+"Двери и окна":["Межкомнатные двери","Входные двери","Окна","Подоконники"],
+"Электрика":["Кабель и провод","Розетки и выключатели","Автоматы и щиты","Генераторы"],
+"Строительное оборудование":["Бетономешалки","Леса и вышки","Сварочное оборудование","Отбойные молотки"],
+"Садовая техника":["Газонокосилки","Триммеры","Мотоблоки","Культиваторы","Снегоуборщики","Пилы"],
+"Растения и семена":["Комнатные растения","Саженцы","Семена","Рассада"],
+"Бани, печи, мангалы":["Мангалы и грили","Печи для бани","Коптильни","Барнхаусы и бани"],
+"Дрова и топливо":["Дрова","Пеллеты","Уголь","Торфобрикет"],
+"Платья и юбки":["Повседневные","Вечерние","Деловые","Юбки"],
+"Верхняя одежда":["Куртки","Пальто","Пуховики","Шубы и дублёнки","Плащи и ветровки"],
+"Обувь":["Кроссовки и кеды","Туфли","Сапоги","Ботинки","Сандалии и шлёпанцы"],
+"Сумки":["Сумки","Рюкзаки","Клатчи","Кошельки"],
+"Часы и украшения":["Часы","Кольца","Серьги","Цепочки и подвески","Браслеты","Бижутерия"],
+"Костюмы и пиджаки":["Костюмы","Пиджаки","Жилеты"],
+"Рубашки и футболки":["Рубашки","Футболки","Поло"],
+"Часы":["Наручные","Умные","Карманные"],
+"Детская одежда":["Для новорождённых","Верхняя одежда","Повседневная","Школьная форма","Спортивная"],
+"Коляски":["Прогулочные","Универсальные 2 в 1","Для новорождённых","Для двойни"],
+"Автокресла":["0+ (до 13 кг)","1 (9–18 кг)","2/3 (15–36 кг)","Бустеры"],
+"Игрушки":["Конструкторы","Куклы","Машинки","Развивающие","Мягкие игрушки","Радиоуправляемые"],
+"Детская мебель":["Кроватки","Столы и стулья","Шкафы и комоды","Манежи"],
+"Детский транспорт":["Велосипеды","Самокаты","Беговелы","Электромобили","Санки"],
+"Кормление и уход":["Стульчики для кормления","Бутылочки","Подгузники","Ванночки"],
+"Школьникам":["Рюкзаки","Канцелярия","Учебники"],
+"Спорт и фитнес":["Тренажёры","Гантели и штанги","Коврики и фитнес","Единоборства","Командные игры"],
+"Велосипеды":["Горные","Городские","Шоссейные","Детские","Электровелосипеды","Запчасти"],
+"Самокаты и электротранспорт":["Электросамокаты","Самокаты","Гироскутеры","Моноколёса"],
+"Туризм и отдых":["Палатки","Спальники","Рюкзаки","Туристическая мебель","Снаряжение"],
+"Рыбалка и охота":["Удочки и спиннинги","Катушки","Лодки","Одежда","Оптика"],
+"Зимние виды спорта":["Лыжи","Сноуборды","Коньки","Хоккей","Ватрушки и санки"],
+"Музыкальные инструменты":["Гитары","Клавишные","Ударные","Духовые","Звуковое оборудование"],
+"Книги и журналы":["Художественная","Учебная","Детская","Комиксы и журналы"],
+"Коллекционирование":["Монеты","Марки","Значки","Антиквариат","Модели"],
+"Собаки":["Щенки","Взрослые","Метисы"],
+"Кошки":["Котята","Взрослые","Метисы"],
+"Аквариумистика":["Аквариумы","Рыбки","Оборудование"],
+"Сельхоз животные":["Куры и птица","Козы и овцы","Свиньи","Коровы","Кролики"],
+"Товары для животных":["Лежанки и домики","Переноски","Клетки","Амуниция","Игрушки"],
+"Торговое оборудование":["Витрины","Стеллажи","Холодильное","Кассовое","Весы"],
+"Оборудование для общепита":["Тепловое","Холодильное","Посудомоечное","Кофейное"],
+"Вакансии":["Продажи","Строительство","Производство","Транспорт и логистика","Общепит","IT","Медицина","Офис","Обслуживание"],
+"Подработка":["Курьер","Промоутер","Разнорабочий","Удалённо"],
+"Резюме":["Продажи","Строительство","Производство","Транспорт и логистика","IT","Офис","Обслуживание"],
+"Ремонт техники":["Телефоны и планшеты","Ноутбуки и компьютеры","Бытовая техника","Телевизоры","Кофемашины","Принтеры"],
+"Компьютерная помощь":["Установка Windows","Удаление вирусов","Настройка интернета","Восстановление данных"],
+"Строительство и ремонт":["Ремонт квартир","Сантехника","Электрика","Отделка","Кровля","Мастер на час"],
+"Ремонт авто":["СТО","Шиномонтаж","Кузовной ремонт","Автоэлектрик","Диагностика"],
+"Перевозки и грузчики":["Грузоперевозки","Грузчики","Переезды","Эвакуатор"],
+"Уборка и клининг":["Квартиры","После ремонта","Химчистка мебели","Мойка окон"],
+"Красота":["Маникюр","Парикмахер","Брови и ресницы","Массаж","Косметолог"],
+"Обучение и репетиторы":["Школьные предметы","Иностранные языки","Музыка","Автошкола","IT-курсы"],
+"Фото и видео":["Фотограф","Видеограф","Монтаж"],
+"Праздники и мероприятия":["Ведущий","Аниматор","Музыканты","Оформление"]
+};
+const EXTRA_SUBS={other:["Разное","Обмен","Куплю"],free:["Одежда и обувь","Мебель","Техника","Детские вещи","Книги","Растения","Животные","Разное"]};
+(function(){
+  for(const c of CATS){
+    if(!c.subs.length&&EXTRA_SUBS[c.id])c.subs=EXTRA_SUBS[c.id].slice();
+    c.fields=c.fields||[];
+    for(const s of c.subs)if(SUB3[s])c.fields.unshift({k:"kind",l:"Вид",t:"sel",o:SUB3[s],s:[s],sub3:true});
+  }
+})();
 const CAT = Object.fromEntries(CATS.map(c=>[c.id,c]));
 const NOCOND=new Set(["services","jobs","realty","animals"]);
 const hasCond=cat=>!NOCOND.has(cat);
-const fieldFor=(f,sub)=>!f.s||!sub||f.s.includes(sub);
+const fieldFor=(f,sub)=>f.sub3?!!sub&&f.s.includes(sub):(!f.s||!sub||f.s.includes(sub));
 const REASONS=["Мошенничество","Товар уже продан","Неверная цена или категория","Запрещённый товар","Оскорбления или спам","Другое"];
 const NOPH = I('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 17l-5-5-9 7"/>');
 const HEART = '<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M12 21s-7-4.4-9.3-9A5.3 5.3 0 0 1 12 6a5.3 5.3 0 0 1 9.3 6c-2.3 4.6-9.3 9-9.3 9z"/></svg>';
@@ -920,7 +1050,7 @@ function fieldFilters(cat){
 let subCounts={}, subCountsKey="";
 function subChips(){
   const c=CAT[S.cat]; const n=x=>subCounts[x]!=null?`<span class="cnt">${subCounts[x]}</span>`:"";
-  return `<button class="chip" data-sub="" aria-pressed="${!S.sub}">Все</button>`+c.subs.map(x=>`<button class="chip" data-sub="${esc(x)}" aria-pressed="${S.sub===x}">${esc(x)} ${n(x)}</button>`).join("");
+  return `<button class="chip" data-sub="" aria-pressed="${!S.sub}">Все</button>`+c.subs.map(x=>`<button class="chip" data-sub="${esc(x)}" aria-pressed="${S.sub===x}">${esc(x)} ${n(x)}</button>`).join("")+(S.sub&&SUB3[S.sub]?`<div class="kinds"><span class="kinds-l">Вид:</span><button class="chip" data-kind="" aria-pressed="${!(S.eq&&S.eq.kind)}">Все</button>${SUB3[S.sub].map(k=>`<button class="chip" data-kind="${esc(k)}" aria-pressed="${!!(S.eq&&S.eq.kind===k)}">${esc(k)}</button>`).join("")}</div>`:"");
 }
 async function loadSubCounts(){
   const key=[S.cat,S.region,S.city].join("|"); if(key===subCountsKey){const box=$("#subChips");if(box)box.innerHTML=subChips();return}
@@ -1043,7 +1173,7 @@ function renderAllCats(){
 async function renderHome(){
   if(S.cat&&CAT[S.cat]&&CAT[S.cat].subs.length) loadSubCounts();
   const seller=S.user?(await profiles([S.user]))[S.user]:null;
-  const title=S.user?`Объявления: ${esc(seller?seller.name:"")}`:S.sub?esc(S.sub):S.cat?CAT[S.cat].name:(S.q?`Поиск: «${esc(S.q)}»`:"Все объявления");
+  const title=S.user?`Объявления: ${esc(seller?seller.name:"")}`:S.eq&&S.eq.kind&&S.sub?esc(S.eq.kind)+` <span class="note">· ${esc(S.sub)}</span>`:S.sub?esc(S.sub):S.cat?CAT[S.cat].name:(S.q?`Поиск: «${esc(S.q)}»`:"Все объявления");
   view().innerHTML=`<div class="layout">
     <aside class="panel ${filtersOpen?"open":""}" aria-label="Фильтры">
       <h3>Фильтры</h3>
@@ -1163,7 +1293,8 @@ async function renderAd(id,fresh){
   const sellerP=Promise.all([profiles([a.user_id]),sb.from("reviews").select("rating,body,author_id,created_at").eq("seller_id",a.user_id).order("created_at",{ascending:false}),sb.from("ads").select("id",{count:"exact",head:true}).eq("user_id",a.user_id).eq("status","active")]);
   const mine=user&&a.user_id===user.id; const c=CAT[a.cat]||{name:a.cat,fields:[]};
   const photos=a.photos||[];
-  const attrs=(c.fields||[]).filter(f=>a.attrs&&a.attrs[f.k]!=null&&a.attrs[f.k]!=="").map(f=>`<div><dt>${esc(f.l)}</dt><dd>${esc(a.attrs[f.k])}${f.u?" "+f.u:""}</dd></div>`).join("");
+  try{seoAd(a,c)}catch(_){}
+  const attrs=(c.fields||[]).filter(f=>fieldFor(f,a.sub)&&a.attrs&&a.attrs[f.k]!=null&&a.attrs[f.k]!=="").map(f=>`<div><dt>${esc(f.l)}</dt><dd>${esc(a.attrs[f.k])}${f.u?" "+f.u:""}</dd></div>`).join("");
   const canBump=mine&&a.status==="active"&&Date.now()-new Date(a.bumped_at)>=864e5-6e5;
   const hoursLeft=Math.max(1,Math.ceil((864e5-(Date.now()-new Date(a.bumped_at)))/36e5));
   document.title=a.title+" — Абисто";
@@ -1480,7 +1611,7 @@ async function refreshUnread(){
   const {count}=await sb.from("messages").select("id",{count:"exact",head:true}).is("read_at",null).neq("sender_id",user.id);
   unread=count||0; paintUnread();
 }
-function paintUnread(){document.querySelectorAll("[data-unread]").forEach(el=>{el.textContent=unread>99?"99+":unread;el.hidden=!unread});document.title=(unread?`(${unread}) `:"")+"Абисто"}
+function paintUnread(){document.querySelectorAll("[data-unread]").forEach(el=>{el.textContent=unread>99?"99+":unread;el.hidden=!unread});document.title=(unread?`(${unread}) `:"")+document.title.replace(/^\(\d+\+?\) /,"")}
 function subscribeMessages(){
   if(msgChannel){sb.removeChannel(msgChannel);msgChannel=null}
   if(!user) return;
@@ -1664,7 +1795,21 @@ async function renderAdmin(){
 /* ================= МАРШРУТЫ ================= */
 const currentView=()=>(location.hash.slice(1).split("/")[0])||"home";
 const currentArg=()=>location.hash.slice(1).split("/")[1];
+
+/* SEO: заголовок и описание страницы (12.11.2026) */
+const SEO_BASE={t:"Абисто — бесплатные объявления в Беларуси: купить и продать",d:"Бесплатные объявления по всей Беларуси: недвижимость, авто, телефоны, техника, одежда, работа и услуги. Подайте объявление за минуту — без комиссии."};
+function setMeta(t,d){document.title=(unread?`(${unread}) `:"")+t;const m=document.querySelector('meta[name="description"]');if(m&&d)m.setAttribute("content",d.slice(0,160));const ot=document.querySelector('meta[property="og:title"]');if(ot)ot.setAttribute("content",t);const od=document.querySelector('meta[property="og:description"]');if(od&&d)od.setAttribute("content",d.slice(0,200))}
+function regionName(){const o=$("#regionTop")&&$("#regionTop").selectedOptions[0];return S.city||(S.region&&o?o.textContent.trim():"")}
+function seoHome(){
+  const c=CAT[S.cat],k=S.eq&&S.eq.kind,where=regionName(),inB=where?` — ${where}`:" в Беларуси";
+  if(S.q){setMeta(`${S.q}${inB}: объявления | Абисто`,`Объявления «${S.q}»${where?" — "+where:" по всей Беларуси"} на Абисто. Цены, фото, контакты продавцов. Купить или продать без комиссии.`);return}
+  if(c){const name=k||S.sub||c.name;setMeta(`${name}${inB} — купить, продать | Абисто`,`${name}${S.sub&&!k?"":S.sub?" ("+S.sub+")":""}: свежие объявления${where?" — "+where:" по всей Беларуси"}. Новые и б/у, цены от частных лиц и магазинов. Разместите объявление бесплатно на Абисто.`);return}
+  setMeta(SEO_BASE.t,SEO_BASE.d);
+}
+function seoAd(a,c){const pr=a.price!=null?` — ${a.price} руб.`:"";setMeta(`${a.title}${pr}, ${a.city||"Беларусь"} | Абисто`,`${a.title}${pr}. ${c&&c.name?c.name+". ":""}${a.city?a.city+". ":""}${String(a.descr||"").replace(/\s+/g," ").slice(0,110)}`)}
+const SEO_PAGES={cats:["Все категории объявлений в Беларуси | Абисто","Каталог Абисто: 22 категории и сотни подкатегорий объявлений по всей Беларуси."],rules:["Правила размещения объявлений | Абисто","Правила размещения объявлений на Абисто."],privacy:["Политика обработки персональных данных | Абисто","Политика обработки персональных данных Абисто по Закону РБ № 99-З."],post:["Подать объявление бесплатно | Абисто","Разместите бесплатное объявление на Абисто за минуту: фото, цена, контакты. Покупатели по всей Беларуси."]};
 async function route(){
+  if(currentView()==="c"){const p=location.hash.slice(1).split("/").map(x=>{try{return decodeURIComponent(x)}catch(_){return x}});S={...freshFilters(),cat:CAT[p[1]]?p[1]:"",sub:p[2]||""};if(p[3])S.eq={kind:p[3]};history.replaceState(null,"",location.pathname+location.search+"#")}
   const v=currentView(), arg=currentArg();
   view().onclick=null; view().onsubmit=null; document.title=(unread?`(${unread}) `:"")+"Абисто";
   if(v!=="post"&&v!=="edit"&&draft&&!draft.id&&!draft.title) draft=null;
@@ -1675,10 +1820,10 @@ async function route(){
   window.scrollTo(0,0); document.body.classList.remove("has-adbar");
   try{
     if(v==="home") await renderHome();
-    else if(v==="cats") renderAllCats();
-    else if(v==="rules"||v==="privacy") renderLegal(v);
+    else if(v==="cats") {renderAllCats();setMeta(...SEO_PAGES.cats)}
+    else if(v==="rules"||v==="privacy") {renderLegal(v);setMeta(...SEO_PAGES[v])}
     else if(v==="ad") await renderAd(arg);
-    else if(v==="post") await renderPost();
+    else if(v==="post") {await renderPost();setMeta(...SEO_PAGES.post)}
     else if(v==="edit") await renderPost(arg);
     else if(v==="my") await renderMy();
     else if(v==="profile") await renderProfile();
@@ -1732,20 +1877,23 @@ async function abistoSuggest(q,hl){
   const cats=[],order=S.cat&&CAT[S.cat]?[CAT[S.cat],...CATS.filter(c=>c.id!==S.cat)]:CATS;
   for(const c of order){
     if(c.name.toLowerCase().includes(ql)&&c.id!==S.cat)cats.push({cat:c.id,html:SG_IC.c+"<span>"+hl(c.name,q)+'</span><span class="sg-c">категория</span>'});
-    for(const x of c.subs||[])if(x.toLowerCase().includes(ql))cats.push({cat:c.id,sub:x,html:SG_IC.c+"<span>"+hl(x,q)+'</span><span class="sg-c">'+esc(c.name)+"</span>"});
+    for(const x of c.subs||[]){if(x.toLowerCase().includes(ql))cats.push({cat:c.id,sub:x,html:SG_IC.c+"<span>"+hl(x,q)+'</span><span class="sg-c">'+esc(c.name)+"</span>"});
+      for(const k of SUB3[x]||[])if(k.toLowerCase().includes(ql))cats.push({cat:c.id,sub:x,kind:k,html:SG_IC.c+"<span>"+hl(k,q)+'</span><span class="sg-c">'+esc(x)+"</span>"})}
   }
   return [...out,...cats.slice(0,Math.max(4,10-out.length))];
 }
 function abistoPick(it){
-  if(it.cat){S={...freshFilters(),region:S.region,cat:it.cat,sub:it.sub||""};$("#q").value="";goHome();return}
+  if(it.cat){S={...freshFilters(),region:S.region,cat:it.cat,sub:it.sub||""};if(it.kind)S.eq={kind:it.kind};$("#q").value="";goHome();return}
   $("#q").value=it.text;$("#searchForm").requestSubmit();
 }
+{const _rh=renderHome;renderHome=async function(){seoHome();return _rh.apply(this,arguments)}}
 function wire(){
   $("#regionTop").innerHTML=regionOptions("");
   addEventListener("hashchange",route);
   $("#regionTop").addEventListener("change",e=>{S.region=e.target.value;S.city="";goHome()});
   document.querySelector(".tb-links").addEventListener("click",e=>{const a=e.target.closest("[data-topcat]");if(!a)return;e.preventDefault();S={...freshFilters(),cat:a.dataset.topcat};goHome()});
   attachSuggest($("#q"),abistoSuggest,abistoPick);
+  {const u=new URLSearchParams(location.search).get("q");if(u){S.q=u.slice(0,100);$("#q").value=S.q}}
   $("#searchForm").addEventListener("submit",e=>{e.preventDefault();S.q=$("#q").value.trim();S.region=$("#regionTop").value;S.city="";S.user="";goHome()});
   $("#catRow").addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(!b)return;const c=b.dataset.cat;const keep={q:S.q,region:S.region,city:S.city,sort:S.sort,cond:hasCond(c)?S.cond:""};S={...freshFilters(),...keep,cat:S.cat===c?"":c};goHome()});
   document.addEventListener("click",e=>{
@@ -1765,6 +1913,7 @@ function wire(){
   document.addEventListener("click",async e=>{
     const f=e.target.closest("[data-fav]"); if(f){e.preventDefault();e.stopPropagation();toggleFav(f.dataset.fav);return}
     const t=e.target, id=t.id;
+    const kc=t.closest("[data-kind]"); if(kc&&kc.closest("#subChips")){S.eq={...(S.eq||{}),kind:kc.dataset.kind};if(!kc.dataset.kind)delete S.eq.kind;renderHome();return}
     const sc=t.closest("[data-sub]"); if(sc&&sc.closest("#subChips")){S.sub=sc.dataset.sub;pruneAttrFilters();renderHome();return}
     const ac=t.closest(".allcat [data-gocat]"); if(ac){e.preventDefault();S=freshFilters();S.cat=ac.dataset.gocat;S.sub=ac.dataset.gosub||"";location.hash="#";return}
     if(id==="loadMore"){t.disabled=true;t.textContent="Загружаем…";try{const r=await search(S,homeItems.length);homeItems=homeItems.concat(r.items);homeTotal=r.total;paintResults()}catch(err){toast(errText(err));t.disabled=false}}
