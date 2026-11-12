@@ -5,5 +5,5 @@ window.ZIS_CONFIG = {
   anonKey: "sb_publishable_vTYTbCs2qrGTgMRYPRdVkA_FeOnmDHW",
   google: false,
   yandex: true,   // включить после настройки функции oauth
-  mailru: false
+  mailru: true
 };
