@@ -67,7 +67,8 @@ def page(a, cmap, siblings, photo_base):
     city = a.get("city") or a.get("region") or "Беларусь"
     pr = price_text(a)
     pr_seo = (" — %s руб." % ("{:g}".format(float(a["price"])))) if (a.get("price") is not None and a.get("price_type") == "fixed") else ""
-    title = "%s%s, %s | Абисто" % (a["title"], pr_seo, city)
+    has_city = city.lower()[:max(4, len(city) - 1)] in a["title"].lower()
+    title = "%s%s%s | Абисто" % (a["title"], pr_seo, "" if has_city else ", " + city)
     descr_raw = re.sub(r"\s+", " ", a.get("descr") or "").strip()
     meta_d = ("%s%s. %s%s. %s" % (a["title"], pr_seo, (sub + ", ") if sub else "", city, descr_raw))[:158]
     photos = [p for p in (a.get("photos") or []) if isinstance(p, str)][:10]
