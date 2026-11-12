@@ -605,6 +605,20 @@ header .search{overflow:visible}
 .adm-tb{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:4px 0 10px}.adm-tb .inp{max-width:320px}
 .adm-ban{display:inline-block;background:#fde7e7;color:#b42318;border-radius:99px;padding:1px 8px;font-size:12px;font-weight:700}
 .btn.danger{background:#d92d20;color:#fff}
+
+/* UX-полировка (12.11.2026) */
+.cat-scroll,.subchips,.tb-links{scrollbar-width:none}.cat-scroll::-webkit-scrollbar,.subchips::-webkit-scrollbar{display:none}
+.subchips{-webkit-mask-image:linear-gradient(90deg,#000 92%,transparent);mask-image:linear-gradient(90deg,#000 92%,transparent)}
+.subchips:has(.kinds){-webkit-mask-image:none;mask-image:none}
+.crumbs{font-size:13px;color:var(--muted);margin:2px 0 6px}.crumbs a{color:inherit;text-decoration:none}.crumbs a:hover{color:var(--accent);text-decoration:underline}.crumbs span{color:var(--ink)}
+.ctree{display:flex;flex-direction:column;gap:2px}.ctree a{color:var(--ink);text-decoration:none;font-size:14px;padding:5px 8px;border-radius:8px;line-height:1.3}.ctree a:hover{background:rgba(0,0,0,.05)}.ctree a.on{background:rgba(0,180,238,.12);color:#0087c0;font-weight:700}
+.ctree{max-height:340px;overflow:auto}
+.pills{display:flex;gap:6px;flex-wrap:wrap}.pills button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:7px 14px;font:inherit;font-size:14px;font-weight:600;cursor:pointer}.pills button[aria-pressed="true"]{background:#1d2633;border-color:#1d2633;color:#fff}
+.afbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:2px 0 12px}.afchip{border:0;background:rgba(0,180,238,.12);color:#006f9e;border-radius:99px;padding:6px 10px 6px 12px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}.afchip span[aria-hidden]{margin-left:4px;opacity:.7}.afchip:hover{background:rgba(0,180,238,.2)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.fbadge{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:99px;background:var(--accent);color:#fff;font-size:12px;margin-left:6px;padding:0 6px}
+.fdone{display:none}
+@media (max-width:900px){aside.panel.open{position:fixed;inset:auto 0 0 0;max-height:85vh;overflow:auto;z-index:70;border-radius:18px 18px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.25);padding-bottom:calc(16px + env(safe-area-inset-bottom))}.fdone{display:flex;justify-content:center;position:sticky;bottom:0;width:100%}}
 </style>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1062,8 +1076,8 @@ function pruneAttrFilters(){
 }
 function fieldFilters(cat){
   const c=CAT[cat]; if(!c) return "";
-  let h=c.subs.length?`<div class="field"><label for="fSub">Подкатегория</label><select class="inp" id="fSub"><option value="">Все</option>${c.subs.map(s=>`<option ${s===S.sub?"selected":""}>${esc(s)}</option>`).join("")}</select></div>`:"";
-  for(const f of c.fields.filter(f=>fieldFor(f,S.sub))){
+  let h=c.subs.length?`<div class="field ctree"><span class="flabel">${esc(c.name)}</span><a href="#" data-tree="" class="${S.sub?"":"on"}">Все подкатегории</a>${c.subs.map(x=>`<a href="#" data-tree="${esc(x)}" class="${x===S.sub?"on":""}">${esc(x)}</a>`).join("")}</div>`:"";
+  for(const f of c.fields.filter(f=>fieldFor(f,S.sub)&&!f.sub3)){
     if(f.t==="sel") h+=`<div class="field"><label for="fe-${f.k}">${esc(f.l)}</label><select class="inp" data-eq="${f.k}" id="fe-${f.k}"><option value="">Любой</option>${f.o.map(o=>`<option ${S.eq[f.k]===o?"selected":""}>${esc(o)}</option>`).join("")}</select></div>`;
     if(f.t==="num") h+=`<div class="field"><span class="flabel">${esc(f.l)}${f.u?", "+f.u:""}</span><div class="row2"><input class="inp" inputmode="numeric" data-nmin="${f.k}" placeholder="от" value="${esc(S.nmin[f.k]||"")}" aria-label="${esc(f.l)} от"><input class="inp" inputmode="numeric" data-nmax="${f.k}" placeholder="до" value="${esc(S.nmax[f.k]||"")}" aria-label="${esc(f.l)} до"></div></div>`;
   }
@@ -1194,7 +1208,21 @@ function renderAllCats(){
     <a href="#" class="allcat-h" data-gocat="${c.id}"><span class="ic">${catArt(c.id)||c.ic}</span><span>${esc(c.name)}${catCounts[c.id]?` <span class="cnt">${catCounts[c.id]}</span>`:""}</span></a>
     ${c.subs.length?`<ul>${c.subs.map(x=>`<li><a href="#" data-gocat="${c.id}" data-gosub="${esc(x)}">${esc(x)}</a></li>`).join("")}</ul>`:""}</section>`).join("")}</div></div>`;
 }
+
+/* Активные фильтры (12.11.2026) */
+function afList(){const L=[];if(S.q)L.push(["q","«"+S.q+"»"]);if(S.region)L.push(["region",S.city||(($("#regionTop")&&$("#regionTop").selectedOptions[0])||{}).textContent||"Регион"]);
+  if(S.min||S.max)L.push(["price",(S.min?"от "+S.min:"")+(S.max?" до "+S.max:"")+" руб."]);if(S.cond)L.push(["cond",S.cond==="new"?"Новое":"Б/у"]);if(S.photo)L.push(["photo","С фото"]);
+  for(const [k,v] of Object.entries(S.eq||{}))if(v)L.push(["eq:"+k,v]);
+  const c=CAT[S.cat];for(const k of new Set([...Object.keys(S.nmin||{}),...Object.keys(S.nmax||{})])){const a=S.nmin[k],b=S.nmax[k];if(a||b){const f=c&&c.fields.find(x=>x.k===k);L.push(["num:"+k,(f?f.l+" ":"")+(a?"от "+a:"")+(b?" до "+b:"")])}}
+  return L}
+const afCount=()=>afList().filter(([k])=>k!=="q").length;
+function afChips(){const L=afList();return L.length?`<div class="afbar">${L.map(([k,l])=>`<button type="button" class="afchip" data-afx="${esc(k)}">${esc(l)} <span aria-hidden="true">×</span><span class="sr">убрать</span></button>`).join("")}${L.length>1?'<button type="button" class="link" data-afx="*">Сбросить всё</button>':""}</div>`:""}
+function afClear(k){if(k==="*"){const keep={cat:S.cat,sub:S.sub};S={...freshFilters(),...keep};$("#q").value="";return}
+  if(k==="q"){S.q="";$("#q").value=""}else if(k==="region"){S.region="";S.city="";if($("#regionTop"))$("#regionTop").value=""}else if(k==="price"){S.min="";S.max=""}else if(k==="cond")S.cond="";else if(k==="photo")S.photo=false;
+  else if(k.startsWith("eq:")){delete S.eq[k.slice(3)]}else if(k.startsWith("num:")){const f=k.slice(4);delete S.nmin[f];delete S.nmax[f]}}
+
 async function renderHome(){
+  {const cb=$("#catsBar");if(cb&&currentView()==="home")cb.hidden=!!(S.cat||S.q||S.user)}
   if(S.cat&&CAT[S.cat]&&CAT[S.cat].subs.length) loadSubCounts();
   const seller=S.user?(await profiles([S.user]))[S.user]:null;
   const title=S.user?`Объявления: ${esc(seller?seller.name:"")}`:S.eq&&S.eq.kind&&S.sub?esc(S.eq.kind)+` <span class="note">· ${esc(S.sub)}</span>`:S.sub?esc(S.sub):S.cat?CAT[S.cat].name:(S.q?`Поиск: «${esc(S.q)}»`:"Все объявления");
@@ -1205,17 +1233,20 @@ async function renderHome(){
       <div class="field"><label for="fRegion">Область</label><select class="inp" id="fRegion">${regionOptions(S.region)}</select></div>
       ${S.region&&REGIONS[S.region].length>1?`<div class="field"><label for="fCity">Город</label><select class="inp" id="fCity">${cityOptions(S.region,S.city)}</select></div>`:""}
       <div class="field"><span class="flabel">Цена, ${BYN}</span><div class="row2"><input class="inp" id="fMin" inputmode="numeric" placeholder="от" value="${esc(S.min)}" aria-label="Цена от"><input class="inp" id="fMax" inputmode="numeric" placeholder="до" value="${esc(S.max)}" aria-label="Цена до"></div></div>
-      ${!hasCond(S.cat)?"":`<div class="field"><label for="fCond">Состояние</label><select class="inp" id="fCond"><option value="">Любое</option><option value="new" ${S.cond==="new"?"selected":""}>Новое</option><option value="used" ${S.cond==="used"?"selected":""}>Б/у</option></select></div>`}
+      ${!hasCond(S.cat)?"":`<div class="field"><span class="flabel">Состояние</span><div class="pills" role="group" aria-label="Состояние">${[["","Любое"],["new","Новое"],["used","Б/у"]].map(([v,l])=>`<button type="button" data-cond="${v}" aria-pressed="${(S.cond||"")===v}">${l}</button>`).join("")}</div></div>`}
       <label class="chk"><input type="checkbox" id="fPhoto" ${S.photo?"checked":""}> Только с фото</label>
       <button class="link" id="fReset">Сбросить фильтры</button>
+      <button class="btn fdone" type="button" id="fDone">Показать объявления</button>
     </aside>
     <section style="min-width:0">
       ${S.user?`<div class="sellerbar"><button class="link" id="sellerBack">← Все объявления</button><a class="link" href="#user/${esc(S.user)}">Профиль продавца</a></div>`:""}
+      ${S.cat&&CAT[S.cat]?`<nav class="crumbs" aria-label="Навигация"><a href="#" data-crumb="home">Главная</a> › ${S.sub?`<a href="#" data-crumb="cat">${esc(CAT[S.cat].name)}</a> › `:""}${S.sub&&S.eq&&S.eq.kind?`<a href="#" data-crumb="sub">${esc(S.sub)}</a> › <span>${esc(S.eq.kind)}</span>`:`<span>${esc(S.sub||CAT[S.cat].name)}</span>`}</nav>`:""}
       <div class="toolbar"><div><h1>${title}</h1><span class="cnt" id="cnt">${esc(S.city||S.region||"Вся Беларусь")}</span></div>
-        <div class="tools">${anyFilter(S)?'<button class="btn sec" id="saveSearch">Сохранить поиск</button>':""}<button class="btn sec filters-toggle" id="fToggle">Фильтры</button>
+        <div class="tools">${anyFilter(S)?'<button class="btn sec" id="saveSearch">Сохранить поиск</button>':""}<button class="btn sec filters-toggle" id="fToggle">Фильтры${afCount()?` <span class="fbadge">${afCount()}</span>`:""}</button>
         <select class="inp" id="fSort" aria-label="Сортировка"><option value="new">Сначала новые</option><option value="cheap" ${S.sort==="cheap"?"selected":""}>Сначала дешёвые</option><option value="dear" ${S.sort==="dear"?"selected":""}>Сначала дорогие</option><option value="popular" ${S.sort==="popular"?"selected":""}>Популярные</option></select>
         <div class="seg2" role="group" aria-label="Вид"><button id="vGrid" aria-pressed="${layoutMode!=="list"}" title="Плиткой">▦</button><button id="vList" aria-pressed="${layoutMode==="list"}" title="Списком">☰</button><button id="vMap" aria-pressed="${layoutMode==="map"}" title="На карте">🗺</button></div></div></div>
       ${S.cat&&CAT[S.cat]&&CAT[S.cat].subs.length?`<div class="subchips" id="subChips">${subChips()}</div>`:""}
+      ${afChips()}
       <div id="recent"></div>
       <div id="topAds"></div>
       <div id="results">${loadingBlock()}</div>
@@ -1986,6 +2017,11 @@ function wire(){
     if(id==="vGrid"||id==="vList"||id==="vMap"){layoutMode=id==="vList"?"list":id==="vMap"?"map":"grid";lsSet("zis-layout",layoutMode);document.querySelectorAll(".seg2 button").forEach(b=>b.setAttribute("aria-pressed",b.id===id));paintResults()}
     if(id==="fReset"){S={...freshFilters(),q:S.q,cat:S.cat,sort:S.sort};$("#regionTop").value="";goHome()}
     if(id==="fToggle"){filtersOpen=!filtersOpen;document.querySelector("aside.panel").classList.toggle("open",filtersOpen)}
+    if(id==="fDone"){filtersOpen=false;document.querySelector("aside.panel").classList.remove("open");$("#results")&&$("#results").scrollIntoView({block:"start"})}
+    {const cd=t.closest&&t.closest("[data-cond]");if(cd){e.preventDefault();S.cond=cd.dataset.cond;renderHome();return}
+     const tr=t.closest&&t.closest("[data-tree]");if(tr){e.preventDefault();S.sub=tr.dataset.tree;if(S.eq)delete S.eq.kind;pruneAttrFilters();renderHome();return}
+     const ax=t.closest&&t.closest("[data-afx]");if(ax){e.preventDefault();afClear(ax.dataset.afx);renderHome();return}
+     const cr=t.closest&&t.closest("[data-crumb]");if(cr){e.preventDefault();const w=cr.dataset.crumb;if(w==="home"){S=freshFilters();$("#q").value=""}else if(w==="cat"){S.sub="";S.eq={};pruneAttrFilters()}else if(w==="sub"){if(S.eq)delete S.eq.kind}renderHome();return}}
     if(id==="saveSearch"){if(needLogin())return;const p=searchParams(S);delete p.limit;delete p.offset;const {error}=await sb.from("saved_searches").insert({params:{...S}});toast(error?errText(error):tgLinked()?"Поиск сохранён. Новые объявления придут в Telegram":"Поиск сохранён в «Избранном». Подключите там Telegram для уведомлений")}
     const ss=t.closest("[data-ss]"); if(ss){S={...freshFilters(),...JSON.parse(ss.dataset.ss)};$("#q").value=S.q||"";$("#regionTop").value=S.region||"";location.hash="#"}
     if(id==="tgLinkBtn"){tgLink();return}
