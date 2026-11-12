@@ -606,6 +606,10 @@ header .search{overflow:visible}
 .adm-ban{display:inline-block;background:#fde7e7;color:#b42318;border-radius:99px;padding:1px 8px;font-size:12px;font-weight:700}
 .btn.danger{background:#d92d20;color:#fff}
 </style>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}))</script>
 </head>
 <body>
 <header>
