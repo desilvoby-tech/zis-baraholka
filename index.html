@@ -598,6 +598,13 @@ header .search{overflow:visible}
 .chk.agree{align-items:flex-start;gap:8px;font-size:14px;line-height:1.4}
 .chk.agree input{margin-top:3px;flex:none}
 .foot-req{display:block;font-size:12px;opacity:.75;flex-basis:100%}
+
+/* админка */
+.adm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.adm-stat{gap:2px!important}.adm-stat b{font-size:28px;line-height:1.1}
+.adm-tb{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:4px 0 10px}.adm-tb .inp{max-width:320px}
+.adm-ban{display:inline-block;background:#fde7e7;color:#b42318;border-radius:99px;padding:1px 8px;font-size:12px;font-weight:700}
+.btn.danger{background:#d92d20;color:#fff}
 </style>
 </head>
 <body>
@@ -1474,7 +1481,7 @@ async function submitPost(e){
 
 /* ================= КАБИНЕТ ================= */
 let myTab="active", myRange=7, mySel=new Set(), myAds=[];
-const MYTABS=[["active","Активные"],["draft","Черновики"],["sold","Проданные"],["archived","Архив"]];
+const MYTABS=[["active","Активные"],["draft","Черновики"],["sold","Проданные"],["archived","Архив"],["blocked","Скрыты модератором"]];
 const IC_EYE='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
 const IC_TEL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>';
 const IC_HEART='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.4-9.3-9A5.3 5.3 0 0 1 12 6a5.3 5.3 0 0 1 9.3 6c-2.3 4.6-9.3 9-9.3 9z"/></svg>';
@@ -1537,8 +1544,8 @@ async function renderMy(){
   const list=myAds.filter(a=>a.status===myTab);
   const empty={active:["У вас нет активных объявлений","Подайте первое объявление: это займёт пару минут.",'<a class="btn" href="#post">Подать объявление</a>'],
     draft:["Черновиков нет","Начните объявление и нажмите «Сохранить черновик», чтобы дописать позже.",""],
-    sold:["Проданных пока нет","",""],archived:["Архив пуст","Сюда попадают объявления, снятые с публикации.",""]}[myTab];
-  $("#myList").innerHTML=list.length?`<div class="mlist">${list.map(a=>myRow(a,st,favc)).join("")}</div>`:emptyBlock(...empty);
+    sold:["Проданных пока нет","",""],archived:["Архив пуст","Сюда попадают объявления, снятые с публикации.",""],blocked:["Нет скрытых объявлений","Здесь появляются объявления, которые модератор скрыл за нарушение правил.",""]}[myTab];
+  $("#myList").innerHTML=list.length?`${myTab==="blocked"?'<p class="note" style="margin:0 0 10px">Эти объявления скрыл модератор. Исправьте нарушение и напишите в Telegram-бот @abisto_bot, чтобы их вернули.</p>':""}<div class="mlist">${list.map(a=>myRow(a,st,favc)+(a.status==="blocked"&&a.mod_note?`<div class="note" style="color:#b42318;margin:-4px 0 8px">Причина: ${a.mod_note==="ban"?"аккаунт заблокирован":esc(a.mod_note)}</div>`:"")).join("")}</div>`:emptyBlock(...empty);
   paintBulk();
 }
 function paintBulk(){
@@ -1790,8 +1797,47 @@ function renderLogin(){
 }
 
 /* ================= МОДЕРАЦИЯ ================= */
+/* Админка: вкладки (12.11.2026) */
+let admTab="sum",admAdSt="active",admQ="";
+const ADM_TABS=[["sum","Сводка"],["ads","Объявления"],["users","Пользователи"],["pr","Жалобы и продвижение"]];
+const admBar=()=>`<div class="tabs adm-tabs">${ADM_TABS.map(([k,l])=>`<button class="chip" data-admtab="${k}" aria-pressed="${admTab===k}">${l}</button>`).join("")}</div>`;
 async function renderAdmin(){
   if(!isAdmin){view().innerHTML=emptyBlock("Раздел для модераторов");return}
+  document.title="Модерация — Абисто";
+  if(admTab==="pr"){await renderAdminPR();const pg=view().querySelector(".page");if(pg)pg.insertAdjacentHTML("afterbegin",admBar());bindAdmBar();return}
+  view().innerHTML=`<div class="page">${admBar()}<div id="admBody">${loadingBlock()}</div></div>`;bindAdmBar();
+  const B=$("#admBody");
+  if(admTab==="sum"){
+    const {data:st,error}=await sb.rpc("admin_stats");if(error){B.innerHTML=emptyBlock("Ошибка",esc(errText(error)));return}
+    const T=[["Пользователей",st.users],["Новых за 7 дней",st.users_week],["Заблокировано",st.banned],["Активных объявлений",st.ads_active],["Новых за сутки",st.ads_today],["Новых за 7 дней",st.ads_week],["Скрыто модератором",st.ads_blocked],["Примеров (демо)",st.ads_demo],["Жалоб",st.reports],["Сообщений за 7 дней",st.messages_week],["Заявок на продвижение",st.promo_pending]];
+    B.innerHTML=`<div class="adm-grid">${T.map(([l,v])=>`<div class="panel adm-stat"><b>${v??0}</b><span class="note">${l}</span></div>`).join("")}</div>`;return}
+  if(admTab==="ads"){
+    const SL=[["active","Активные"],["blocked","Скрытые"],["draft","Черновики"],["archived","Архив"],["sold","Проданные"]];
+    let q=sb.from("ads").select("id,title,price,currency,city,status,user_id,created_at,mod_note,is_demo,photos").eq("status",admAdSt).order("created_at",{ascending:false}).limit(100);
+    if(admQ)q=q.ilike("title","%"+admQ.replace(/[%_,()*]/g," ")+"%");
+    const {data,error}=await q;if(error){B.innerHTML=emptyBlock("Ошибка",esc(errText(error)));return}
+    B.innerHTML=`<div class="toolbar adm-tb"><div class="tabs">${SL.map(([k,l])=>`<button class="chip" data-admst="${k}" aria-pressed="${admAdSt===k}">${l}</button>`).join("")}</div><input class="inp" id="admQ" placeholder="Поиск по названию" value="${esc(admQ)}"></div>
+    <div class="panel">${data.length?data.map(a=>`<div class="ssrow"><div style="min-width:0;flex:1"><a class="link" href="#ad/${a.id}"><strong>${esc(a.title)}</strong></a>${a.is_demo?' <span class="note">· пример</span>':""}<div class="note">${esc(fmtPrice(a))} · ${esc(a.city||"")} · ${esc(fmtDate(a.created_at))}${a.mod_note&&a.mod_note!=="ban"?" · причина: "+esc(a.mod_note):a.mod_note==="ban"?" · автор заблокирован":""}</div></div><div class="actions">${a.status==="blocked"?`<button class="btn sec sm" data-admunblock="${a.id}">Вернуть</button>`:`<button class="btn sec sm" data-admblock="${a.id}">Скрыть</button>`}<button class="btn sec sm" data-admuser="${a.user_id}">Автор</button><button class="btn sm danger" data-admdel="${a.id}">Удалить</button></div></div>`).join(""):emptyBlock("Объявлений нет")}</div>`;
+    $("#admQ").onchange=e=>{admQ=e.target.value.trim();renderAdmin()};return}
+  if(admTab==="users"){
+    const {data,error}=await sb.rpc("admin_users",{p_q:admQ});if(error){B.innerHTML=emptyBlock("Ошибка",esc(errText(error)));return}
+    B.innerHTML=`<div class="toolbar adm-tb"><input class="inp" id="admQ" placeholder="Имя, почта или телефон" value="${esc(admQ)}"></div>
+    <div class="panel">${data.length?data.map(u=>`<div class="ssrow"><div style="min-width:0;flex:1"><a class="link" href="#user/${u.id}"><strong>${esc(u.name||"Без имени")}</strong></a>${u.banned?' <span class="adm-ban">заблокирован</span>':""}<div class="note">${esc(u.email||"")}${u.phone?" · "+esc(u.phone):""}${u.city?" · "+esc(u.city):""} · с ${esc(fmtDate(u.created_at))}</div><div class="note">Объявлений: ${u.ads_active} активных из ${u.ads_total}${u.reports?` · жалоб: ${u.reports}`:""}</div></div><div class="actions">${u.banned?`<button class="btn sec sm" data-admban="${u.id}|0">Разблокировать</button>`:`<button class="btn sm danger" data-admban="${u.id}|1">Заблокировать</button>`}</div></div>`).join(""):emptyBlock("Никого не нашли")}</div>`;
+    $("#admQ").onchange=e=>{admQ=e.target.value.trim();renderAdmin()};return}
+}
+function bindAdmBar(){
+  view().onclick=async e=>{
+    const t=e.target;
+    const tb=t.closest("[data-admtab]");if(tb){admTab=tb.dataset.admtab;admQ="";renderAdmin();return}
+    const st=t.closest("[data-admst]");if(st){admAdSt=st.dataset.admst;renderAdmin();return}
+    const bl=t.closest("[data-admblock]");if(bl){const why=prompt("Причина скрытия (увидит автор):","Нарушение правил");if(why===null)return;const {error}=await sb.from("ads").update({status:"blocked",mod_note:why.slice(0,200)||"Нарушение правил"}).eq("id",bl.dataset.admblock);toast(error?errText(error):"Объявление скрыто");loadCatCounts();renderAdmin();return}
+    const ub=t.closest("[data-admunblock]");if(ub){const {error}=await sb.from("ads").update({status:"active",mod_note:null}).eq("id",ub.dataset.admunblock);toast(error?errText(error):"Объявление снова опубликовано");loadCatCounts();renderAdmin();return}
+    const dl=t.closest("[data-admdel]");if(dl){if(!confirm("Удалить объявление навсегда?"))return;const {data:a}=await sb.from("ads").select("photos").eq("id",dl.dataset.admdel).maybeSingle();const {error}=await sb.from("ads").delete().eq("id",dl.dataset.admdel);if(error)toast(errText(error));else{if(a)removePhotos(a.photos||[]);toast("Удалено");loadCatCounts();renderAdmin()}return}
+    const au=t.closest("[data-admuser]");if(au){admTab="users";admQ="";const {data}=await sb.from("profiles").select("name").eq("id",au.dataset.admuser).maybeSingle();admQ=(data&&data.name)||"";renderAdmin();return}
+    const bn=t.closest("[data-admban]");if(bn){const [id,v]=bn.dataset.admban.split("|");if(v==="1"&&!confirm("Заблокировать пользователя? Все его активные объявления будут скрыты, он не сможет подавать объявления и писать сообщения."))return;const {error}=await sb.rpc("admin_ban",{p_user:id,p_ban:v==="1"});toast(error?errText(error):v==="1"?"Пользователь заблокирован":"Пользователь разблокирован");loadCatCounts();renderAdmin();return}
+  };
+}
+async function renderAdminPR(){
   view().innerHTML=`<div class="page"><div class="toolbar"><h1>Заявки на продвижение</h1></div><div id="promoList">${loadingBlock()}</div><div class="toolbar"><h1>Жалобы</h1></div><div id="repList">${loadingBlock()}</div></div>`;
   sb.from("promo_orders").select("*, ads(id,title)").eq("status","pending").order("created_at",{ascending:false}).then(({data:po,error:pe})=>{const b=$("#promoList");if(!b)return;if(pe){b.innerHTML=emptyBlock("Ошибка",esc(errText(pe)));return}
     b.innerHTML=po.length?`<div class="panel">${po.map(o=>`<div class="ssrow"><div style="min-width:0"><strong>${esc((PROMO_TARIFFS.find(x=>x[0]===o.kind)||[,o.kind])[1])} — ${o.price} руб.</strong><div class="note">№${o.id} · ${o.ads?`<a class="link" href="#ad/${o.ads.id}">${esc(o.ads.title)}</a>`:"объявление удалено"} · ${esc(fmtDate(o.created_at))}</div></div><div class="actions"><button class="btn" data-poact="${o.id}">Оплачено — включить</button><button class="btn sec" data-pocancel="${o.id}">Отменить</button></div></div>`).join("")}</div>`:emptyBlock("Новых заявок нет","Когда продавец выберет тариф продвижения, заявка появится здесь.")});
@@ -1799,6 +1845,7 @@ async function renderAdmin(){
   if(error){$("#repList").innerHTML=emptyBlock("Ошибка",esc(errText(error)));return}
   $("#repList").innerHTML=data.length?`<div class="panel">${data.map(r=>`<div class="ssrow"><div style="min-width:0"><strong>${esc(r.reason)}</strong>${r.body?" — "+esc(r.body):""}<div class="note">${r.ads?`<a class="link" href="#ad/${r.ads.id}">${esc(r.ads.title)}</a>`:"Объявление уже удалено"} · ${esc(fmtDate(r.created_at))}</div></div><div class="actions">${r.ads?`<button class="btn danger" data-addel="${r.ads.id}">Удалить объявление</button>`:""}<button class="btn sec" data-repdel="${r.id}">Отклонить жалобу</button></div></div>`).join("")}</div>`:emptyBlock("Жалоб нет","Когда посетители пожалуются на объявление, жалоба появится здесь.");
   view().onclick=async e=>{
+    const tb=e.target.closest("[data-admtab]");if(tb){admTab=tb.dataset.admtab;admQ="";renderAdmin();return}
     const ad=e.target.closest("[data-addel]"); if(ad){const r=data.find(x=>x.ads&&x.ads.id==ad.dataset.addel);const {error}=await sb.from("ads").delete().eq("id",ad.dataset.addel);if(error)toast(errText(error));else{if(r)removePhotos(r.ads.photos||[]);toast("Объявление удалено");loadCatCounts();renderAdmin()}}
     const rp=e.target.closest("[data-repdel]"); if(rp){await sb.from("reports").delete().eq("id",rp.dataset.repdel);renderAdmin()}
     const pa=e.target.closest("[data-poact]"); if(pa){const {error}=await sb.rpc("promo_activate",{p_order:+pa.dataset.poact});toast(error?errText(error):"Продвижение включено");PROMO.at=0;renderAdmin()}
