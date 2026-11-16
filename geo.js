@@ -1,5 +1,5 @@
 /* Определение города посетителя (12.11.2026).
-   1) по IP через GeoJS (только страна BY), 2) по кнопке «Точнее» — геолокация браузера.
+   Только по кнопке: геолокация браузера (без внешних сервисов и передачи IP).
    Выбор хранится только в браузере (localStorage "geo_v1"). */
 (function(){
 var C=[["Минск",53.902,27.561,"Минск"],
@@ -208,5 +208,6 @@ function ask(g,how){css();var o=document.querySelector(".geob");if(o)o.remove();
   document.body.appendChild(d)}
 window.GEO={get:get,set:function(region,city){set({region:region||"",city:city||"",ts:Date.now()})},nearest:nearest,
   start:function(){var s=get();if(s){if(!s.skip&&window.GEO_APPLY&&window.GEO_SILENT)window.GEO_SILENT(s);return}
-    fetch("https://get.geojs.io/v1/ip/geo.json").then(function(r){return r.json()}).then(function(j){if(!j||j.country_code!=="BY")return;var g=nearest(+j.latitude,+j.longitude);if(g)ask(g,"ip")}).catch(function(){})}};
+    },
+  locate:function(){if(!navigator.geolocation){alert("Геолокация недоступна в этом браузере. Выберите регион вручную.");return}navigator.geolocation.getCurrentPosition(function(pos){var r=nearest(pos.coords.latitude,pos.coords.longitude);if(r)ask(r,"gps");else alert("Не удалось определить город в Беларуси. Выберите регион вручную.")},function(){alert("Нет доступа к геолокации. Выберите регион вручную.")},{timeout:10000,maximumAge:600000})}};
 })();
