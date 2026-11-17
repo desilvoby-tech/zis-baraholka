@@ -617,6 +617,23 @@ header .search{overflow:visible}
 .fbadge{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:99px;background:var(--accent);color:#fff;font-size:12px;margin-left:6px;padding:0 6px}
 .fdone{display:none}
 @media (max-width:900px){aside.panel.open{position:fixed;inset:auto 0 0 0;max-height:85vh;overflow:auto;z-index:70;border-radius:18px 18px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.25);padding-bottom:calc(16px + env(safe-area-inset-bottom))}.fdone{display:flex;justify-content:center;position:sticky;bottom:0;width:100%}}
+/* ---- плитки категорий в стиле Авито (17.11.2026) ---- */
+.cat-row{display:grid!important;grid-auto-flow:column dense;grid-template-rows:repeat(2,112px);grid-auto-columns:64px;gap:10px!important;padding-block:14px 10px!important;overflow-x:auto;scrollbar-width:none}
+.cat-row::-webkit-scrollbar{display:none}
+.cat-row .cat{position:relative;grid-column:span 2;width:auto!important;height:112px;padding:14px 14px 0!important;border-radius:26px!important;background:#f2f3f5;display:block!important;text-align:left!important;overflow:hidden;font-size:16px!important;font-weight:600;line-height:1.15;color:var(--ink);hyphens:auto;-webkit-hyphens:auto;transition:transform .15s}
+.cat-row .cat:active{transform:scale(.97)}
+.cat-row .cat.wide{grid-column:span 3}
+.cat-row .cat .t{position:relative;z-index:1;display:block;max-width:100%}
+.cat-row .cat .ic{position:absolute!important;right:-6px;bottom:-8px;width:74px!important;height:74px!important;padding:0!important;background:none!important;border-radius:0!important;outline:0!important;display:grid;place-items:end}
+.cat-row .cat .ic svg,.cat-row .cat .ic svg.art{width:70px!important;height:70px!important;margin:0!important}
+.cat-row .cat.wide .ic{width:92px!important;height:92px!important}
+.cat-row .cat.wide .ic svg,.cat-row .cat.wide .ic svg.art{width:88px!important;height:88px!important}
+.cat-row .cat[aria-pressed="true"]{box-shadow:inset 0 0 0 3px var(--accent)}
+.cat-row .cat .n{display:none!important}
+.cat-row .allcats .ic{color:#2e9a4a}
+@media (min-width:900px){.cat-row{grid-template-rows:repeat(2,120px);grid-auto-columns:70px}.cat-row .cat{height:120px}}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .cat-row .cat{background:#1e1e1e}}
+:root[data-theme="dark"] .cat-row .cat{background:#1e1e1e}
 </style>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1064,7 +1081,7 @@ let layoutMode=lsGet("zis-layout","grid");
 
 /* ================= КАТЕГОРИИ ================= */
 function renderCats(){
-  $("#catRow").innerHTML=`<a class="cat allcats" href="#cats"><span class="ic">${I('<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>')}</span>Все категории</a>`+CATS.map(c=>`<button class="cat" data-cat="${c.id}" aria-pressed="${S.cat===c.id}"><span class="ic">${catArt(c.id)||c.ic}</span>${esc(c.name)}<span class="n">${catCounts[c.id]||0}</span></button>`).join("");
+  $("#catRow").innerHTML=`<a class="cat allcats" href="#cats"><span class="t">Все</span><span class="ic">${I('<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>')}</span></a>`+CATS.map(c=>`<button class="cat${["realty","jobs","auto","services"].includes(c.id)?" wide":""}" data-cat="${c.id}" aria-pressed="${S.cat===c.id}"><span class="t">${esc(c.name)}</span><span class="ic">${catArt(c.id)||c.ic}</span><span class="n">${catCounts[c.id]||0}</span></button>`).join("");
 }
 async function loadCatCounts(){const {data}=await sb.rpc("cat_counts");catCounts=data||{};renderCats()}
 
