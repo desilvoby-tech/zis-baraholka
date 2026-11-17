@@ -431,6 +431,7 @@ img.logo-mark,.logo-img{background:none!important;border-radius:0!important;disp
 .leaflet-popup-content a{color:#007aa3}
 /* ---- подкатегории ---- */
 .subchips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;scrollbar-width:thin}
+.qq{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px}
 .subchips .chip{white-space:nowrap;padding:8px 14px;font-size:14px}
 .subchips .cnt{color:var(--muted);font-weight:500;margin-left:2px}
 .cat.allcats{text-decoration:none}
@@ -626,7 +627,7 @@ header .search{overflow:visible}
 <body>
 <header>
   <div class="topbar"><div class="wrap tb-row">
-    <nav class="tb-links" aria-label="Разделы"><a href="#" data-topcat="realty">Недвижимость</a><a href="#" data-topcat="auto">Авто</a><a href="#" data-topcat="phones">Телефоны</a><a href="#" data-topcat="electronics">Электроника</a><a href="#" data-topcat="jobs">Работа</a><a href="#" data-topcat="services">Услуги</a><a href="#" data-topcat="kids">Детям</a><a href="#" data-topcat="free">Отдам даром</a><a href="#rules">Безопасность</a></nav>
+    <nav class="tb-links" aria-label="Разделы"><a href="#" data-topcat="realty">Недвижимость</a><a href="#" data-topcat="auto">Авто</a><a href="#" data-topcat="phones">Телефоны</a><a href="#" data-topcat="electronics">Электроника</a><a href="#" data-topcat="jobs">Работа</a><a href="#" data-topcat="services">Услуги</a><a href="#" data-topcat="kids">Детям</a><a href="#" data-topcat="free">Отдам даром</a><a href="#safety">Безопасность</a></nav>
     <nav class="tb-ic" aria-label="Быстрые ссылки">
       <a href="#msgs" title="Сообщения" aria-label="Сообщения"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/></svg><span class="dot" data-unread hidden>0</span></a>
       <a href="#favs" title="Избранное" aria-label="Избранное"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.4-9.3-9A5.3 5.3 0 0 1 12 6a5.3 5.3 0 0 1 9.3 6c-2.3 4.6-9.3 9-9.3 9z"/></svg></a>
@@ -1126,10 +1127,26 @@ const LEGAL_REQ=`<h1>Реквизиты</h1>
 <li>Банк: ОАО «Паритетбанк», 220002, г. Минск, ул. Киселёва, 61а, BIC POISBY2X, УНП банка 100233809</li>
 <li>Связь: Telegram-бот @abisto_bot</li></ul>`;
 function renderLegal(kind){
-  document.title=(kind==="rules"?"Правила":kind==="requisites"?"Реквизиты":"Политика персональных данных")+" — Абисто";
-  view().innerHTML=`<article class="legal box">${kind==="rules"?LEGAL_RULES:kind==="requisites"?LEGAL_REQ:LEGAL_PRIVACY}
+  document.title=(kind==="rules"?"Правила":kind==="requisites"?"Реквизиты":kind==="safety"?"Безопасные сделки":"Политика персональных данных")+" — Абисто";
+  view().innerHTML=`<article class="legal box">${kind==="rules"?LEGAL_RULES:kind==="requisites"?LEGAL_REQ:kind==="safety"?LEGAL_SAFETY:LEGAL_PRIVACY}
     <p class="note" style="margin-top:18px"><a href="#${kind==="rules"?"privacy":"rules"}">${kind==="rules"?"Политика обработки персональных данных":"Правила размещения объявлений"}</a> · <a href="#">На главную</a></p></article>`;
 }
+const LEGAL_SAFETY=`<h1>Безопасные сделки</h1>
+<p>Абисто — бесплатная доска объявлений. Мы не берём деньги за сделки и не участвуем в расчётах между покупателем и продавцом. Несколько простых правил помогут не стать жертвой мошенников.</p>
+<h2>Покупателю</h2>
+<ul><li>По возможности встречайтесь лично и проверяйте товар до оплаты.</li>
+<li>Не переводите предоплату незнакомым продавцам, особенно если цена заметно ниже рынка.</li>
+<li>Не переходите по ссылкам «на оплату» или «на доставку», которые прислали в переписке, и не вводите там данные карты.</li>
+<li>Переписывайтесь в сообщениях на Абисто: так история разговора сохранится.</li></ul>
+<h2>Продавцу</h2>
+<ul><li>Никому не сообщайте номер карты целиком, срок действия, CVV-код и коды из SMS — для получения перевода они не нужны.</li>
+<li>Если «покупатель» присылает ссылку, чтобы «получить деньги», — это мошенничество.</li>
+<li>Не отправляйте товар, пока деньги не пришли на ваш счёт.</li></ul>
+<h2>Встреча</h2>
+<ul><li>Назначайте встречу в людном месте днём, крупные покупки — с сопровождающим.</li>
+<li>Проверяйте документы на технику, авто и недвижимость.</li></ul>
+<h2>Заметили мошенника?</h2>
+<p>Нажмите «Пожаловаться на объявление» на его странице — модератор проверит объявление. Если вы уже перевели деньги, сразу обратитесь в банк и в милицию.</p>`;
 const LEGAL_RULES=`<h1>Правила размещения объявлений</h1>
 <p class="note">Редакция от 10 ноября 2026 г.</p>
 <p>Абисто (abisto.by) — бесплатная доска объявлений. Сайт помогает покупателям и продавцам найти друг друга, но не участвует в сделках, не продаёт товары и не оказывает услуги от своего имени. Пользуясь сайтом, вы соглашаетесь с этими правилами.</p>
@@ -1375,11 +1392,12 @@ async function renderAd(id,fresh){
     </div>
     <aside class="adside">
       <div class="box">
-        <div class="tags">${a.is_demo?'<span class="tag demo">Пример объявления</span>':""}${a.status==="sold"?'<span class="tag sold">Продано</span>':""}${a.haggle&&a.price_type==="fixed"?'<span class="tag">Торг уместен</span>':""}${a.cond==="new"&&hasCond(a.cat)?'<span class="tag">Новое</span>':""}</div>
+        <div class="tags">${a.is_demo?'<span class="tag demo">Пример объявления</span>':""}${a.status==="sold"?'<span class="tag sold">Продано</span>':""}${a.haggle&&a.price_type==="fixed"?'<span class="tag">Торг уместен</span>':""}${a.cond==="new"&&hasCond(a.cat)?'<span class="tag">Новое</span>':""}${a.attrs&&a.attrs.delivery?'<span class="tag">Доставка по Беларуси</span>':""}${a.attrs&&a.attrs.exchange?'<span class="tag">Возможен обмен</span>':""}</div>
         <h1>${esc(a.title)}</h1>${fmtPrice(a)}
         ${a.status==="sold"?'<p class="note">Товар продан.</p>':mine?"":`<div class="actions">
           ${a.show_phone&&a.phone?`<span id="phoneBox"><button class="btn" id="showPhone">Показать телефон</button></span>`:""}
-          <button class="btn ${a.show_phone&&a.phone?"sec":""}" id="writeSeller">Написать продавцу</button></div>`}
+          <button class="btn ${a.show_phone&&a.phone?"sec":""}" id="writeSeller">Написать продавцу</button></div>
+          <div class="qq"><span class="note">Быстрый вопрос:</span>${["Ещё продаёте?","Торг уместен?","Как забрать?","Есть доставка?"].map(q=>`<button class="chip" type="button" data-qq="${esc("Здравствуйте. "+q)}">${esc(q)}</button>`).join("")}</div>`}
         <div class="actions"><button class="btn sec" id="mFav" aria-pressed="${favs.has(a.id)}">${favs.has(a.id)?"В избранном":"В избранное"}</button><button class="btn sec" id="mShare">Поделиться</button></div>
         ${mine?`<div class="actions"><a class="btn sec" href="#edit/${a.id}">Редактировать</a>${a.status==="active"?`<button class="btn sec" id="mBump" ${canBump?"":"disabled"}>${canBump?"Поднять в поиске":"Поднять через "+hoursLeft+" ч"}</button>`:""}${a.status==="active"?`<button class="btn" id="mPromo">Продвинуть</button>`:""}<button class="btn sec" id="mSold">${a.status==="sold"?"Вернуть в продажу":"Отметить проданным"}</button><button class="btn danger" id="mDel">Удалить</button></div>`
           :isAdmin?`<div class="actions"><button class="btn danger" id="mMod">Удалить (модерация)</button></div>`:""}
@@ -1413,6 +1431,7 @@ async function renderAd(id,fresh){
     const th=t.closest("[data-th]"); if(th){$("#mMain").src=photoUrl(photos[+th.dataset.th]);vw.querySelectorAll("[data-th]").forEach(b=>b.setAttribute("aria-current",b===th));return}
     if(id==="showPhone"){if(!user||user.id!==a.user_id)sb.rpc("track_phone",{ad:a.id}).then(()=>{},()=>{});$("#phoneBox").innerHTML=`<a class="btn" href="tel:${esc(a.phone.replace(/[^\d+]/g,""))}">${esc(a.phone)}</a>`}
     if(id==="writeSeller"||id==="barWrite"){if(needLogin())return;openChat(a)}
+    const qq=t.closest("[data-qq]"); if(qq){if(needLogin())return;try{sessionStorage.setItem("chatDraft",qq.dataset.qq)}catch(_){}openChat(a);return}
     if(id==="barCall"&&(!user||user.id!==a.user_id))sb.rpc("track_phone",{ad:a.id}).then(()=>{},()=>{});
     if(id==="mFav") toggleFav(a.id).then(()=>{t.textContent=favs.has(a.id)?"В избранном":"В избранное";t.setAttribute("aria-pressed",favs.has(a.id))});
     if(id==="mShare"){const url=location.href;if(navigator.share)navigator.share({title:a.title,url}).catch(()=>{});else copyText(url,"Ссылка скопирована")}
@@ -1464,6 +1483,7 @@ async function renderPost(editId){
       <div class="field"><span class="flabel">${d.cat==="jobs"?"Зарплата":"Цена"}</span>
         <div class="seg" role="radiogroup">${[["fixed",d.cat==="jobs"?"Указать":"Указать цену"],["deal","Договорная"],["free","Бесплатно"]].filter(x=>d.cat!=="jobs"||x[0]!=="free").map(([v,l])=>`<label><input type="radio" name="pt" value="${v}" ${d.price_type===v?"checked":""}>${l}</label>`).join("")}</div>
         <div class="row2" ${d.price_type==="fixed"?"":"hidden"}><div style="display:flex;gap:6px"><input class="inp" id="pPrice" inputmode="decimal" placeholder="Сумма" value="${esc(d.price)}" aria-label="Цена"><span class="inp" id="pCur" aria-label="Валюта" style="width:auto;display:inline-flex;align-items:center">р.</span></div><label class="chk"><input type="checkbox" id="pHaggle" ${d.haggle?"checked":""}> Возможен торг</label></div></div>
+      <div class="field"><span class="flabel">Дополнительно</span><label class="chk"><input type="checkbox" id="pDelivery" ${d.attrs&&d.attrs.delivery?"checked":""}> Доставка по Беларуси (почта, Европочта, курьер)</label><label class="chk"><input type="checkbox" id="pExchange" ${d.attrs&&d.attrs.exchange?"checked":""}> Возможен обмен</label></div>
       ${!hasCond(d.cat)?"":`<div class="field"><span class="flabel">Состояние</span><div class="seg">${[["used","Б/у"],["new","Новое"]].map(([v,l])=>`<label><input type="radio" name="cond" value="${v}" ${d.cond===v?"checked":""}>${l}</label>`).join("")}</div></div>`}
     </div>
     <div class="panel">
@@ -1489,7 +1509,7 @@ function readForm(){
   const d=draft, v=id=>($("#"+id)||{}).value||"";
   d.cat=v("pCat");d.sub=v("pSub");d.title=v("pTitle").trim();d.descr=v("pDesc").trim();d.price=v("pPrice").trim();
   d.currency=v("pCur")||d.currency||"BYN";d.region=v("pRegion");d.city=v("pCity");d.phone=v("pPhone").trim();
-  const sp=$("#pShowPhone");if(sp)d.show_phone=sp.checked; const hg=$("#pHaggle");if(hg)d.haggle=hg.checked;
+  const sp=$("#pShowPhone");if(sp)d.show_phone=sp.checked; const hg=$("#pHaggle");if(hg)d.haggle=hg.checked; d.attrs=d.attrs||{}; const dv=$("#pDelivery");if(dv)d.attrs.delivery=dv.checked?1:0; const ex=$("#pExchange");if(ex)d.attrs.exchange=ex.checked?1:0;
   d.price_type=(document.querySelector('input[name="pt"]:checked')||{}).value||"fixed";
   d.cond=(document.querySelector('input[name="cond"]:checked')||{}).value||d.cond||"used";
   document.querySelectorAll("[data-attr]").forEach(el=>{d.attrs[el.dataset.attr]=el.value.trim()});
@@ -1507,7 +1527,7 @@ async function submitPost(e){
     const newBases=[];
     for(let i=0;i<d.newFiles.length;i++){btn.textContent=`Загружаем фото ${i+1} из ${d.newFiles.length}…`;newBases.push(await uploadPhoto(d.newFiles[i].file))}
     btn.textContent="Сохраняем…";
-    const attrs={};for(const f of c.fields.filter(f=>fieldFor(f,d.sub))){const v=d.attrs[f.k];if(v)attrs[f.k]=f.t==="num"?Number(String(v).replace(",",".")):v}
+    const attrs={};for(const f of c.fields.filter(f=>fieldFor(f,d.sub))){const v=d.attrs[f.k];if(v)attrs[f.k]=f.t==="num"?Number(String(v).replace(",",".")):v} if(d.attrs.delivery)attrs.delivery=1; if(d.attrs.exchange)attrs.exchange=1;
     const row={cat:d.cat,sub:d.sub||null,title:d.title,descr:d.descr,price_type:d.cat==="free"?"free":d.price_type,
       price:d.price_type==="fixed"&&d.cat!=="free"&&price>0?Math.round(price*100)/100:null,haggle:!!d.haggle&&d.price_type==="fixed",
       cond:!hasCond(d.cat)?"used":d.cond,region:d.region,city:d.city,phone:d.phone||null,show_phone:!!d.show_phone&&(asDraft||!!d.phone),attrs,photos:[...d.photos,...newBases]};{const fx=d.price_type==="fixed"&&d.cat!=="free";const isUsd=false;row.currency=isUsd?"USD":"BYN";row.price_usd=isUsd?Math.round(price*100)/100:null;if(isUsd){if(!USD_RATE)throw new Error("Не удалось получить курс доллара. Попробуйте позже или укажите цену в рублях.");row.price=Math.round(price*USD_RATE)}}
@@ -1718,6 +1738,7 @@ async function renderChat(id){
   box.innerHTML=(ms||[]).length?"":'<p class="note" style="text-align:center">Напишите первое сообщение. Например, спросите, актуально ли объявление.</p>';
   (ms||[]).forEach(appendMsg);
   markRead(c.id);
+  try{const dr=sessionStorage.getItem("chatDraft");if(dr){$("#chatText").value=dr;sessionStorage.removeItem("chatDraft")}}catch(_){}
   $("#chatText").focus();
 }
 function appendMsg(m){
@@ -1854,7 +1875,8 @@ async function renderAdmin(){
   if(admTab==="sum"){
     const {data:st,error}=await sb.rpc("admin_stats");if(error){B.innerHTML=emptyBlock("Ошибка",esc(errText(error)));return}
     const T=[["Пользователей",st.users],["Новых за 7 дней",st.users_week],["Заблокировано",st.banned],["Активных объявлений",st.ads_active],["Новых за сутки",st.ads_today],["Новых за 7 дней",st.ads_week],["Скрыто модератором",st.ads_blocked],["Примеров (демо)",st.ads_demo],["Жалоб",st.reports],["Сообщений за 7 дней",st.messages_week],["Заявок на продвижение",st.promo_pending]];
-    B.innerHTML=`<div class="adm-grid">${T.map(([l,v])=>`<div class="panel adm-stat"><b>${v??0}</b><span class="note">${l}</span></div>`).join("")}</div>`;return}
+    B.innerHTML=`<div class="adm-grid">${T.map(([l,v])=>`<div class="panel adm-stat"><b>${v??0}</b><span class="note">${l}</span></div>`).join("")}</div>${st.ads_demo?`<div class="actions" style="margin-top:12px"><button class="btn danger" id="admDelDemo">Удалить все демо-объявления (${st.ads_demo})</button></div>`:""}`;
+    const dd=$("#admDelDemo");if(dd)dd.onclick=async()=>{if(!confirm("Удалить все демо-объявления? Это нельзя отменить."))return;dd.disabled=true;const {data:rows,error}=await sb.from("ads").delete().eq("is_demo",true).select("id,photos");if(error){toast(errText(error));dd.disabled=false;return}removePhotos((rows||[]).flatMap(a=>a.photos||[]));toast("Удалено: "+(rows||[]).length);loadCatCounts();renderAdmin()};return}
   if(admTab==="ads"){
     const SL=[["active","Активные"],["blocked","Скрытые"],["draft","Черновики"],["archived","Архив"],["sold","Проданные"]];
     let q=sb.from("ads").select("id,title,price,currency,city,status,user_id,created_at,mod_note,is_demo,photos").eq("status",admAdSt).order("created_at",{ascending:false}).limit(100);
@@ -1915,7 +1937,7 @@ function seoHome(){
   setMeta(SEO_BASE.t,SEO_BASE.d);
 }
 function seoAd(a,c){const pr=a.price!=null?` — ${a.price} руб.`:"";const ct=a.city||"Беларусь",hasCt=String(a.title).toLowerCase().includes(ct.toLowerCase().slice(0,Math.max(4,ct.length-1)));setMeta(`${a.title}${pr}${hasCt?"":", "+ct} | Абисто`,`${a.title}${pr}. ${c&&c.name?c.name+". ":""}${a.city?a.city+". ":""}${String(a.descr||"").replace(/\s+/g," ").slice(0,110)}`);setCanon("https://abisto.by/ob/"+a.id+"-"+obSlug(a.title))}
-const SEO_PAGES={cats:["Все категории объявлений в Беларуси | Абисто","Каталог Абисто: 22 категории и сотни подкатегорий объявлений по всей Беларуси."],rules:["Правила размещения объявлений | Абисто","Правила размещения объявлений на Абисто."],privacy:["Политика обработки персональных данных | Абисто","Политика обработки персональных данных Абисто по Закону РБ № 99-З."],post:["Подать объявление бесплатно | Абисто","Разместите бесплатное объявление на Абисто за минуту: фото, цена, контакты. Покупатели по всей Беларуси."]};
+const SEO_PAGES={safety:["Безопасные сделки — советы покупателям и продавцам | Абисто","Как не попасться мошенникам при покупке и продаже на доске объявлений: предоплата, ссылки на оплату, встречи."],cats:["Все категории объявлений в Беларуси | Абисто","Каталог Абисто: 22 категории и сотни подкатегорий объявлений по всей Беларуси."],rules:["Правила размещения объявлений | Абисто","Правила размещения объявлений на Абисто."],privacy:["Политика обработки персональных данных | Абисто","Политика обработки персональных данных Абисто по Закону РБ № 99-З."],post:["Подать объявление бесплатно | Абисто","Разместите бесплатное объявление на Абисто за минуту: фото, цена, контакты. Покупатели по всей Беларуси."]};
 async function route(){
   if(currentView()==="c"){const p=location.hash.slice(1).split("/").map(x=>{try{return decodeURIComponent(x)}catch(_){return x}});S={...freshFilters(),cat:CAT[p[1]]?p[1]:"",sub:p[2]||""};if(p[3])S.eq={kind:p[3]};history.replaceState(null,"",location.pathname+location.search+"#")}
   const v=currentView(), arg=currentArg();
@@ -1929,7 +1951,7 @@ async function route(){
   try{
     if(v==="home") await renderHome();
     else if(v==="cats") {renderAllCats();setMeta(...SEO_PAGES.cats)}
-    else if(v==="rules"||v==="privacy"||v==="requisites") {renderLegal(v);setMeta(...(SEO_PAGES[v]||SEO_PAGES.privacy))}
+    else if(v==="rules"||v==="privacy"||v==="requisites"||v==="safety") {renderLegal(v);setMeta(...(SEO_PAGES[v]||SEO_PAGES.privacy))}
     else if(v==="ad") await renderAd(arg);
     else if(v==="post") {await renderPost();setMeta(...SEO_PAGES.post)}
     else if(v==="edit") await renderPost(arg);
