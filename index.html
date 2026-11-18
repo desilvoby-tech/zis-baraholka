@@ -656,7 +656,7 @@ header .search{overflow:visible}
   </div></div>
   <div class="wrap hrow">
     <a class="logo" href="#" aria-label="Абисто, на главную">
-      <img class="logo-mark logo-img" src="logo.svg" alt="" width="40" height="40">
+      <img class="logo-mark logo-img" src="logo.svg" alt="Абисто" width="40" height="40">
       <span class="logo-txt">Abisto<small>Объявления по Беларуси</small></span>
     </a>
     <button class="catalog-btn" id="catBtn" type="button" aria-expanded="false" aria-controls="mega"><span class="cb-ic" aria-hidden="true"><i></i><i></i><i></i></span><span class="lbl">Категории</span></button>
@@ -1074,7 +1074,7 @@ function card(a){
   const n=(a.photos||[]).length;
   const tags=(PROMO.top.has(a.id)?'<span class="tag top">Топ</span>':"")+(a.is_demo?'<span class="tag demo">Пример объявления</span>':"")+(a.status==="sold"?'<span class="tag sold">Продано</span>':"")+(a.haggle&&a.price_type==="fixed"?'<span class="tag">Торг</span>':"")+(a.cond==="new"&&hasCond(a.cat)?'<span class="tag">Новое</span>':"");
   return `<a class="card${a.status==="sold"?" is-sold":""}${PROMO.hl.has(a.id)?" is-hl":""}" href="#ad/${a.id}">
-    <div class="ph">${n?"":catPh(a.cat)}${n?`<img alt="" loading="lazy" src="${esc(photoUrl(a.photos[0],true))}">`:""}${n>1?`<span class="np">${n} фото</span>`:""}
+    <div class="ph">${n?"":catPh(a.cat)}${n?`<img alt="${esc(a.title||"")}" loading="lazy" src="${esc(photoUrl(a.photos[0],true))}">`:""}${n>1?`<span class="np">${n} фото</span>`:""}
       <button type="button" class="fav" data-fav="${a.id}" aria-pressed="${favs.has(a.id)}" aria-label="В избранное">${HEART}</button></div>
     <div class="cbody">${fmtPrice(a)}<div class="ctitle">${esc(a.title)}</div>${tags?`<div class="tags">${tags}</div>`:""}
       <div class="meta"><span>${esc(a.city)}</span><span>${esc(fmtDate(a.bumped_at))}</span></div></div></a>`;
@@ -1084,7 +1084,7 @@ let layoutMode=lsGet("zis-layout","grid");
 
 /* ================= КАТЕГОРИИ ================= */
 function renderCats(){
-  const tiles=[`<a class="cat allcats" href="#cats"><span class="t">Все</span><span class="ic">${I('<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>')}</span></a>`].concat(CATS.map(c=>`<button class="cat${["realty","jobs","auto","services"].includes(c.id)?" wide":""}" data-cat="${c.id}" aria-pressed="${S.cat===c.id}"><span class="t">${esc(c.name)}</span><img class="ph" src="/img/cats/${c.id}.webp" alt="" loading="lazy" decoding="async"><span class="n">${catCounts[c.id]||0}</span></button>`));
+  const tiles=[`<a class="cat allcats" href="#cats"><span class="t">Все</span><span class="ic">${I('<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/>')}</span></a>`].concat(CATS.map(c=>`<button class="cat${["realty","jobs","auto","services"].includes(c.id)?" wide":""}" data-cat="${c.id}" aria-pressed="${S.cat===c.id}"><span class="t">${esc(c.name)}</span><img class="ph" src="/img/cats/${c.id}.webp" alt="${esc(c.name)}" loading="lazy" decoding="async"><span class="n">${catCounts[c.id]||0}</span></button>`));
   const byId={};CATS.forEach((c,i)=>byId[c.id]=tiles[i+1]);
   const R1=["realty","jobs","clothes","kids","appliances","furniture","home","garden","beauty","wedding","other"],R2=["auto","electronics","services","phones","computers","repair","menswear","hobby","animals","business","free"];
   const rest=CATS.map(c=>c.id).filter(id=>!R1.includes(id)&&!R2.includes(id));
@@ -1618,7 +1618,7 @@ function myRow(a,st,fc){
     sold:[B("activate","Вернуть в продажу"),B("archive","В архив")],
     archived:[B("activate","Активировать","",false),`<a class="btn sec sm" href="#edit/${a.id}">Редактировать</a>`]}[a.status]||[];
   return `<div class="mrow"><label class="mchk"><input type="checkbox" data-sel="${a.id}" ${mySel.has(a.id)?"checked":""} aria-label="Выбрать"></label>
-    <a class="mph" href="#ad/${a.id}">${n?`<img alt="" loading="lazy" src="${esc(photoUrl(a.photos[0],true))}">`:catPh(a.cat)}</a>
+    <a class="mph" href="#ad/${a.id}">${n?`<img alt="${esc(a.title||"")}" loading="lazy" src="${esc(photoUrl(a.photos[0],true))}">`:catPh(a.cat)}</a>
     <div class="minfo"><a class="mtitle" href="#ad/${a.id}">${esc(a.title)}</a>${a.status==="draft"?'<span class="note">Черновик</span>':fmtPrice(a)}
       <div class="note">${esc(a.city||"")}${a.status==="draft"?"":" · "+(a.status==="active"?"поднято ":"")+esc(fmtDate(a.bumped_at))}</div>
       ${a.status==="draft"?"":`<div class="mstat"><span title="Просмотров всего">${IC_EYE}${a.views||0}</span><span title="Просмотров за ${myRange} дн.">+${s.views||0}</span><span title="Показов телефона за ${myRange} дн.">${IC_TEL}${s.phone_views||0}</span><span title="В избранном">${IC_HEART}${fc[a.id]||0}</span><span title="Новых чатов за ${myRange} дн.">${IC_CHAT}${s.chats||0}</span></div>`}</div>
