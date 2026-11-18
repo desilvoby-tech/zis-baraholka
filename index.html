@@ -1422,7 +1422,7 @@ async function renderAd(id,fresh){
           <button class="btn ${a.show_phone&&a.phone?"sec":""}" id="writeSeller">Написать продавцу</button></div>
           <div class="qq"><span class="note">Быстрый вопрос:</span>${["Ещё продаёте?","Торг уместен?","Как забрать?","Есть доставка?"].map(q=>`<button class="chip" type="button" data-qq="${esc("Здравствуйте. "+q)}">${esc(q)}</button>`).join("")}</div>`}
         <div class="actions"><button class="btn sec" id="mFav" aria-pressed="${favs.has(a.id)}">${favs.has(a.id)?"В избранном":"В избранное"}</button><button class="btn sec" id="mShare">Поделиться</button></div>
-        ${mine?`<div class="actions"><a class="btn sec" href="#edit/${a.id}">Редактировать</a>${a.status==="active"?`<button class="btn sec" id="mBump" ${canBump?"":"disabled"}>${canBump?"Поднять в поиске":"Поднять через "+hoursLeft+" ч"}</button>`:""}${a.status==="active"?`<button class="btn" id="mPromo">Продвинуть</button>`:""}<button class="btn sec" id="mSold">${a.status==="sold"?"Вернуть в продажу":"Отметить проданным"}</button><button class="btn danger" id="mDel">Удалить</button></div>`
+        ${mine&&isAdmin?`<div class="actions"><button class="btn" id="mClaim" type="button">Передать продавцу (код)</button></div>`:""}${mine?`<div class="actions"><a class="btn sec" href="#edit/${a.id}">Редактировать</a>${a.status==="active"?`<button class="btn sec" id="mBump" ${canBump?"":"disabled"}>${canBump?"Поднять в поиске":"Поднять через "+hoursLeft+" ч"}</button>`:""}${a.status==="active"?`<button class="btn" id="mPromo">Продвинуть</button>`:""}<button class="btn sec" id="mSold">${a.status==="sold"?"Вернуть в продажу":"Отметить проданным"}</button><button class="btn danger" id="mDel">Удалить</button></div>`
           :isAdmin?`<div class="actions"><button class="btn danger" id="mMod">Удалить (модерация)</button></div>`:""}
         <div id="mConfirm"></div>
       </div>
@@ -1462,6 +1462,12 @@ async function renderAd(id,fresh){
     if(id==="mSold"){const {error}=await sb.from("ads").update({status:a.status==="sold"?"active":"sold"}).eq("id",a.id);if(error)toast(errText(error));else{toast(a.status==="sold"?"Объявление снова в продаже":"Отмечено как проданное");loadCatCounts();renderAd(a.id)}}
     if(id==="mDel"||id==="mMod"){$("#mConfirm").innerHTML=`<p class="note">Объявление исчезнет для всех. Удалить?</p><div class="actions"><button class="btn danger" id="delYes">Да, удалить</button><button class="btn sec" id="mNo">Отмена</button></div>`}
     if(id==="mNo") $("#mConfirm").innerHTML="";
+    if(id==="mClaim"){let code="";const {data:ex}=await sb.from("ad_claims").select("code").contains("ad_ids",[a.id]).is("claimed_by",null).limit(1);
+      if(ex&&ex[0])code=ex[0].code;else{const A="ABCDEFGHJKMNPQRSTUVWXYZ23456789";const r=crypto.getRandomValues(new Uint8Array(6));code=[...r].map(x=>A[x%A.length]).join("");
+        const {error}=await sb.from("ad_claims").insert({code,ad_ids:[a.id]});if(error){toast(errText(error));return}}
+      const msg=`Ваше объявление «${a.title}» уже на Абисто (№${a.id}). Чтобы покупатели писали и звонили напрямую вам: зайдите на abisto точка by → Кабинет → «Есть код от Абисто?» и введите код ${code}. Это бесплатно.`;
+      $("#mConfirm").innerHTML=`<div class="box" style="margin-top:10px"><strong>Код для продавца: <span class="phone">${esc(code)}</span></strong><p class="note">Отправьте продавцу текст ниже. После ввода кода объявление и переписка по нему перейдут в его аккаунт.</p><p style="white-space:pre-wrap">${esc(msg)}</p><div class="actions"><button class="btn sec" type="button" id="mClaimCopy">Скопировать текст</button></div></div>`;
+      $("#mClaimCopy").onclick=()=>copyText(msg,"Текст скопирован")}
     if(id==="mPromo"){await loadPromos(true);$("#mConfirm").innerHTML=`<div class="box" style="margin-top:10px"><strong>Продвижение объявления</strong>${PROMO.top.has(a.id)||PROMO.hl.has(a.id)?'<p class="note">Сейчас уже действует продвижение — новый тариф продлит его.</p>':""}<div class="promo-t">${PROMO_TARIFFS.map(([k,n,p])=>`<button class="btn sec" id="prBuy-${k}"><span>${n}</span><b>${p}\u00a0ƃ</b></button>`).join("")}</div><p class="note">«Топ» — объявление показывается в блоке «Топ-объявления» над выдачей. «Выделение» — карточка подсвечивается в списке.</p><button class="btn sec" id="mNo">Закрыть</button></div>`}
     const pb=t.closest&&t.closest('[id^="prBuy-"]'); if(pb){const k=pb.id.slice(6);const {data:o,error}=await sb.from("promo_orders").insert({ad_id:a.id,kind:k}).select().single();if(error){toast(errText(error));return}o.title=(PROMO_TARIFFS.find(x=>x[0]===k)||[,k])[1];$("#mConfirm").innerHTML=startPromoPayment(o)}
     if(id==="delYes"){const {error}=await sb.from("ads").delete().eq("id",a.id);if(error){toast(errText(error));return}removePhotos(photos);toast("Объявление удалено");loadCatCounts();location.hash=mine?"#my":"#"}
@@ -1596,12 +1602,28 @@ function myRow(a,st,fc){
       ${a.status==="draft"?"":`<div class="mstat"><span title="Просмотров всего">${IC_EYE}${a.views||0}</span><span title="Просмотров за ${myRange} дн.">+${s.views||0}</span><span title="Показов телефона за ${myRange} дн.">${IC_TEL}${s.phone_views||0}</span><span title="В избранном">${IC_HEART}${fc[a.id]||0}</span><span title="Новых чатов за ${myRange} дн.">${IC_CHAT}${s.chats||0}</span></div>`}</div>
     <div class="mact">${acts.join("")}${B("del","Удалить","danger")}</div></div>`;
 }
+function renderClaim(code){
+  if(needLogin()) return;
+  document.title="Получить объявление — Абисто";
+  view().innerHTML=`<div class="page"><div class="box" style="max-width:520px;margin:0 auto">
+    <h1>Код от Абисто</h1><p class="note">Мы бесплатно перенесли ваше объявление с другого сайта. Введите код из сообщения — объявление перейдёт в ваш аккаунт, и покупатели будут писать и звонить вам.</p>
+    <form id="claimForm"><div class="field"><label for="clCode">Код</label><input class="inp" id="clCode" maxlength="12" autocomplete="off" style="text-transform:uppercase;letter-spacing:2px" value="${esc((code||"").toUpperCase())}" required></div>
+    <div class="field"><label for="clPhone">Телефон для покупателей</label><input class="inp" id="clPhone" maxlength="20" inputmode="tel" placeholder="+375 29 123-45-67" value="${esc(me&&me.phone||"")}" autocomplete="tel"><div class="note">Необязательно. Если укажете — в объявлении появится кнопка «Позвонить».</div></div>
+    <p class="note" id="clErr" hidden></p>
+    <div class="actions"><button class="btn" type="submit">Получить объявление</button><a class="btn sec" href="#my">Назад</a></div></form></div></div>`;
+  $("#claimForm").onsubmit=async e=>{e.preventDefault();const ph=$("#clPhone").value.trim();
+    if(ph&&ph.replace(/\D/g,"").length<7){$("#clErr").textContent="Проверьте номер телефона.";$("#clErr").hidden=false;return}
+    const {data:n,error}=await sb.rpc("claim_ads",{p_code:$("#clCode").value.trim(),p_phone:ph||null});
+    if(error){$("#clErr").textContent=errText(error);$("#clErr").hidden=false;return}
+    if(ph&&me&&!me.phone){me.phone=ph;profCache.set(user.id,me)}
+    toast(n?`Готово: ${n} ${plural(n,["объявление","объявления","объявлений"])} теперь ваши`:"Объявление уже передано");myTab="active";location.hash="#my"}
+}
 async function renderMy(){
   if(needLogin()) return;
   const shop=me&&me.shop_name;
   view().innerHTML=`<div class="page cab">
     <div class="box cab-head"><div class="userhead">${avatarHtml(me,"lg")}<div style="flex:1;min-width:0"><h1 style="font-size:20px">${esc(shop||(me?me.name:""))}</h1><div class="note">${shop?esc(me.name)+" · ":""}${esc(/@telegram\.abisto\.by$/.test(user.email||"")?"Вход через Telegram":(user.email||user.phone||""))}</div></div>
-      <div class="actions"><a class="btn sec" href="#profile">Профиль и магазин</a><a class="btn sec" href="#user/${user.id}">Страница продавца</a><button class="btn danger" id="logout">Выйти</button></div></div></div>
+      <div class="actions"><a class="btn sec" href="#profile">Профиль и магазин</a><a class="btn sec" href="#user/${user.id}">Страница продавца</a><a class="btn sec" href="#claim">Есть код от Абисто?</a><button class="btn danger" id="logout">Выйти</button></div></div></div>
     <div class="toolbar"><h1>Кабинет продавца</h1><a class="btn" href="#post">Подать объявление</a></div>
     <section class="box cab-stats"><div class="cab-sh"><h2 class="sub2">Статистика</h2><div class="chips">${[7,30].map(r=>`<button class="chip" data-range="${r}" aria-pressed="${myRange===r}">${r} дней</button>`).join("")}</div></div><div id="cabStats">${loadingBlock()}</div></section>
     <div class="tabs" id="cabTabs"></div>
@@ -1966,7 +1988,7 @@ async function route(){
   const v=currentView(), arg=currentArg();
   view().onclick=null; view().onsubmit=null; document.title=(unread?`(${unread}) `:"")+"Абисто";
   if(v!=="post"&&v!=="edit"&&draft&&!draft.id&&!draft.title) draft=null;
-  if(user&&["my","profile","post","edit","admin","favs","msgs","chat","login"].includes(v)) await meReady;
+  if(user&&["my","profile","post","edit","admin","favs","msgs","chat","login","claim"].includes(v)) await meReady;
   if(v!=="chat") chatConv=null;
   $("#catsBar").hidden=!["home"].includes(v);
   document.querySelectorAll("[data-nav]").forEach(a=>a.setAttribute("aria-current",a.dataset.nav===v||(v==="profile"&&a.dataset.nav==="my")?"page":"false"));
@@ -1986,6 +2008,7 @@ async function route(){
     else if(v==="user") await renderUser(arg);
     else if(v==="login") renderLogin();
     else if(v==="admin") await renderAdmin();
+    else if(v==="claim") renderClaim(arg);
     else await renderHome();
   }catch(e){view().innerHTML=emptyBlock("Ошибка загрузки",esc(errText(e)),'<button class="btn sec" onclick="route()">Повторить</button>')}
   renderCats();
