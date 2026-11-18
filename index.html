@@ -1275,7 +1275,7 @@ async function renderHome(){
   {const cb=$("#catsBar");if(cb&&currentView()==="home")cb.hidden=!!(S.cat||S.q||S.user)}
   if(S.cat&&CAT[S.cat]&&CAT[S.cat].subs.length) loadSubCounts();
   const seller=S.user?(await profiles([S.user]))[S.user]:null;
-  const title=S.user?`Объявления: ${esc(seller?seller.name:"")}`:S.eq&&S.eq.kind&&S.sub?esc(S.eq.kind)+` <span class="note">· ${esc(S.sub)}</span>`:S.sub?esc(S.sub):S.cat?CAT[S.cat].name:(S.q?`Поиск: «${esc(S.q)}»`:"Все объявления");
+  const title=S.user?`Все объявления продавца <span class="note">«${esc(seller&&seller.name||"Продавец")}»</span>`:S.eq&&S.eq.kind&&S.sub?esc(S.eq.kind)+` <span class="note">· ${esc(S.sub)}</span>`:S.sub?esc(S.sub):S.cat?CAT[S.cat].name:(S.q?`Поиск: «${esc(S.q)}»`:"Все объявления");
   view().innerHTML=`<div class="layout">
     <aside class="panel ${filtersOpen?"open":""}" aria-label="Фильтры">
       <h3>Фильтры</h3>
