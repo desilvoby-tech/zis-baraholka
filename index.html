@@ -1281,7 +1281,7 @@ function renderAllCats(){
 /* Активные фильтры (12.11.2026) */
 function afList(){const L=[];if(S.q)L.push(["q","«"+S.q+"»"]);if(S.region)L.push(["region",S.city||(($("#regionTop")&&$("#regionTop").selectedOptions[0])||{}).textContent||"Регион"]);
   if(S.min||S.max)L.push(["price",(S.min?"от "+S.min:"")+(S.max?" до "+S.max:"")+"\u00a0ƃ"]);if(S.cond)L.push(["cond",S.cond==="new"?"Новое":"Б/у"]);if(S.photo)L.push(["photo","С фото"]);
-  for(const [k,v] of Object.entries(S.eq||{}))if(v)L.push(["eq:"+k,v]);
+  for(const [k,v] of Object.entries(S.eq||{}))if(v)L.push(["eq:"+k,k==="delivery"?"С доставкой":k==="exchange"?"Возможен обмен":v]);
   const c=CAT[S.cat];for(const k of new Set([...Object.keys(S.nmin||{}),...Object.keys(S.nmax||{})])){const a=S.nmin[k],b=S.nmax[k];if(a||b){const f=c&&c.fields.find(x=>x.k===k);L.push(["num:"+k,(f?f.l+" ":"")+(a?"от "+a:"")+(b?" до "+b:"")])}}
   return L}
 const afCount=()=>afList().filter(([k])=>k!=="q").length;
@@ -1304,6 +1304,8 @@ async function renderHome(){
       <div class="field"><span class="flabel">Цена, ${BYN}</span><div class="row2"><input class="inp" id="fMin" inputmode="numeric" placeholder="от" value="${esc(S.min)}" aria-label="Цена от"><input class="inp" id="fMax" inputmode="numeric" placeholder="до" value="${esc(S.max)}" aria-label="Цена до"></div></div>
       ${!hasCond(S.cat)?"":`<div class="field"><span class="flabel">Состояние</span><div class="pills" role="group" aria-label="Состояние">${[["","Любое"],["new","Новое"],["used","Б/у"]].map(([v,l])=>`<button type="button" data-cond="${v}" aria-pressed="${(S.cond||"")===v}">${l}</button>`).join("")}</div></div>`}
       <label class="chk"><input type="checkbox" id="fPhoto" ${S.photo?"checked":""}> Только с фото</label>
+      <label class="chk"><input type="checkbox" id="fDelivery" ${S.eq&&S.eq.delivery?"checked":""}> С доставкой</label>
+      <label class="chk"><input type="checkbox" id="fExchange" ${S.eq&&S.eq.exchange?"checked":""}> Возможен обмен</label>
       <button class="link" id="fReset">Сбросить фильтры</button>
       <button class="btn fdone" type="button" id="fDone">Показать объявления</button>
     </aside>
@@ -2162,6 +2164,7 @@ function wire(){
     if(id==="fCity"){S.city=t.value;renderHome()}
     if(id==="fCond"){S.cond=t.value;renderHome()}
     if(id==="fPhoto"){S.photo=t.checked;renderHome()}
+    if(id==="fDelivery"||id==="fExchange"){const k=id==="fDelivery"?"delivery":"exchange";S.eq=S.eq||{};if(t.checked)S.eq[k]="1";else delete S.eq[k];renderHome()}
     if(id==="fSort"){S.sort=t.value;renderHome()}
     if(id==="fSub"){S.sub=t.value;pruneAttrFilters();renderHome()}
     if(id==="fMin"||id==="fMax"){S[id==="fMin"?"min":"max"]=t.value.replace(/[^\d.]/g,"");renderHome()}
