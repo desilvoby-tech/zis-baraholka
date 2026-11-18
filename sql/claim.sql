@@ -49,3 +49,5 @@ begin
 end $$;
 revoke all on function public.claim_ads(text, text) from public, anon;
 grant execute on function public.claim_ads(text, text) to authenticated;
+
+notify pgrst, 'reload schema';
