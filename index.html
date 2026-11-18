@@ -1095,7 +1095,7 @@ async function loadCatCounts(){const {data}=await sb.rpc("cat_counts");catCounts
 /* ================= ГЛАВНАЯ / ПОИСК ================= */
 let homeItems=[], homeTotal=0, filtersOpen=false;
 function pruneAttrFilters(){
-  const c=CAT[S.cat]; if(!c) return; const ok=new Set(c.fields.filter(f=>fieldFor(f,S.sub)).map(f=>f.k));
+  const c=CAT[S.cat]; if(!c) return; const ok=new Set([...c.fields.filter(f=>fieldFor(f,S.sub)).map(f=>f.k),"delivery","exchange"]);
   for(const k of ["eq","nmin","nmax"]) for(const a of Object.keys(S[k]||{})) if(!ok.has(a)) delete S[k][a];
 }
 function fieldFilters(cat){
