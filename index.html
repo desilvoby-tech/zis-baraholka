@@ -162,6 +162,7 @@ textarea.inp{min-height:130px;resize:vertical}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:14px}
 .kv dt{color:var(--muted)} .kv dd{margin:0}
 .seller{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.acct{margin-top:12px}.acct-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:6px 0}.extsum{margin-top:4px}
 .phone{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;user-select:all}
 .close{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.9);color:#13213b;font-size:20px;z-index:2}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
@@ -1241,6 +1242,24 @@ const LEGAL_PRIVACY=`<h1>Политика обработки персональ�
 <h2>9. Изменения</h2>
 <p>Мы можем обновлять эту политику. Новая редакция действует с момента публикации на этой странице.</p>`;
 const tgLinked=()=>!!(me&&(me.notify_chat_id||me.tg_chat_id));
+function extSummary(x){if(!x||typeof x!=="object")return "";const src=esc(x.source||"Kufar"),r=+x.rating,n=+x.reviews_count,d=+x.deals;
+  const parts=[];if(r)parts.push(stars(r)+" <strong>"+r.toFixed(1)+"</strong>");if(n)parts.push(n+" "+plural(n,["отзыв","отзыва","отзывов"]));if(d)parts.push(d+" "+plural(d,["сделка","сделки","сделок"]));if(x.since)parts.push("на "+src+" с "+esc(String(x.since)));
+  return parts.length?`<div class="note extsum">Рейтинг на ${src}: ${parts.join(" · ")}</div>`:""}
+function extReviews(x){const L=x&&Array.isArray(x.reviews)?x.reviews.filter(r=>r&&(r.text||r.rating)).slice(0,30):[];if(!L.length)return "";
+  return `<div class="box" style="margin-top:16px"><h2 class="sub2">Отзывы с ${esc(x.source||"Kufar")} <span class="note">перенесены с согласия продавца</span></h2>${L.map(r=>`<div class="review"><div style="display:flex;gap:8px;align-items:center"><strong>${esc(r.author||"Покупатель")}</strong>${r.rating?stars(+r.rating):""}<span class="note">${esc(r.date||"")}</span></div>${r.text?`<p style="margin:4px 0 0">${esc(r.text)}</p>`:""}</div>`).join("")}</div>`}
+function loginMethod(){const e=(user&&user.email)||"",ids=((user&&user.identities)||[]).map(i=>i.provider),um=(user&&user.user_metadata)||{};
+  if(/@telegram\.abisto\.by$/.test(e))return "Telegram"+(um.tg_username?" (@"+esc(um.tg_username)+")":"");
+  if(ids.includes("google"))return "Google ("+esc(e)+")";
+  if(/yandex/i.test(um.provider||"")||/@yandex\.abisto\.by$|@(yandex|ya)\.(ru|by|com)$/i.test(e))return "Яндекс ("+esc(e)+")";
+  if(/mail/i.test(um.provider||"")||/@mailru\.abisto\.by$|@(mail|inbox|list|bk)\.ru$/i.test(e))return "Mail.ru ("+esc(e)+")";
+  if(user&&user.phone)return "Телефон ("+esc(user.phone)+")";
+  return "Эл. почта и пароль ("+esc(e)+")"}
+function accountBlock(){const ok='<span style="color:#1a7f37;font-weight:700">✓</span>',no='<span style="color:#b42318;font-weight:700">✗</span>';
+  return `<section class="box acct"><h2 class="sub2">Вход и уведомления</h2>
+    <div class="acct-row">${ok} <span>Вы вошли через: <strong>${loginMethod()}</strong></span></div>
+    <div class="acct-row">${tgLinked()?ok+' <span>Telegram-бот <strong>@abisto_bot</strong> подключён — сообщения покупателей и новые объявления по поискам приходят в бот</span>':no+' <span>Telegram-бот @abisto_bot не подключён — вы можете пропустить сообщения покупателей</span> <button class="btn tg-btn sm" type="button" id="tgLinkBtn">Подключить</button><span id="tgLinkBox"></span>'}</div>
+    <div class="acct-row">${me&&me.phone?ok+' <span>Телефон для покупателей: <strong>'+esc(me.phone)+'</strong></span>':no+' <span>Телефон не указан — покупатели не смогут позвонить</span> <a class="btn sec sm" href="#profile">Указать</a>'}</div>
+    <div id="acctExt"></div></section>`}
 function tgNotifyBlock(){
   return tgLinked()?`<p class="note" style="margin:0">🔔 Новые объявления по отмеченным поискам приходят в Telegram-бот @abisto_bot.</p>`
     :`<div class="tgnote"><span>Подключите Telegram — бот пришлёт новые объявления по вашим поискам.</span><button class="btn tg-btn sm" type="button" id="tgLinkBtn">Подключить Telegram</button><span id="tgLinkBox"></span></div>`;
@@ -1438,8 +1457,9 @@ async function renderAd(id,fresh){
   sellerP.then(([ps,{data:rv},{count}])=>{
     const box=$("#sellerBox"); if(!box||currentView()!=="ad"||+currentArg()!==id) return;
     const sl=ps[a.user_id]||{name:"Продавец"}; const n=(rv||[]).length, av=n?rv.reduce((x,r)=>x+r.rating,0)/n:0;
-    box.innerHTML=`<a class="sellercard" href="#user/${esc(a.user_id)}">${avatarHtml(sl)}<div><div class="nm">${esc(sl.name)}</div><div class="note">${n?stars(av)+" "+av.toFixed(1)+" · "+n+" "+plural(n,["отзыв","отзыва","отзывов"]):"Пока без отзывов"}</div><div class="note">${sl.created_at?esc(sinceText(sl.created_at)):""}</div></div></a>
+    box.innerHTML=`<a class="sellercard" href="#user/${esc(a.user_id)}">${avatarHtml(sl)}<div><div class="nm">${esc(sl.name)}</div><div class="note">${n?stars(av)+" "+av.toFixed(1)+" · "+n+" "+plural(n,["отзыв","отзыва","отзывов"]):"Пока без отзывов"}</div><div class="note">${sl.created_at?esc(sinceText(sl.created_at)):""}</div></div></a><div id="adExt">${a.attrs&&a.attrs.ext_seller?(a.attrs.ext_seller.name?`<div class="note">Продавец: <strong>${esc(a.attrs.ext_seller.name)}</strong></div>`:"")+extSummary(a.attrs.ext_seller):""}</div>
       <a class="link" href="#" data-seller="${esc(a.user_id)}">Все объявления продавца (${count||0})</a>`;
+    if(!(a.attrs&&a.attrs.ext_seller))sb.from("profiles").select("ext").eq("id",a.user_id).maybeSingle().then(({data})=>{const el=$("#adExt");if(el&&data&&data.ext)el.innerHTML=extSummary(data.ext)},()=>{});
     const rb=$("#adReviews"); if(!rb) return;
     const last=(rv||[]).filter(r=>r.body).slice(0,3);
     profiles(last.map(r=>r.author_id)).then(au=>{ if(!$("#adReviews")) return;
@@ -1624,11 +1644,13 @@ async function renderMy(){
   view().innerHTML=`<div class="page cab">
     <div class="box cab-head"><div class="userhead">${avatarHtml(me,"lg")}<div style="flex:1;min-width:0"><h1 style="font-size:20px">${esc(shop||(me?me.name:""))}</h1><div class="note">${shop?esc(me.name)+" · ":""}${esc(/@telegram\.abisto\.by$/.test(user.email||"")?"Вход через Telegram":(user.email||user.phone||""))}</div></div>
       <div class="actions"><a class="btn sec" href="#profile">Профиль и магазин</a><a class="btn sec" href="#user/${user.id}">Страница продавца</a><a class="btn sec" href="#claim">Есть код от Абисто?</a><button class="btn danger" id="logout">Выйти</button></div></div></div>
+    ${accountBlock()}
     <div class="toolbar"><h1>Кабинет продавца</h1><a class="btn" href="#post">Подать объявление</a></div>
     <section class="box cab-stats"><div class="cab-sh"><h2 class="sub2">Статистика</h2><div class="chips">${[7,30].map(r=>`<button class="chip" data-range="${r}" aria-pressed="${myRange===r}">${r} дней</button>`).join("")}</div></div><div id="cabStats">${loadingBlock()}</div></section>
     <div class="tabs" id="cabTabs"></div>
     <div class="bulk" id="bulkBar" hidden></div>
     <div id="myList">${loadingBlock()}</div></div>`;
+  sb.from("profiles").select("ext").eq("id",user.id).maybeSingle().then(({data})=>{const el=$("#acctExt");if(el&&data&&data.ext)el.innerHTML='<div class="acct-row"><span style="color:#1a7f37;font-weight:700">✓</span> <span>Перенесено с '+esc(data.ext.source||"Kufar")+':</span></div>'+extSummary(data.ext)},()=>{});
   const since=new Date(Date.now()-(myRange-1)*864e5).toISOString().slice(0,10);
   const [{data:all,error},{data:stats},{data:fc}]=await Promise.all([
     sb.from("ads").select("*").eq("user_id",user.id).order("bumped_at",{ascending:false}),
@@ -1813,15 +1835,17 @@ async function renderUser(uid){
   const authors=await profiles((revs||[]).map(x=>x.author_id));
   const avg=revs.length?revs.reduce((s,x)=>s+x.rating,0)/revs.length:0;
   const mineRev=user&&revs.find(x=>x.author_id===user.id); pickRating=mineRev?mineRev.rating:0;
+  let ext=null;try{const {data,error}=await sb.from("profiles").select("ext").eq("id",uid).maybeSingle();if(!error&&data)ext=data.ext}catch(_){}
   view().innerHTML=`<div class="page">
     <div class="box" style="margin-bottom:16px"><div class="userhead">${avatarHtml(p,"lg")}<div><h1 style="font-size:22px">${esc(p.shop_name||p.name)}${p.is_business?' <span class="tag">Компания</span>':""}</h1>${p.shop_name?`<div class="note">${esc(p.name)}</div>`:""}
       <div>${revs.length?stars(avg)+` <strong>${avg.toFixed(1)}</strong> · ${revs.length} ${plural(revs.length,["отзыв","отзыва","отзывов"])}`:'<span class="note">Пока без отзывов</span>'}</div>
-      <div class="note">${esc(sinceText(p.created_at))}${p.city?" · "+esc(p.city):""}</div></div></div>
+      <div class="note">${esc(sinceText(p.created_at))}${p.city?" · "+esc(p.city):""}</div>${extSummary(ext)}</div></div>
       ${p.about?`<p class="shop-about">${esc(p.about)}</p>`:""}
       ${p.address||p.work_hours||p.website?`<div class="shop-info">${p.address?`<span><b>Адрес:</b> ${esc(p.address)}</span>`:""}${p.work_hours?`<span><b>Часы работы:</b> ${esc(p.work_hours)}</span>`:""}${p.website&&/^https?:\/\//i.test(p.website)?`<span><b>Сайт:</b> <a href="${esc(p.website)}" target="_blank" rel="noopener nofollow">${esc(p.website.replace(/^https?:\/\//i,""))}</a></span>`:""}</div>`:""}</div>
     <div class="toolbar"><h2 class="sub2">Объявления (${r.total})</h2></div>
     ${r.items.length?grid(r.items):emptyBlock("Активных объявлений нет")}
     ${r.total>r.items.length?`<div class="more"><button class="btn sec" data-seller="${esc(uid)}">Все объявления продавца</button></div>`:""}
+    ${extReviews(ext)}
     <div class="box" style="margin-top:20px"><h2 class="sub2">Отзывы</h2>
       ${user&&user.id!==uid?`<form id="revForm" class="panel" style="padding:12px;gap:10px"><span class="flabel">${mineRev?"Изменить ваш отзыв":"Оставить отзыв"}</span>
         <div class="starpick" role="radiogroup" aria-label="Оценка">${[1,2,3,4,5].map(n=>`<button type="button" data-star="${n}" class="${n<=pickRating?"on":""}" aria-label="${n} из 5">★</button>`).join("")}</div>
