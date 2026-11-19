@@ -105,6 +105,7 @@ def page(a, cmap, siblings, photo_base):
     sib = "".join('<a class="ad" href="%s"><b>%s</b>%s<div class="muted">%s</div></a>'
                   % (ad_path(s), E(price_text(s)), E(s["title"]), E(s.get("city") or "")) for s in siblings)
     descr_html = "<br>".join(E(l) for l in (a.get("descr") or "").splitlines()) or "Описание не указано."
+    ld_prod = ('<script type="application/ld+json">' + json.dumps(prod, ensure_ascii=False) + '</script>') if "offers" in prod else ""
     return f"""<!doctype html>
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{E(title)}</title><meta name="description" content="{E(meta_d)}">
@@ -114,7 +115,7 @@ def page(a, cmap, siblings, photo_base):
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/kategorii/k.css">
 <style>.ob{{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}}.gal{{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory}}.gal img{{height:240px;width:auto;max-width:90vw;object-fit:cover;border-radius:12px;scroll-snap-align:start;background:#e8ecf2}}.box{{background:#fff;border:1px solid #dfe4ec;border-radius:12px;padding:16px}}.pr{{font-size:28px;font-weight:800;margin:0 0 10px}}.facts{{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:15px}}.facts dt{{color:#5b6880}}.facts dd{{margin:0}}.ds{{white-space:normal;max-width:780px}}@media(max-width:820px){{.ob{{grid-template-columns:1fr}}}}</style>
 <script type="application/ld+json">{json.dumps(ld_bc, ensure_ascii=False)}</script>
-<script type="application/ld+json">{json.dumps(prod, ensure_ascii=False)}</script>
+{ld_prod}
 </head><body>
 <header class="h"><div class="w"><a class="logo" href="/"><img src="/logo.svg" alt="" width="34" height="34">Abisto</a><a class="post" href="/#post">+ Подать объявление</a></div></header>
 <main class="w">
@@ -151,6 +152,36 @@ def catmap():
             m["subs"][it[2]["item"].rsplit("/", 1)[1] + "|" + it[3]["name"]] = it[3]["item"].rsplit("/", 1)[1]
     return m
 
+ADS_RE = re.compile(r'(<div id="ads" class="ads" data-q="([^"]*)">)(.*?)(</div>)', re.S)
+
+def inject_kategorii(ads):
+    """Вставляет свежие объявления прямо в HTML статичных страниц /kategorii/, чтобы их видели поисковики.
+    Живой список по-прежнему подгружает kategorii/k.js; здесь только серверная копия со ссылками /ob/."""
+    kdir = os.path.join(ROOT, "kategorii")
+    if not os.path.isdir(kdir):
+        return 0
+    srt = sorted(ads, key=lambda x: x.get("bumped_at") or x.get("created_at") or "", reverse=True)
+    n = 0
+    for f in sorted(os.listdir(kdir)):
+        if not f.endswith(".html"):
+            continue
+        p = os.path.join(kdir, f)
+        t = open(p, encoding="utf-8").read()
+        def rep(m):
+            cat, _, sub = html.unescape(m.group(2)).partition("|")
+            items = [a for a in srt if (not cat or a.get("cat") == cat) and (not sub or a.get("sub") == sub)][:12]
+            if items:
+                body = "".join('<a class="ad" href="%s"><b>%s</b>%s<span class="muted" style="display:block">%s</span></a>'
+                               % (E(ad_path(a)), E(price_text(a)), E(a["title"]), E(a.get("city") or "")) for a in items)
+            else:
+                body = '<p class="muted">Пока нет объявлений — <a href="/#post">разместите первое</a>.</p>'
+            return m.group(1) + "<!--ssr-ads-->" + body + "<!--/ssr-ads-->" + m.group(4)
+        t2 = ADS_RE.sub(rep, t, count=1)
+        if t2 != t:
+            open(p, "w", encoding="utf-8").write(t2)
+            n += 1
+    return n
+
 def main():
     url, key = cfg()
     ads = json.load(open(sys.argv[1], encoding="utf-8")) if len(sys.argv) > 1 else fetch_ads(url, key)
@@ -183,7 +214,7 @@ def main():
     sp = os.path.join(ROOT, "sitemap-ob.xml")
     if not os.path.exists(sp) or open(sp, encoding="utf-8").read() != smt:
         open(sp, "w", encoding="utf-8").write(smt)
-    print("ads:", len(ads))
+    print("ads:", len(ads), "kategorii updated:", inject_kategorii(ads))
 
 if __name__ == "__main__":
     main()
