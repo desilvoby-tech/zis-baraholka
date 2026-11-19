@@ -18,7 +18,7 @@ jobs:
         run: python3 tools/gen_ob.py
       - name: Сохранить изменения
         run: |
-          git add -A ob sitemap-ob.xml
+          git add -A ob sitemap-ob.xml kategorii
           if git diff --cached --quiet; then echo "Без изменений"; exit 0; fi
           git config user.name "abisto-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
