@@ -23,194 +23,20 @@
   <url><loc>https://abisto.by/kategorii/business</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
   <url><loc>https://abisto.by/kategorii/jobs</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
   <url><loc>https://abisto.by/kategorii/other</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
-  <url><loc>https://abisto.by/kategorii/realty-kvartiry</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/realty-novostroyki</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/realty-komnaty</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/realty-doma-kottedzhi</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/realty-garazhi-i-stoyanki</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/realty-uchastki</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/realty-kommercheskaya</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/auto-legkovye-avto</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/auto-gruzoviki-i-avtobusy</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/auto-mototehnika</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/auto-spectehnika</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/auto-selhoztehnika</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/auto-pricepy</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/auto-vodnyy-transport</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/auto-zapchasti</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/auto-shiny-diski</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/auto-aksessuary</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/auto-instrument-oborudovanie</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/auto-avtohimiya-i-avtomasla</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-uslugi-dlya-avto</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://abisto.by/kategorii/services-bytovye-uslugi</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-kompyuternye-uslugi-internet</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://abisto.by/kategorii/services-remont-tehniki-i-elektroniki</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-krasota</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-zdorove</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-nyani-i-sidelki</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-obrazovatelnye-uslugi</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-gruzoperevozki</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-passazhirskie-perevozki</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-uslugi-gruzchikov</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-uslugi-evakuatora</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-vyvoz-musora</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-poligrafiya-naruzhnaya-reklama</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-stroitelnye-raboty</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-remont-kvartiry-doma</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-remont-sborka-peretyazhka-mebeli</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-remont-i-poshiv-odezhdy</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-sad-blagoustroystvo</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-uslugi-dlya-zhivotnyh</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-uslugi-dlya-torzhestv</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-foto-i-videosemka</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-delovye-uslugi</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-vpechatleniya</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-arenda-i-prokat</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-arenda-ban-i-besedok</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/services-prochie-uslugi</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://abisto.by/kategorii/appliances-tehnika-dlya-kuhni</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/appliances-krupnaya-tehnika-dlya-kuhni</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/appliances-tehnika-dlya-uborki</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/appliances-tehnika-dlya-stirki-i-uhoda-za-odezhdoy</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/appliances-klimaticheskaya-tehnika</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/appliances-tehnika-dlya-krasoty-i-zdorovya</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://abisto.by/kategorii/computers-noutbuki</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/computers-kompyutery-sistemnye-bloki</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/computers-monitory</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/computers-komplektuyuschie</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/computers-orgtehnika</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/computers-periferiya-i-aksessuary</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/computers-setevoe-oborudovanie</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/computers-prochie-kompyuternye-tovary</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://abisto.by/kategorii/phones-mobilnye-telefony</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/phones-komplektuyuschie-dlya-telefonov</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/phones-aksessuary-dlya-telefonov</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/phones-telefoniya-i-svyaz</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/phones-planshety</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/phones-komplektuyuschie-dlya-planshetov</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/phones-graficheskie-planshety</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/phones-elektronnye-knigi</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/phones-umnye-chasy-i-fitnes-braslety</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/phones-aksessuary-dlya-planshetov-knig-chasov</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://abisto.by/kategorii/electronics-audiotehnika</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/electronics-naushniki</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/electronics-tv-i-videotehnika</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/electronics-fototehnika-i-optika</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/electronics-igry-i-pristavki</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/electronics-bezopasnost-i-umnyy-dom</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/clothes-zhenskaya-odezhda</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://abisto.by/kategorii/clothes-zhenskaya-obuv</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/clothes-zhenskie-aksessuary</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/menswear-muzhskaya-odezhda</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/menswear-muzhskaya-obuv</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/menswear-muzhskie-aksessuary</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/beauty-dekorativnaya-kosmetika</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/beauty-uhodovaya-kosmetika</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/beauty-parfyumeriya</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/beauty-tovary-dlya-manikyura-i-pedikyura</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/beauty-sredstva-dlya-volos</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/beauty-sredstva-gigieny-depilyaciya</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/beauty-tovary-dlya-resnic-brovey-i-tatuazha</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/beauty-kosmeticheskie-aksessuary</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/beauty-medicinskie-tovary</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/kids-odezhda-do-1-goda</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://abisto.by/kategorii/kids-odezhda-dlya-devochek</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/kids-odezhda-dlya-malchikov</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/kids-aksessuary-dlya-detey</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/kids-detskaya-obuv</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/kids-hodunki-shezlongi-kacheli</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/kids-kolyaski</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/kids-avtokresla-i-bustery</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/kids-kormlenie-i-uhod</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/kids-tekstil-dlya-detey</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/kids-sumki-kenguru-i-slingi</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://abisto.by/kategorii/kids-igrushki-i-knigi</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/kids-detskiy-transport</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/kids-tovary-dlya-mam</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/kids-odezhda-dlya-beremennyh</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/kids-prochie-tovary-dlya-detey</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/kids-detskaya-mebel</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/furniture-banketki-pufiki</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/furniture-veshalki-prihozhie</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/furniture-komody</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/furniture-krovati-matrasy</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/furniture-kuhni</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/furniture-kuhonnye-ugolki</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://abisto.by/kategorii/furniture-myagkaya-mebel</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/furniture-polki-stellazhi-shkafchiki</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/furniture-spalnye-garnitury</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/furniture-stenki-sekcii-moduli</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://abisto.by/kategorii/furniture-stoly-i-obedennye-gruppy</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/furniture-stulya</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/furniture-tumby-bufety</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/furniture-shkafy</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/furniture-mebelnaya-furnitura-i-sostavlyayuschie</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/furniture-prochaya-mebel</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/home-predmety-interera-zerkala</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/home-shtory-zhalyuzi-karnizy</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/home-tekstil-i-kovry</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/home-osveschenie</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/home-hozyaystvennye-tovary</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://abisto.by/kategorii/home-posuda-i-kuhonnye-aksessuary</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/home-komnatnye-rasteniya</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/repair-stroitelnyy-instrument</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/repair-stroitelnoe-oborudovanie</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/repair-santehnika-i-otoplenie</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/repair-stroymaterialy</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://abisto.by/kategorii/repair-otdelochnye-materialy</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/repair-okna-i-dveri</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/repair-doma-sruby-i-sooruzheniya</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/repair-vorota-zabory</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/repair-elektrosnabzhenie</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/repair-sredstva-individualnoy-zaschity</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/repair-prochee-dlya-remonta-i-stroyki</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/garden-sadovaya-mebel-i-basseyny</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/garden-mangaly-aksessuary-toplivo</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/garden-motobloki-i-kultivatory</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/garden-sadovaya-tehnika</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://abisto.by/kategorii/garden-sadovyy-inventar</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/garden-teplicy-i-parniki</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/garden-rasteniya-rassada-i-semena</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/garden-udobreniya-i-agrohimiya</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/garden-vse-dlya-pchelovoda</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/garden-bani-hozbloki-sanuzly</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/garden-prochee-dlya-sada-i-ogoroda</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/hobby-cd-dvd-plastinki</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/hobby-antikvariat-i-kollekcii</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/hobby-bilety</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/hobby-knigi-i-zhurnaly</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/hobby-metalloiskateli</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://abisto.by/kategorii/hobby-muzykalnye-instrumenty</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/hobby-nastolnye-igry-i-pazly</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/hobby-ohota-i-rybalka</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/hobby-turisticheskie-tovary</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/hobby-radioupravlyaemye-modeli</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/hobby-rukodelie</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
   <url><loc>https://abisto.by/kategorii/hobby-sporttovary</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/hobby-velosport</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/hobby-elektrotransport</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/hobby-turisticheskie-uslugi</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/hobby-prochee-v-hobbi-sport-i-turizm</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/wedding-svadebnye-platya</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/wedding-svadebnye-kostyumy</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/wedding-svadebnaya-obuv</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/wedding-svadebnye-aksessuary</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/wedding-podarki-i-prazdnichnye-tovary</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/wedding-karnavalnye-kostyumy</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/animals-pitomcy-v-dar</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/animals-domashnie-pitomcy</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/animals-selhoz-zhivotnye</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/animals-tovary-dlya-zhivotnyh</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/animals-vyazka-zhivotnyh</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/business-gotovyy-biznes</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/business-oborudovanie-dlya-biznesa</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/jobs-vakansii</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/jobs-ischu-rabotu</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/other-byuro-nahodok</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/other-kancelyarskie-tovary</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/other-produkty-pitaniya</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/other-ritualnye-tovary-i-uslugi</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/other-spros</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
-  <url><loc>https://abisto.by/kategorii/other-vse-ostalnoe</loc><lastmod>2026-11-18</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
 </urlset>
