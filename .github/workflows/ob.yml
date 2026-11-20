@@ -16,6 +16,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Сгенерировать страницы /ob/
         run: python3 tools/gen_ob.py
+      - name: SEO-тексты и robots в /kategorii/
+        run: python3 tools/seo_text.py
       - name: Сохранить изменения
         run: |
           git add -A ob sitemap-ob.xml kategorii
