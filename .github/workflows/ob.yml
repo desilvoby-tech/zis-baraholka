@@ -20,7 +20,7 @@ jobs:
         run: python3 tools/seo_text.py
       - name: Сохранить изменения
         run: |
-          git add -A ob sitemap-ob.xml kategorii
+          git add -A ob sitemap-ob.xml kategorii sitemap.xml
           if git diff --cached --quiet; then echo "Без изменений"; exit 0; fi
           git config user.name "abisto-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
