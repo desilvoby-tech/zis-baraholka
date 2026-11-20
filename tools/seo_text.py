@@ -4,7 +4,8 @@
 Отдельный шаг после tools/gen_ob.py в .github/workflows/ob.yml. Код генераторов не меняет:
 - вставляет блок текста между метками <!--seo-text-->…<!--/seo-text--> перед секцией «Как продать или купить»;
 - подкатегориям без активных объявлений ставит noindex,follow, с первым объявлением — снова index,follow;
-  основные разделы и корень каталога всегда index.
+  основные разделы и корень каталога всегда index;
+- noindex-подкатегории убирает из sitemap.xml, с первым объявлением возвращает адрес обратно.
 Смысловые тексты — в tools/seo_texts.json (раздел без текста получает только абзац с данными).
 Данные — активные объявления из Supabase по публичному ключу из config.js. Нулевые значения не выводятся.
 Только стандартная библиотека Python.
@@ -214,6 +215,38 @@ def similarity_warnings(blocks):
             print(f"::warning::seo_text: похожие тексты {fa} и {fb}: {j:.0%}")
 
 
+SITE = "https://abisto.by/kategorii/"
+
+
+def sync_sitemap(sub_state):
+    """sub_state: {slug: (indexed, newest_iso)} для подкатегорий. noindex-адреса убираем из sitemap.xml,
+    а когда в подкатегории появляется объявление — возвращаем (в формате gen_kategorii.py, priority 0.6).
+    Основные разделы и прочие адреса не трогаем. Возвращает (убрано, добавлено)."""
+    p = os.path.join(ROOT, "sitemap.xml")
+    if not os.path.exists(p):
+        return 0, 0
+    src = open(p, encoding="utf-8").read()
+    lines = src.split("\n")
+    present = {}
+    for i, ln in enumerate(lines):
+        m = re.search(r"<loc>" + re.escape(SITE) + r"([^<]+)</loc>", ln)
+        if m:
+            present[m.group(1)] = i
+    drop = {present[s] for s, (ix, _) in sub_state.items() if not ix and s in present}
+    add = [s for s, (ix, _) in sorted(sub_state.items()) if ix and s not in present]
+    if not drop and not add:
+        return 0, 0
+    out = [ln for i, ln in enumerate(lines) if i not in drop]
+    last = max((i for i, ln in enumerate(out) if "<loc>" + SITE in ln), default=None)
+    if last is None:
+        last = next(i for i, ln in enumerate(out) if "</urlset>" in ln) - 1
+    new = [f"  <url><loc>{SITE}{s}</loc><lastmod>{(sub_state[s][1] or datetime.date.today().isoformat())[:10]}</lastmod>"
+           f"<changefreq>daily</changefreq><priority>0.6</priority></url>" for s in add]
+    out[last + 1:last + 1] = new
+    open(p, "w", encoding="utf-8").write("\n".join(out))
+    return len(drop), len(add)
+
+
 def main():
     texts = json.load(open(os.path.join(ROOT, "tools", "seo_texts.json"), encoding="utf-8"))
     enabled = set(texts.get("enabled", []))
@@ -221,6 +254,7 @@ def main():
     idx = tree_index()
     stats = {"pages": 0, "text": 0, "noindex": 0, "index": 0, "changed": 0}
     indexed_blocks = []
+    sub_state = {}
     for f in sorted(os.listdir(KDIR)):
         if not f.endswith(".html") or f == "index.html":
             continue
@@ -246,9 +280,11 @@ def main():
             robots = "index,follow" if mine else "noindex,follow"
             t2 = ROBOTS_RE.sub(f'<meta name="robots" content="{robots}">', t2, count=1)
             stats["index" if mine else "noindex"] += 1
+            sub_state[f[:-5]] = (bool(mine), max(((a.get("bumped_at") or a.get("created_at") or "") for a in mine), default=""))
         if t2 != t:
             open(p, "w", encoding="utf-8").write(t2)
             stats["changed"] += 1
+    stats["sitemap_removed"], stats["sitemap_added"] = sync_sitemap(sub_state)
     similarity_warnings(indexed_blocks)
     print("seo_text:", stats, "ads:", len(ads))
 
