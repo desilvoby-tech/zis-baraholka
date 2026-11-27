@@ -12,4 +12,4 @@ window.ZIS_CONFIG = {
 (function(){try{var l=document.createElement("link");l.rel="stylesheet";l.href="/addons.css?v=3";document.head.appendChild(l);var s=document.createElement("script");s.src="/addons.js?v=3";s.defer=true;document.head.appendChild(s)}catch(e){}})();
 
 /* search-fix (27.11.2026): поиск и фильтры — адрес с фильтрами, числа, раскладка. Чтобы отключить — удалить этот блок. */
-(function(){try{var s=document.createElement("script");s.src="/search-fix.js?v=1";document.head.appendChild(s)}catch(e){}})();
+(function(){try{var s=document.createElement("script");s.src="/search-fix.js?v=2";document.head.appendChild(s)}catch(e){}})();

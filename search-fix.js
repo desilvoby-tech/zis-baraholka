@@ -3,7 +3,10 @@
    - числа в фильтрах: «1,5» → 1.5, «1.2.3» больше не даёт ошибку базы; «от» > «до» — меняются местами;
    - ответ на устаревший запрос не перезаписывает выдачу (быстрая смена фильтров, «Показать ещё»);
    - пустая выдача по запросу латиницей → поиск в русской раскладке (ghjlfv → продам);
-   - символы % _ \ в запросе не работают как шаблон.
+   - символы % _ \ в запросе не работают как шаблон;
+   - (v2) пустая выдача → поиск по словам в любом порядке и форме («угловой диван», «ремонт ноутбука», «елку»),
+     пока в базе не подключён tools/migration-2026-11-23-search.sql (до 100 объявлений);
+   - (v2) «Сбросить фильтры» оставляет подкатегорию, как «Сбросить всё».
    Подключается из config.js. Чтобы отключить — удалить блок search-fix в config.js. */
 (function(){
   if(window.__abSearchFix) return; window.__abSearchFix=1;
@@ -21,6 +24,10 @@
   function fixLayout(q){if(!/^[a-z\[\];',.`\s]+$/i.test(q)||!/[a-z]/i.test(q))return "";
     var r=q.toLowerCase().split("").map(function(c){return EN_RU[c]!=null?EN_RU[c]:c}).join("");
     return /[а-яё]/.test(r)&&r!==q.toLowerCase()?r:""}
+  /* грубое русское окончание: «стиральную» → «стиральн», «ноутбука» → «ноутбук» */
+  var END=/^(.{4,}?)(иями|ями|ами|ого|его|ому|ему|ыми|ими|ий|ый|ой|ая|яя|ое|ее|ые|ие|ую|юю|ах|ях|ам|ям|ом|ем|ов|ев|ей|ия|ье|а|я|у|ю|ы|и|е|о|ь|й)$/;
+  function stem(w){if(w.length<5)return w;var m=END.exec(w);return m?m[1]:w}
+  function yo(t){return String(t||"").toLowerCase().replace(/ё/g,"е")}
 
   function install(){
     function sToQS(s,base){var u=new URLSearchParams(base||"");
@@ -56,23 +63,41 @@
       return p};
 
     /* устаревшие ответы и раскладка */
-    var tok=0, layoutFrom="";
+    var tok=0, layoutFrom="", wordsMode=false, pendingSub=null;
     var _search=search;
+    function hang(){return new Promise(function(){})} /* ответ устарел — выдачу не трогаем */
+    /* поиск по словам: сервер ищет фразу целиком, поэтому берём самое длинное слово (основу),
+       а остальные слова проверяем здесь — в любом порядке, ё = е */
+    function byWords(q){
+      var ws=yo(q).split(/[^a-zа-я0-9]+/).filter(function(w){return w.length>=2}).map(stem);
+      if(!ws.length) return Promise.resolve(null);
+      var probe=ws.slice().sort(function(a,b){return b.length-a.length})[0],tries=[];
+      if(probe!==yo(q).trim())tries.push(probe);
+      for(var i=probe.indexOf("е"),k=0;i>=0&&k<3;i=probe.indexOf("е",i+1),k++)tries.push(probe.slice(0,i)+"ё"+probe.slice(i+1));
+      var seen={},items=[];
+      return tries.reduce(function(pr,t){return pr.then(function(){
+        return _search(Object.assign({},S,{q:t}),0,100).then(function(r){(r&&r.items||[]).forEach(function(a){if(!seen[a.id]){seen[a.id]=1;items.push(a)}})})})},Promise.resolve())
+      .then(function(){
+        var ok=items.filter(function(a){var tx=yo(a.title)+" "+yo(a.descr);return ws.every(function(w){return tx.indexOf(w)>=0})});
+        return ok.length?{total:ok.length,items:ok}:null})}
     search=function(s,offset){var my=tok,args=arguments;
       return _search.apply(this,args).then(function(r){
-        if(my!==tok) return new Promise(function(){}); /* ответ устарел — выдачу не трогаем */
-        if(!(offset>0)&&s===S&&r&&!r.total&&S.q){var alt=fixLayout(S.q);
-          if(alt) return _search(Object.assign({},S,{q:alt}),0).then(function(r2){
-            if(my!==tok) return new Promise(function(){});
+        if(my!==tok) return hang();
+        if(offset>0||s!==S||!r||r.total||!S.q) return r;
+        var alt=fixLayout(S.q);
+        var p=alt?_search(Object.assign({},S,{q:alt}),0).then(function(r2){
+            if(my!==tok) return hang();
             if(r2&&r2.total){layoutFrom=S.q;S.q=alt;var q=document.getElementById("q");if(q)q.value=alt;return r2}
-            return r})}
-        return r})};
+            return null}):Promise.resolve(null);
+        return p.then(function(rr){if(rr)return rr;
+          return byWords(S.q).then(function(rw){if(my!==tok)return hang();if(rw){wordsMode=true;return rw}return r},function(){return r})})})};
 
     var restored=false;
     var _rh=renderHome;
     renderHome=async function(){
       if(!restored){restored=true;if(hasSKeys(location.search)&&initHash.indexOf("#c/")!==0)restore()}
-      normRanges(); tok++; layoutFrom=""; syncUrl();
+      if(pendingSub!==null){if(S.cat)S.sub=pendingSub;pendingSub=null}
+      normRanges(); tok++; layoutFrom=""; wordsMode=false; syncUrl();
       var res=await _rh.apply(this,arguments);
       if(layoutFrom&&currentView()==="home"){
         var h=document.querySelector(".toolbar h1");if(h)h.textContent="Поиск: «"+S.q+"»";
@@ -80,8 +105,13 @@
         if(box&&!document.getElementById("layoutNote"))box.insertAdjacentHTML("beforebegin",'<p class="note" id="layoutNote">Показаны результаты по запросу «'+esc(S.q)+'» — исправлена раскладка клавиатуры («'+esc(layoutFrom)+'»).</p>');
         try{seoHome()}catch(_){}
       }
+      if(wordsMode&&currentView()==="home"){var bx=document.getElementById("results");
+        if(bx&&!document.getElementById("wordsNote"))bx.insertAdjacentHTML("beforebegin",'<p class="note" id="wordsNote">Точного совпадения нет — показаны объявления, где есть все слова запроса.</p>')}
       syncUrl();
       return res};
+
+    /* «Сбросить фильтры» — подкатегория остаётся (до штатного обработчика) */
+    document.addEventListener("click",function(e){var t=e.target;if(t&&t.id==="fReset"&&S.cat&&S.sub)pendingSub=S.sub},true);
 
     /* числа в полях фильтров — до штатного обработчика */
     document.addEventListener("change",function(e){var t=e.target;if(!t||!t.dataset)return;
