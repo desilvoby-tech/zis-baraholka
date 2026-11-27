@@ -1,8 +1,15 @@
-/* mobile-search (28.11.2026): на телефоне строка поиска идёт до правого края экрана, кнопка фильтров лежит внутри поля справа. Чтобы отключить — удалить блок mobile-search в конце config.js */
+/* mobile-search (28.11.2026): на телефоне строка поиска идёт до правого края экрана, кнопка фильтров лежит внутри поля справа; крестик и фон у панели фильтров. Чтобы отключить — удалить блок mobile-search в конце config.js */
+.f-x{display:none}
+#fBack{display:none}
 @media (max-width:860px){
   header .hrow{gap:10px}
   header .m-filt{margin-left:-58px;width:48px;height:48px;background:transparent!important;border-radius:0 14px 14px 0;z-index:3;box-shadow:none}
   header .m-filt::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:1px;background:rgba(125,135,154,.35)}
   header .hrow .search{padding-right:48px;box-sizing:border-box}
   header .m-filt .fbadge{top:6px;right:6px}
+}
+@media (max-width:900px){
+  aside.panel.open .f-x{display:grid;place-items:center;position:absolute;top:10px;right:12px;width:40px;height:40px;border:0;border-radius:50%;background:rgba(125,135,154,.18);color:inherit;font-size:26px;line-height:1;cursor:pointer;z-index:2;padding:0}
+  aside.panel.open h3{padding-right:48px}
+  #fBack{display:block;position:fixed;inset:0;z-index:69;background:rgba(10,18,35,.45)}
 }
