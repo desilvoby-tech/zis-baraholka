@@ -14,7 +14,15 @@
   function enhance(gal){
     if(gal.dataset.enh) return;
     var main=gal.querySelector(".main"); var ths=[].slice.call(gal.querySelectorAll(".thumbs [data-th]"));
-    if(!main||ths.length<2) return; gal.dataset.enh="1";
+    if(!main) return;
+    if(ths.length<2){ /* одно фото (например, перенесённые объявления): тоже открывается на весь экран */
+      var one=main.querySelector("img"); if(!one) return; gal.dataset.enh="1";
+      gal.appendChild(mk("span","g-zoom","Нажмите, чтобы увеличить"));
+      main.style.cursor="zoom-in";
+      main.addEventListener("click",function(){lightbox([full(one.getAttribute("src")||one.src)],0)});
+      return;
+    }
+    gal.dataset.enh="1";
     var n=ths.length;
     function cur(){for(var i=0;i<n;i++)if(ths[i].getAttribute("aria-current")==="true")return i;return 0}
     var count=mk("span","g-count"); var zoom=mk("span","g-zoom","Нажмите, чтобы увеличить");
@@ -38,14 +46,14 @@
     img.alt="";
     function show(k){i=(k+n)%n;img.src=urls[i];num.textContent=(i+1)+" / "+n;onChange&&onChange(i);
       [urls[(i+1)%n],urls[(i-1+n)%n]].forEach(function(u){var im=new Image();im.src=u})}
-    function close(){document.removeEventListener("keydown",key,true);box.remove();document.body.style.overflow=prevOv}
+    function close(){document.removeEventListener("keydown",key,true);removeEventListener("hashchange",close);box.remove();document.body.style.overflow=prevOv}
     function key(e){if(e.key==="Escape"){close();e.stopPropagation()}else if(e.key==="ArrowLeft"){show(i-1);e.stopPropagation();e.preventDefault()}else if(e.key==="ArrowRight"){show(i+1);e.stopPropagation();e.preventDefault()}}
     var prevOv=document.body.style.overflow;document.body.style.overflow="hidden";
     x.onclick=close;p.onclick=function(e){e.stopPropagation();show(i-1)};q.onclick=function(e){e.stopPropagation();show(i+1)};
     box.onclick=function(e){if(e.target===box)close()};
     swipe(box,function(){show(i+1)},function(){show(i-1)});
     box.appendChild(img);box.appendChild(x);if(n>1){box.appendChild(p);box.appendChild(q);box.appendChild(num)}
-    document.body.appendChild(box);document.addEventListener("keydown",key,true);show(i);
+    document.body.appendChild(box);document.addEventListener("keydown",key,true);addEventListener("hashchange",close);show(i);
   }
   /* ---- Карточки в стиле «Авито»: название, под ним цена; сердечко справа от названия, «три точки» справа от цены ---- */
   var DOTS='<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>';
@@ -77,6 +85,24 @@
     row2.appendChild(p);row2.appendChild(dots);
     body.insertBefore(row2,body.firstChild);body.insertBefore(row1,body.firstChild);
   }
+  /* ---- Переписка на телефоне: при открытой клавиатуре видны шапка диалога, сообщения и поле ввода ---- */
+  var chatOn=false;
+  function fitChat(){
+    var c=document.querySelector(".chat"),ta=document.getElementById("chatText");
+    if(!c||!ta||document.activeElement!==ta||innerWidth>860){if(c&&c.style.height){c.style.height="";c.style.minHeight=""}return}
+    var vv=window.visualViewport,vh=vv?vv.height:innerHeight,hb=0,hd=document.querySelector("header");
+    if(hd){var ps=getComputedStyle(hd).position;if(ps==="sticky"||ps==="fixed")hb=hd.offsetHeight}
+    c.style.minHeight="0";c.style.height=Math.max(200,vh-hb-8)+"px";
+    var top=c.getBoundingClientRect().top-(vv?vv.offsetTop:0);
+    if(Math.abs(top-hb-4)>2)window.scrollBy(0,top-hb-4);
+    var m=document.getElementById("msgs");if(m)m.scrollTop=m.scrollHeight;
+  }
+  function chatSoon(){setTimeout(fitChat,60);setTimeout(fitChat,350)}
+  document.addEventListener("focusin",function(e){if(e.target&&e.target.id==="chatText"){chatOn=true;document.body.classList.add("chat-typing");chatSoon()}});
+  document.addEventListener("focusout",function(e){if(e.target&&e.target.id==="chatText"){chatOn=false;document.body.classList.remove("chat-typing");setTimeout(fitChat,120)}});
+  if(window.visualViewport)visualViewport.addEventListener("resize",function(){if(chatOn)fitChat()});
+  addEventListener("resize",function(){if(chatOn)chatSoon()});
+
   var pend=false;
   function scan(){pend=false;[].forEach.call(document.querySelectorAll(".gal:not([data-enh])"),enhance);[].forEach.call(document.querySelectorAll(".card:not([data-av])"),card)}
   new MutationObserver(function(){if(!pend){pend=true;requestAnimationFrame(scan)}}).observe(document.documentElement,{childList:true,subtree:true});

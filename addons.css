@@ -86,3 +86,14 @@
   .card .av-p .price{font-size:19px}
   .card .meta{font-size:13px}
 }
+
+/* ---- Карточки с лёгким контуром (27.11.2026): белая карточка, тень, фото во всю ширину ---- */
+.grid .card{background:var(--surface);border:0;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(16,24,40,.14),0 0 0 1px rgba(16,24,40,.05)}
+.grid .card .ph{border-radius:0}
+.grid .card .cbody{padding:10px 12px 12px}
+.grid.list .card .cbody{padding:12px 14px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .grid .card{box-shadow:0 1px 3px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08)}}
+:root[data-theme="dark"] .grid .card{box-shadow:0 1px 3px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08)}
+
+/* ---- Переписка: пока пишем сообщение, нижнее меню не закрывает поле ввода ---- */
+@media (max-width:860px){body.chat-typing .bottomnav{display:none!important}body.chat-typing main{padding-bottom:0!important}}
