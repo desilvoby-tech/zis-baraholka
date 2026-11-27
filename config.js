@@ -22,3 +22,6 @@ window.ZIS_CONFIG = {
 
 /* kufar-gallery (28.11.2026): фото в объявлении как на Куфаре. Чтобы отключить — удалить этот блок. */
 (function(){try{var l=document.createElement("link");l.rel="stylesheet";l.href="/kufar-gallery.css?v=1";document.head.appendChild(l)}catch(e){}})();
+
+/* qa-fix (27.11.2026): замечания проверки. Чтобы отключить — удалить этот блок. */
+(function(){try{var l=document.createElement("link");l.rel="stylesheet";l.href="/qa-fix.css?v=1";document.head.appendChild(l);var s=document.createElement("script");s.src="/qa-fix.js?v=1";s.defer=true;document.head.appendChild(s)}catch(e){}})();
