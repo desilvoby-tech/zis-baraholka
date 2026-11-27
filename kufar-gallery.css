@@ -1,0 +1,9 @@
+/* kufar-gallery (28.11.2026): фото в объявлении как на Куфаре — светлый фон, фото целиком по центру со скруглением, счётчик 1/N слева внизу. Чтобы отключить — удалить блок kufar-gallery в конце config.js */
+.gal{background:var(--surface,#fff);border-radius:16px}
+.gal .main{aspect-ratio:4/5;max-height:72vh;background:transparent}
+.gal .main img{object-fit:contain;object-position:center;border-radius:16px}
+.gal .g-zoom{display:none}
+.gal .g-count{right:auto;left:12px;top:auto;bottom:12px;background:rgba(110,115,125,.85);color:#fff;border-radius:8px;font-size:15px;padding:4px 10px}
+.gal .thumbs{justify-content:center}
+.gal .thumbs button{border-radius:10px}
+@media (min-width:641px){.gal .main{aspect-ratio:4/3}}
