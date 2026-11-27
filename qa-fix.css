@@ -1,0 +1,19 @@
+/* qa-fix (27.11.2026): замечания проверки. Чтобы отключить — удалить блок qa-fix в конце config.js */
+/* фото в объявлении не наезжает на миниатюры */
+.gal .main{position:relative;overflow:hidden}
+.gal .main>img{position:absolute;inset:0;width:100%;height:100%}
+.gal:has(.thumbs button) .g-count{bottom:96px}
+@media (max-width:640px){.gal:has(.thumbs button) .g-count{bottom:84px}}
+/* вход: один разделитель «или по почте», подписи кнопок по центру */
+#gLogin+.note:has(~.or){display:none}
+button[data-oauth]{justify-content:center}
+/* телефон: после фото сразу название, цена и кнопки */
+@media (max-width:860px){
+  .adpage{display:flex;flex-direction:column;align-items:stretch;gap:14px}
+  .adpage>div:first-child,.adpage>.adside{display:contents!important}
+  .adpage .gal{order:-2}
+  .adpage .adside>.box:first-child{order:-1}
+  .adpage #sellerBox{order:1}
+  .adpage .adside>.link{order:2}
+  .adpage>div:first-child>div:last-child:not(.box):not(.gal){order:3}
+}
