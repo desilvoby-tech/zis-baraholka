@@ -62,3 +62,27 @@
 .lb .g-prev{left:14px}.lb .g-next{right:14px}
 .lb .lb-n{position:absolute;left:50%;bottom:max(16px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:rgba(255,255,255,.14);color:#fff;font-size:14px;font-weight:600;border-radius:10px;padding:4px 12px}
 @media (max-width:640px){.lb .g-nav{display:none}}
+
+/* ---- Карточки как на Авито (27.11.2026) ---- */
+.card .ph{aspect-ratio:1/1;border-radius:12px}
+.card .cbody{padding:10px 0 0;gap:6px}
+.card .av-t{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.card .av-t .ctitle{flex:1;min-width:0;font-size:17px;line-height:1.28;font-weight:600;min-height:0;-webkit-line-clamp:2}
+.card .av-t .fav{position:static;flex:none;width:32px;height:32px;margin:-2px -4px 0 0;background:transparent;border-radius:50%}
+.card .av-t .fav svg{width:24px;height:24px}
+.card .av-p{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card .av-p .price{font-size:20px;font-weight:800}
+.card .av-dots{flex:none;width:36px;height:28px;margin-right:-6px;border:0;background:transparent;color:var(--ink);display:grid;place-items:center;cursor:pointer;border-radius:8px}
+.card .av-dots:hover{background:rgba(0,0,0,.06)}
+.card .av-dots svg{width:24px;height:24px}
+.card .meta{margin-top:0;font-size:14px;color:var(--muted)}
+.card .tags{margin:0}
+.grid.list .card .ph{aspect-ratio:1/1}
+.av-menu{position:absolute;z-index:150;min-width:200px;background:#fff;color:#13213b;border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.22);padding:6px;display:flex;flex-direction:column}
+.av-menu button{border:0;background:transparent;text-align:left;font:inherit;font-size:15px;padding:10px 12px;border-radius:8px;cursor:pointer}
+.av-menu button:hover{background:#f0f2f6}
+@media (max-width:560px){
+  .card .av-t .ctitle{font-size:15px}
+  .card .av-p .price{font-size:19px}
+  .card .meta{font-size:13px}
+}

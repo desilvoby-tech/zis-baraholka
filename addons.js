@@ -47,8 +47,38 @@
     box.appendChild(img);box.appendChild(x);if(n>1){box.appendChild(p);box.appendChild(q);box.appendChild(num)}
     document.body.appendChild(box);document.addEventListener("keydown",key,true);show(i);
   }
+  /* ---- Карточки в стиле «Авито»: название, под ним цена; сердечко справа от названия, «три точки» справа от цены ---- */
+  var DOTS='<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>';
+  var menu=null;
+  function closeMenu(){if(menu){menu.remove();menu=null}}
+  function openMenu(btn,card){
+    closeMenu();var fav=card.querySelector("[data-fav]"),on=fav&&fav.getAttribute("aria-pressed")==="true";
+    menu=mk("div","av-menu");
+    var a=mk("button","",on?"Убрать из избранного":"В избранное"),b=mk("button","","Скопировать ссылку");
+    a.type=b.type="button";
+    a.onclick=function(e){e.preventDefault();e.stopPropagation();if(fav)fav.click();closeMenu()};
+    b.onclick=function(e){e.preventDefault();e.stopPropagation();var u=new URL(card.getAttribute("href"),location.href).href;
+      try{navigator.clipboard.writeText(u)}catch(x){var t=mk("textarea");t.value=u;document.body.appendChild(t);t.select();try{document.execCommand("copy")}catch(y){}t.remove()}
+      b.textContent="Ссылка скопирована";setTimeout(closeMenu,900)};
+    menu.appendChild(a);menu.appendChild(b);document.body.appendChild(menu);
+    var r=btn.getBoundingClientRect(),w=menu.offsetWidth;
+    menu.style.top=(window.scrollY+r.bottom+4)+"px";menu.style.left=Math.max(8,Math.min(window.scrollX+r.right-w,document.documentElement.clientWidth-w-8))+"px";
+  }
+  document.addEventListener("click",function(e){if(menu&&!menu.contains(e.target)&&!(e.target.closest&&e.target.closest(".av-dots")))closeMenu()},true);
+  window.addEventListener("scroll",closeMenu,{passive:true});
+  function card(c){
+    if(c.dataset.av) return;
+    var body=c.querySelector(".cbody"),t=body&&body.querySelector(".ctitle"),p=body&&body.querySelector(".price"),fav=c.querySelector(".ph .fav");
+    if(!body||!t||!p) return; c.dataset.av="1";
+    var row1=mk("div","av-t"),row2=mk("div","av-p"),dots=mk("button","av-dots",DOTS);
+    dots.type="button";dots.setAttribute("aria-label","Ещё");
+    dots.onclick=function(e){e.preventDefault();e.stopPropagation();if(menu){closeMenu();return}openMenu(dots,c)};
+    row1.appendChild(t);if(fav)row1.appendChild(fav);
+    row2.appendChild(p);row2.appendChild(dots);
+    body.insertBefore(row2,body.firstChild);body.insertBefore(row1,body.firstChild);
+  }
   var pend=false;
-  function scan(){pend=false;[].forEach.call(document.querySelectorAll(".gal:not([data-enh])"),enhance)}
+  function scan(){pend=false;[].forEach.call(document.querySelectorAll(".gal:not([data-enh])"),enhance);[].forEach.call(document.querySelectorAll(".card:not([data-av])"),card)}
   new MutationObserver(function(){if(!pend){pend=true;requestAnimationFrame(scan)}}).observe(document.documentElement,{childList:true,subtree:true});
   scan();
 })();
