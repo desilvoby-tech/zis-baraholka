@@ -13,3 +13,6 @@ window.ZIS_CONFIG = {
 
 /* search-fix (27.11.2026): поиск и фильтры — адрес с фильтрами, числа, раскладка. Чтобы отключить — удалить этот блок. */
 (function(){try{var s=document.createElement("script");s.src="/search-fix.js?v=3";document.head.appendChild(s)}catch(e){}})();
+
+/* cats-fix (27.11.2026): плитки категорий на главной — ровная сетка в 2 ряда. Чтобы отключить — удалить этот блок. */
+(function(){try{var s=document.createElement("script");s.src="/cats-fix.js?v=1";document.head.appendChild(s)}catch(e){}})();
