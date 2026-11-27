@@ -9,4 +9,4 @@ window.ZIS_CONFIG = {
 };
 
 /* addons (27.11.2026): крупные карточки + галерея. Чтобы отключить — удалить этот блок. */
-(function(){try{var l=document.createElement("link");l.rel="stylesheet";l.href="/addons.css?v=1";document.head.appendChild(l);var s=document.createElement("script");s.src="/addons.js?v=1";s.defer=true;document.head.appendChild(s)}catch(e){}})();
+(function(){try{var l=document.createElement("link");l.rel="stylesheet";l.href="/addons.css?v=2";document.head.appendChild(l);var s=document.createElement("script");s.src="/addons.js?v=2";s.defer=true;document.head.appendChild(s)}catch(e){}})();
