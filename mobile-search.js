@@ -1,4 +1,4 @@
-/* mobile-search.js (28.11.2026): на телефоне панель фильтров можно закрыть крестиком, тапом по затемнённому фону или Esc. Чтобы отключить — удалить блок mobile-search в config.js */
+/* mobile-search.js (28.11.2026): на телефоне панель фильтров закрывается крестиком, тапом по фону или Esc; сверху рядом с «Фильтры» появляется «Сбросить всё». Чтобы отключить — удалить блок mobile-search в config.js */
 (function(){
   var mq=window.matchMedia?window.matchMedia("(max-width:900px)"):null;
   function done(){var d=document.getElementById("fDone");if(d)d.click()}
@@ -17,6 +17,13 @@
       back.addEventListener("click",done);
       document.body.appendChild(back);
     }else if(!open&&back){back.remove()}
+    var ft=document.getElementById("fToggle"),has=!!document.getElementById("saveSearch")||!!document.querySelector(".chip-x,.fchip,[data-rmchip]");
+    var rb=document.getElementById("fFullReset");
+    if(ft&&has&&!rb){
+      rb=document.createElement("button");rb.type="button";rb.id="fFullReset";rb.className="btn sec";rb.textContent="Сбросить всё";
+      rb.addEventListener("click",function(e){e.stopPropagation();location.href=location.pathname});
+      ft.insertAdjacentElement("afterend",rb);
+    }else if(rb&&(!ft||!has)){rb.remove()}
   }
   var t=0;
   function later(){if(t)return;t=setTimeout(function(){t=0;sync()},30)}

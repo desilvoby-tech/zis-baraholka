@@ -17,8 +17,8 @@ window.ZIS_CONFIG = {
 /* cats-fix (27.11.2026): плитки категорий на главной — ровная сетка в 2 ряда. Чтобы отключить — удалить этот блок. */
 (function(){try{var s=document.createElement("script");s.src="/cats-fix.js?v=1";document.head.appendChild(s)}catch(e){}})();
 
-/* mobile-search (28.11.2026): поиск на всю ширину на телефоне + закрытие фильтров. Чтобы отключить — удалить этот блок. */
-(function(){try{var l=document.createElement("link");l.rel="stylesheet";l.href="/mobile-search.css?v=2";document.head.appendChild(l);var s=document.createElement("script");s.src="/mobile-search.js?v=1";s.defer=true;document.head.appendChild(s)}catch(e){}})();
+/* mobile-search (28.11.2026): поиск на всю ширину на телефоне + закрытие фильтров + «Сбросить всё». Чтобы отключить — удалить этот блок. */
+(function(){try{var l=document.createElement("link");l.rel="stylesheet";l.href="/mobile-search.css?v=2";document.head.appendChild(l);var s=document.createElement("script");s.src="/mobile-search.js?v=2";s.defer=true;document.head.appendChild(s)}catch(e){}})();
 
 /* kufar-gallery (28.11.2026): фото в объявлении как на Куфаре. Чтобы отключить — удалить этот блок. */
 (function(){try{var l=document.createElement("link");l.rel="stylesheet";l.href="/kufar-gallery.css?v=1";document.head.appendChild(l)}catch(e){}})();
